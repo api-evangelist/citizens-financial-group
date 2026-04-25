@@ -92,8 +92,8 @@ Citizens Pay is the buy-now-pay-later embedded financing platform offered by Cit
 - [Terms of Service](https://www.citizensbank.com/customer-service/online-banking-service-agreement.aspx)
 - [Support](https://www.citizensbank.com/customer-service/overview.aspx)
 - [JSON-LD Context](json-ld/citizens-financial-group-context.jsonld)
-- [Spectral Ruleset](spectral/citizens-financial-group-spectral.yml)
-- [Naftiko Capabilities](naftiko/citizens-financial-group-capabilities.yml)
+- [Spectral Ruleset](rules/citizens-financial-group-rules.yml)
+- [Naftiko Capabilities](capabilities/citizens-financial-group-capabilities.yml)
 
 ## Maintainers
 
