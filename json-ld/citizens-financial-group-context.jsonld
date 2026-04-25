@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "@vocab": "https://developer.citizensbank.com/vocab/",
+    "schema": "https://schema.org/",
+    "fdx": "https://financialdataexchange.org/vocab/",
+    "Account": "schema:BankAccount",
+    "Transaction": "schema:MoneyTransfer",
+    "Statement": "schema:DigitalDocument",
+    "Branch": "schema:BankOrCreditUnion",
+    "ATM": "schema:AutomatedTeller",
+    "Customer": "schema:Person",
+    "Loan": "schema:LoanOrCredit",
+    "Installment": "fdx:Installment",
+    "Merchant": "schema:Organization",
+    "name": "schema:name",
+    "address": "schema:address",
+    "latitude": "schema:latitude",
+    "longitude": "schema:longitude",
+    "balance": "fdx:balance",
+    "currency": "schema:currency",
+    "amount": "schema:amount",
+    "createdAt": "schema:dateCreated",
+    "valueDate": "fdx:valueDate"
+  }
+}

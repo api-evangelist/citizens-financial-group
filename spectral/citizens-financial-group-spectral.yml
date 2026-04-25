@@ -1,0 +1,43 @@
+extends:
+  - spectral:oas
+rules:
+  citizens-https-only:
+    description: All Citizens API servers MUST use HTTPS.
+    severity: error
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        match: '^https://'
+  citizens-oauth-required:
+    description: Citizens APIs MUST declare an OAuth 2.0 security scheme for consented data access.
+    severity: error
+    given: $.components.securitySchemes
+    then:
+      function: truthy
+  citizens-operation-id:
+    description: Operations MUST have an operationId.
+    severity: error
+    given: $.paths[*][get,post,put,delete,patch]
+    then:
+      field: operationId
+      function: truthy
+  citizens-tag-required:
+    description: Operations MUST be tagged for product domain grouping.
+    severity: warn
+    given: $.paths[*][get,post,put,delete,patch].tags
+    then:
+      function: truthy
+  citizens-info-contact:
+    description: API info MUST contain a contact for security disclosures.
+    severity: warn
+    given: $.info
+    then:
+      field: contact
+      function: truthy
+  citizens-fdx-alignment:
+    description: Open banking endpoints SHOULD align with Financial Data Exchange (FDX) field names.
+    severity: warn
+    given: $.components.schemas
+    then:
+      function: truthy

@@ -1,0 +1,38 @@
+capabilities:
+  - id: citizens.share-financial-data
+    name: Share account data with third parties
+    description: >-
+      Allow Citizens customers to authorize sharing of account, balance,
+      and transaction data with third-party platforms via the FDX-aligned
+      Open Banking API.
+    apis:
+      - citizens-financial-group:citizens-open-banking-api
+  - id: citizens.read-accounts
+    name: Read account and transaction information
+    description: >-
+      Retrieve authorized account balances and transaction histories
+      for Citizens Bank customers.
+    apis:
+      - citizens-financial-group:citizens-accounts-api
+      - citizens-financial-group:citizens-open-banking-api
+  - id: citizens.retrieve-statements
+    name: Retrieve account statements
+    description: >-
+      Fetch authorized monthly statements for Citizens Bank customers.
+    apis:
+      - citizens-financial-group:citizens-statements-api
+  - id: citizens.locate-services
+    name: Locate branches and ATMs
+    description: >-
+      Search for Citizens Bank branches and ATMs by zip code, address,
+      or coordinates.
+    apis:
+      - citizens-financial-group:citizens-branch-locator-api
+      - citizens-financial-group:citizens-atm-locator-api
+  - id: citizens.embed-financing
+    name: Embed buy-now-pay-later financing
+    description: >-
+      Integrate Citizens Pay installment financing into merchant
+      checkouts and partner applications.
+    apis:
+      - citizens-financial-group:citizens-pay-api
