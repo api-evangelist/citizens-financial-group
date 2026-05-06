@@ -4,156 +4,69 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Citizens Financial Group
 providerId: citizens-financial-group
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: false
 tags:
   - Banking
-  - Buy Now Pay Later
   - Financial Services
-  - FDX
-  - Locator
-  - Open Banking
   - Payments
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+  - Open Banking
+  - FDX
+description: Citizens Financial Group is a US bank holding company (Citizens Bank). It exposes
+  account, payments, and consumer-data APIs to vetted FinTech and corporate partners through its
+  developer portal and FDX-aligned data-sharing program. Per-API pricing is not publicly published;
+  commercial terms flow through master agreements covering retail banking, commercial banking, and
+  data-sharing partnerships.
+notes: No public per-API price list. Replace with negotiated terms once available. This repo overlaps
+  with citizens-financial; both describe the same legal entity.
+sources:
+  - https://www.citizensbank.com
+  - https://investor.citizensbank.com
 plans:
-  - id: citizens-financial-group-free
-    name: Free
+  - id: citizens-financial-group-developer-sandbox
+    name: Citizens Developer Sandbox
     type: freemium
-    description: Free entry tier for the Citizens Financial Group API surface. Intended for evaluation,
-      prototyping, and low-volume integrations. Real limits and pricing must be reconciled with the provider's
-      published plan documentation.
+    description: Free sandbox access for vetted FinTech and corporate partners to evaluate Citizens
+      APIs (FDX-aligned account aggregation, payments, locator). Production access requires a
+      commercial / data-sharing agreement.
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Citizens Open Banking API
-      - name: Citizens Accounts API
-      - name: Citizens Statements API
-      - name: Citizens ATM Locator API
-      - name: Citizens Branch Locator API
-      - name: Citizens Pay API
-  - id: citizens-financial-group-pro
-    name: Professional
-    type: paid
-    description: Production tier for Citizens Financial Group. Provides higher quotas, priority support,
-      and access to the broader API portfolio. Pricing placeholder; align with the provider's pricing
-      page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
+      - label: Sandbox access
+        name: sandbox
+        type: subscription
+        metric: month
         limit: -1
         timeFrame: month
-        geo: global
-        domains: []
-        unit: 1000
-        price: TBD
+        geo: US
+        unit: 1
+        price: '0.00'
         userMultiplied: false
     elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Citizens Open Banking API
-      - name: Citizens Accounts API
-      - name: Citizens Statements API
-      - name: Citizens ATM Locator API
-      - name: Citizens Branch Locator API
-      - name: Citizens Pay API
-  - id: citizens-financial-group-enterprise
-    name: Enterprise
+      - name: Sandbox API access
+      - name: FDX-aligned schemas
+      - name: OAuth 2.0 / FAPI authentication flows
+  - id: citizens-financial-group-partner-production
+    name: Citizens Partner / Commercial Production
     type: enterprise
-    description: Custom-negotiated tier for Citizens Financial Group. Includes dedicated capacity, contractual
-      SLAs, security review, data residency options, and named technical account management.
+    description: Production API access for FinTech aggregators (FDX), Buy Now Pay Later partners, and
+      commercial banking customers. Pricing rolls into the customer's broader Citizens commercial
+      banking or data-sharing agreement.
     entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
+      - label: Negotiated commercial terms
+        name: enterprise
+        type: subscription
+        metric: contract
         limit: -1
-        timeFrame: month
-        geo: configurable
-        domains: []
+        timeFrame: year
+        geo: US
         unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
+        price: contact Citizens partnerships / commercial banking
         userMultiplied: false
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Citizens Open Banking API
-      - name: Citizens Accounts API
-      - name: Citizens Statements API
-      - name: Citizens ATM Locator API
-      - name: Citizens Branch Locator API
-      - name: Citizens Pay API
+      - name: FDX consumer-data sharing APIs
+      - name: Account & balance reporting
+      - name: Payments APIs (ACH, Wire, RTP)
+      - name: Branch / ATM locator APIs
+      - name: Buy Now Pay Later partner APIs
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
