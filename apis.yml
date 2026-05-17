@@ -145,13 +145,13 @@ common:
     url: https://investor.citizensbank.com/
   - type: Open Banking Announcement
     url: https://investor.citizensbank.com/about-us/newsroom/latest-news/2025/2025-03-27.aspx
-  - type: Privacy Policy
+  - type: PrivacyPolicy
     url: https://www.citizensbank.com/account-safeguards/privacy.aspx
-  - type: Terms of Service
+  - type: TermsOfService
     url: https://www.citizensbank.com/customer-service/online-banking-service-agreement.aspx
   - type: Support
     url: https://www.citizensbank.com/customer-service/overview.aspx
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/citizens-financial-group-context.jsonld
   - type: Spectral
     url: rules/citizens-financial-group-rules.yml
