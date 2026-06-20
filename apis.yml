@@ -37,7 +37,7 @@ apis:
       - FDX
       - Open Banking
       - Transactions
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/
     properties:
       - url: https://developer.citizensbank.com/
@@ -57,7 +57,7 @@ apis:
       - Balances
       - Banking
       - Transactions
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/api
     properties:
       - url: https://developer.citizensbank.com/api
@@ -73,7 +73,7 @@ apis:
       - Banking
       - Documents
       - Statements
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/api
     properties:
       - url: https://developer.citizensbank.com/api
@@ -88,7 +88,7 @@ apis:
       - ATM
       - Geo Search
       - Locator
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/
     properties:
       - url: https://developer.citizensbank.com/
@@ -103,7 +103,7 @@ apis:
       - Branch
       - Geo Search
       - Locator
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/
     properties:
       - url: https://developer.citizensbank.com/
@@ -120,7 +120,7 @@ apis:
       - Citizens Pay
       - Embedded Finance
       - Lending
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer-citizenspay.citizensbank.com/
     properties:
       - url: https://developer-citizenspay.citizensbank.com/
