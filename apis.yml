@@ -131,6 +131,8 @@ apis:
       exposes APIs for merchant integration, underwriting, and
       installment-loan lifecycle management.
 common:
+  - type: DomainSecurity
+    url: security/citizens-financial-group-domain-security.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/rbs-citizens-financial-group
   - type: Website
