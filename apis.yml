@@ -23,6 +23,14 @@ specificationVersion: '0.23'
 tags:
   - Banking
   - Buy Now Pay Later
+  - Financial-Services
+  - FDX
+  - Locator
+  - Open Banking
+  - Payments
+tags_raw:
+  - Banking
+  - Buy Now Pay Later
   - Financial Services
   - FDX
   - Locator
@@ -45,6 +53,12 @@ apis:
   - aid: citizens-financial-group:citizens-open-banking-api
     name: Citizens Open Banking API
     tags:
+      - Account
+      - Balances
+      - FDX
+      - Open Banking
+      - Transaction
+    tags_raw:
       - Accounts
       - Balances
       - FDX
@@ -66,6 +80,11 @@ apis:
   - aid: citizens-financial-group:citizens-accounts-api
     name: Citizens Accounts API
     tags:
+      - Account
+      - Balances
+      - Banking
+      - Transaction
+    tags_raw:
       - Accounts
       - Balances
       - Banking
