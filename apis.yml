@@ -29,7 +29,7 @@ created: '2026-03-23'
 modified: '2026-04-23'
 type: Index
 access: 3rd-Party
-position: Consumer
+position: Consuming
 specificationVersion: '0.23'
 tags:
   - Banking
