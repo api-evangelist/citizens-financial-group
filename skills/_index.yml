@@ -1,0 +1,74 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  Packaged from the 12 contracts harvested into openapi/ on 2026-09-05 and the four Citizens API
+  user guides at https://developer.citizensbank.com/content/qut/. Every operation named in every
+  skill is a real operationId present in a published Citizens contract; where the contract declares
+  no operationId the skill names the HTTP method and path instead and says so. Citizens publishes no
+  AGENTS.md, no skills directory and no llms.txt - these are authored by API Evangelist.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+skill_count: 5
+grounding:
+  operation_ids_invented: 0
+  note: >-
+    Eight of the twelve Citizens contracts declare no operationIds at all (both FDX Accounts, both
+    FDX Statements, both Authorize, and the non-postal-code paths on both locators). Skills cover the
+    four contracts that do name operations, plus the locators via their two named operations. No
+    skill was written against an invented identifier.
+skills:
+  - name: citizens-initiate-payment
+    file: citizens-financial-group-initiate-payment.md
+    api: Citizens Payments API v3.1.11
+    operations: [checkParticipantStatus, initiatePayment, retrievePaymentStatus]
+    consequence: high - moves money, no reversal operation is published
+    covers: >-
+      RTP and ACH disbursement, the paymentId duplicate guard (PMT1003), Nacha SEC code rules, the
+      ACH prenote rehearsal, and why the final outcome is only available from the status query.
+  - name: citizens-validate-payee-account
+    file: citizens-financial-group-validate-payee-account.md
+    api: Citizens Account Validation API v1.0.13
+    operations: [getAccountInquiry, getAccountInquiryByRefId]
+    consequence: billable - $1.25 per successful validation
+    covers: >-
+      Payee verification before an irrevocable payment, the three-read cap on status (AV-4001), the
+      24-hour auto-cancel window, and the per-scheme bank identifier formats (AV-6001..AV-6010).
+  - name: citizens-transfer-between-own-accounts
+    file: citizens-financial-group-transfer-between-own-accounts.md
+    api: Citizens Account Transfer API v1.0.6
+    operations: [initiateTransfer]
+    consequence: high - moves money, no duplicate protection and no reversal
+    covers: >-
+      Same-day internal transfer, the absence of any idempotency mechanism or status lookup, and how
+      to treat an ambiguous timeout.
+  - name: citizens-report-balances-and-transactions
+    file: citizens-financial-group-report-balances-and-transactions.md
+    api: Citizens Information Reporting API v1.0.16
+    operations: [getAccountList, getAccountDetails, getTransactions]
+    consequence: read-only
+    covers: >-
+      The only paginated surface in the Citizens estate, the 206 partial-content trap on batch
+      balance queries, and nextKey cursoring on transactions.
+  - name: citizens-find-atm-or-branch
+    file: citizens-financial-group-find-atm-or-branch.md
+    api: Citizens ATM Locator v1.0.10 and Branch Locator v1.0.10
+    operations: [findAtmsByPostalCode, findBranchesByPostalCode]
+    consequence: read-only
+    covers: >-
+      The only Citizens surface reachable without OAuth, its separate Partner-ID credential family,
+      its sandbox-only publication, and the backslash path-template defect in both contracts.
+shared_rules:
+  auth: authentication/citizens-financial-group-authentication.yml
+  scopes: scopes/citizens-financial-group-scopes.yml
+  conventions: conventions/citizens-financial-group-conventions.yml
+  errors: errors/citizens-financial-group-error-codes.yml
+  decline_codes: errors/citizens-financial-group-decline-codes.yml
+  rate_limits: rate-limits/citizens-financial-group-rate-limits.yml
+  sandbox: sandbox/citizens-financial-group-sandbox.yml
+  onboarding_note: >-
+    No Citizens API is self-serve. An Implementation Manager provisions IP allowlisting, mTLS keys
+    and portal credentials, and sandbox testing is mandatory before production. An agent cannot
+    obtain access to any of these surfaces on its own.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

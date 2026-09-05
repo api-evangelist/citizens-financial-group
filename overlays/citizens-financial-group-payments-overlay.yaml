@@ -1,0 +1,52 @@
+overlay: 1.0.0
+info:
+  title: Citizens Payments API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is quoted from a Citizens-published document
+    named in the action description.
+extends: citizens-financial-group-payments-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/commercial-banking/api/payments-v3
+- target: $.paths['/participant-status/query'].post
+  description: Tag the operation. The published contract declares no tags at all, so every operation is untagged
+    in the portal explorer.
+  update:
+    tags:
+    - Payments
+- target: $.paths['/initiate-payment'].post
+  description: Tag the operation and record the duplicate-key semantics published in the user guide (PMT1003) and
+    the absence of any reversal path.
+  update:
+    tags:
+    - Payments
+    x-idempotency:
+      mechanism: client-assigned paymentId, max 15 chars
+      on-replay: 400 PMT1003 - "paymentId provided in this request has already been processed"
+      header: null
+      source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+    x-reversibility:
+      reversal-operation: null
+      window: null
+      note: No cancel, void or recall operation is published. For RTP the accept/reject outcome must be read from
+        retrievePaymentStatus.
+- target: $.paths['/payment-status/query'].post
+  description: Tag the operation and point at the RTP reject-code vocabulary carried in rejectCode.
+  update:
+    tags:
+    - Payments
+    x-reject-codes: errors/citizens-financial-group-decline-codes.yml (85 codes, ISO 20022 external status reason
+      codes)
+- target: $.components.securitySchemes.OAuth2
+  description: Record the callable token endpoints published in the user guide; the contract names a non-resolving
+    .internal. host.
+  update:
+    x-token-endpoint-production: https://apis.citizensbank.com/as/token.oauth2
+    x-token-endpoint-sandbox: https://sandboxapis.citizensbank.com/as/token.oauth2
+    x-client-authentication: private_key_jwt over mTLS
+    x-profile: FAPI 1.0 Part 2 Advanced (self-declared)

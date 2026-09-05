@@ -4,72 +4,159 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Citizens Financial Group
 providerId: citizens-financial-group
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-09-05'
+generated: '2026-09-05'
+method: searched
+source: >-
+  Plan names, tiers and rate limits read from the Citizens API Developer Portal product pages on
+  2026-09-05 (https://developer.citizensbank.com/product and
+  https://sandboxdeveloper.citizensbank.com/product). The one published unit price is from
+  https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf.
+reconciled: true
 tags:
   - Banking
   - Financial Services
   - Payments
   - Open Banking
   - FDX
-description: Citizens Financial Group is a US bank holding company (Citizens Bank). It exposes
-  account, payments, and consumer-data APIs to vetted FinTech and corporate partners through its
-  developer portal and FDX-aligned data-sharing program. Per-API pricing is not publicly published;
-  commercial terms flow through master agreements covering retail banking, commercial banking, and
-  data-sharing partnerships.
-notes: No public per-API price list. Replace with negotiated terms once available. This repo overlaps
-  with citizens-financial; both describe the same legal entity.
+description: >-
+  Citizens publishes named API plans on its IBM API Connect developer portal - each product carries
+  one or more plans with an advertised rate limit and a subscribe button - but it publishes almost no
+  prices. Every plan page reads "Rate limits" and "Terms and conditions", not a monetary rate.
+  Subscription is request-and-approve, not self-service: the portal routes each request to a Citizens
+  API administrator. The single exception is the Account Validation API, where the user guide states
+  a per-transaction price outright.
+notes: >-
+  plan_count below counts distinct published portal plans across both environments. Commercial terms
+  for production access roll into the client's Citizens commercial banking or data-sharing agreement
+  and are not published.
 sources:
-  - https://www.citizensbank.com
-  - https://investor.citizensbank.com
+  - https://developer.citizensbank.com/product
+  - https://sandboxdeveloper.citizensbank.com/product
+  - https://developer.citizensbank.com/support
+  - https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+plan_count: 11
+published_prices:
+  - item: Account Validation
+    price: '1.25'
+    currency: USD
+    unit: per validation
+    conditions: >-
+      "A charge of $1.25 per validation will be incurred. If an account is unable to be found, no
+      charge will be applied."
+    source: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
 plans:
-  - id: citizens-financial-group-developer-sandbox
-    name: Citizens Developer Sandbox
-    type: freemium
-    description: Free sandbox access for vetted FinTech and corporate partners to evaluate Citizens
-      APIs (FDX-aligned account aggregation, payments, locator). Production access requires a
-      commercial / data-sharing agreement.
-    entries:
-      - label: Sandbox access
-        name: sandbox
-        type: subscription
-        metric: month
-        limit: -1
-        timeFrame: month
-        geo: US
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Sandbox API access
-      - name: FDX-aligned schemas
-      - name: OAuth 2.0 / FAPI authentication flows
-  - id: citizens-financial-group-partner-production
-    name: Citizens Partner / Commercial Production
-    type: enterprise
-    description: Production API access for FinTech aggregators (FDX), Buy Now Pay Later partners, and
-      commercial banking customers. Pricing rolls into the customer's broader Citizens commercial
-      banking or data-sharing agreement.
-    entries:
-      - label: Negotiated commercial terms
-        name: enterprise
-        type: subscription
-        metric: contract
-        limit: -1
-        timeFrame: year
-        geo: US
-        unit: 1
-        price: contact Citizens partnerships / commercial banking
-        userMultiplied: false
-    elements:
-      - name: FDX consumer-data sharing APIs
-      - name: Account & balance reporting
-      - name: Payments APIs (ACH, Wire, RTP)
-      - name: Branch / ATM locator APIs
-      - name: Buy Now Pay Later partner APIs
+  - id: commercial-banking-default
+    name: Default Plan
+    product: commercial-banking
+    environment: production
+    type: request-and-approve
+    apis: [Payments, Account Transfer, Account Validation, Information Reporting]
+    price: not published
+    currency: USD
+    rate_limit: 100 calls per hour
+    url: https://developer.citizensbank.com/product/commercial-banking
+  - id: accounts-limited
+    name: Limited
+    product: accounts
+    environment: production
+    type: request-and-approve
+    apis: [Accounts (FDX v1.0)]
+    price: not published
+    rate_limit: 1 call per second
+    url: https://developer.citizensbank.com/product/accounts
+  - id: accounts-bronze
+    name: Bronze
+    product: accounts
+    environment: production
+    type: request-and-approve
+    apis: [Accounts (FDX v1.0)]
+    price: not published
+    rate_limit: unlimited
+    url: https://developer.citizensbank.com/product/accounts
+  - id: accounts-silver
+    name: Silver
+    product: accounts
+    environment: production
+    type: request-and-approve
+    apis: [Accounts (FDX v1.0)]
+    price: not published
+    rate_limit: unlimited
+    url: https://developer.citizensbank.com/product/accounts
+  - id: accounts-gold
+    name: Gold
+    product: accounts
+    environment: production
+    type: request-and-approve
+    apis: [Accounts (FDX v1.0)]
+    price: not published
+    rate_limit: unlimited
+    url: https://developer.citizensbank.com/product/accounts
+  - id: statements-platinum
+    name: Platinum
+    product: statements
+    environment: production
+    type: request-and-approve
+    apis: [Statements (FDX v1.0)]
+    price: not published
+    rate_limit: 3 calls per second
+    url: https://developer.citizensbank.com/product/statements
+  - id: statements-gold
+    name: GOLD
+    product: statements
+    environment: production
+    type: request-and-approve
+    apis: [Statements (FDX v1.0)]
+    price: not published
+    rate_limit: 1 call per second
+    url: https://developer.citizensbank.com/product/statements
+  - id: identity-sandbox
+    name: Sandbox
+    product: Identity
+    environment: production portal
+    type: request-and-approve
+    apis: [Authorize]
+    price: not published
+    rate_limit: 100 calls per hour
+    url: https://developer.citizensbank.com/product/88
+  - id: sandbox-accounts-default
+    name: DEFAULT
+    product: Accounts
+    environment: sandbox
+    type: request-and-approve
+    apis: [Accounts (FDX v2.1)]
+    price: not published
+    rate_limit: 1000 calls per hour
+    url: https://sandboxdeveloper.citizensbank.com/product/124
+  - id: sandbox-marketing-default
+    name: DEFAULT
+    product: Marketing
+    environment: sandbox
+    type: request-and-approve
+    apis: [ATM Locator, Branch Locator]
+    price: not published
+    rate_limit: 1000 calls per hour
+    url: https://sandboxdeveloper.citizensbank.com/product/127
+  - id: sandbox-statements-gold
+    name: GOLD
+    product: statements
+    environment: sandbox
+    type: request-and-approve
+    apis: [Statements (FDX v2.1)]
+    price: not published
+    rate_limit: unlimited
+    url: https://sandboxdeveloper.citizensbank.com/product/statements
+commercial_model:
+  self_service: false
+  onboarding: >-
+    An Implementation Manager runs a kickoff, collects security contacts, client IPs, the mTLS public
+    key and a JWKS endpoint; production access follows sandbox sign-off and a mutually agreed go-live
+    date.
+  contracting: >-
+    API charges are not separately listed. Payments settle as underlying ACH / RTP / wire transaction
+    fees and account service charges under the client's commercial banking agreement; Account
+    Validation is the one surface with a published per-call price.
+  contact: https://www.citizensbank.com/corporate-finance/overview.aspx
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

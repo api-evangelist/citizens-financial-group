@@ -1,0 +1,1618 @@
+generated: '2026-09-05'
+method: derived
+source: Derived from components.schemas / definitions $ref links and id-reference field names in the 12 contracts
+  under openapi/_original/.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+entity_count: 96
+relationship_count: 88
+key_identifiers:
+- name: paymentId
+  domain: Payments
+  owner: consumer-assigned
+  max_length: 15
+  note: Must be unique per initiate-payment; a replay is rejected with PMT1003.
+- name: bankReferenceNumber
+  domain: Payments
+  owner: Citizens-assigned
+  note: The bank assigned transaction id, e.g. US24100482608794.
+- name: networkInstructionId
+  domain: Payments
+  owner: RTP/ACH network-assigned
+  note: The network assigned payment reference number.
+- name: referenceId
+  domain: Account Validation
+  owner: Citizens-assigned
+  note: Returned by POST /initiation and used to poll GET /status; status can be requested up to three times after
+    completion.
+- name: accountId
+  domain: FDX Accounts / Statements
+  owner: Citizens-assigned
+  note: Path parameter on every FDX account and statement resource.
+- name: routingNumber
+  domain: Payments / Branch Locator
+  owner: ABA
+  note: Nine-digit ABA routing number; also the lookup key on GET /routingnumber/{routingnumber}.
+entities:
+- entity: AccountTransferResponse
+  apis:
+  - Account Transfer
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: AuthorizationHeader
+  apis:
+  - Account Transfer
+  - Account Validation
+  - Information Reporting
+  - Payments
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  - openapi/_original/citizens-account-validation-v1.json
+  - openapi/_original/citizens-information-reporting-v1.json
+  - openapi/_original/citizens-payments-v3.json
+  fields: []
+  identifiers: []
+- entity: AccountTransferRequest
+  apis:
+  - Account Transfer
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  fields:
+  - fromAccountNumber
+  - toAccountNumber
+  - amount
+  - memo
+  identifiers:
+  - fromAccountNumber
+  - toAccountNumber
+- entity: AccountTransferData
+  apis:
+  - Account Transfer
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  fields:
+  - transactionId
+  - confirmationNumber
+  identifiers:
+  - transactionId
+  - confirmationNumber
+- entity: ErrorResponse401
+  apis:
+  - Account Transfer
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: ErrorResponse400
+  apis:
+  - Account Transfer
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: ErrorResponse
+  apis:
+  - Account Transfer
+  - Account Validation
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-account-transfer-v1.json
+  - openapi/_original/citizens-account-validation-v1.json
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: UnauthorizedRequestErrorResponse
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: UnauthorizedErrorResponse
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: InternalServerErrorResponse
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - result
+  - source
+  - requestId
+  - errorDetails
+  identifiers:
+  - requestId
+- entity: AccountIdentifier
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - businessName
+  - accountNumber
+  - accountType
+  - country
+  identifiers:
+  - accountNumber
+- entity: AccountStatusInquiryRequest
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - accountIdentifier
+  - bankIdentifier
+  identifiers:
+  - accountIdentifier
+  - bankIdentifier
+- entity: BankIdentifier
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - idType
+  - idValue
+  identifiers: []
+- entity: AccountInquiryResponse
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: AccountInquiryInitiateResponse
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: inline_response_200
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields: []
+  identifiers: []
+- entity: ErrorResponse_errorDetails
+  apis:
+  - Account Validation
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - code
+  - messageDetail
+  - description
+  identifiers: []
+- entity: UnauthorizedRequestErrorResponse_errorDetails
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - code
+  - messageDetail
+  identifiers: []
+- entity: InternalServerErrorResponse_errorDetails
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - code
+  - messageDetail
+  identifiers: []
+- entity: AccountInquiryResponse_data_referenceIdentifier
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - referenceId
+  identifiers:
+  - referenceId
+- entity: AccountInquiryResponse_data_inquiryStatus
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - accountNumber
+  - routingNumber
+  - accountName
+  - accountStatus
+  - accountStatusMessage
+  - accountStatusCode
+  - nameMatchStatus
+  identifiers:
+  - accountNumber
+  - routingNumber
+- entity: AccountInquiryResponse_data
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - referenceIdentifier
+  - inquiryStatus
+  identifiers:
+  - referenceIdentifier
+- entity: AccountInquiryInitiateResponse_data
+  apis:
+  - Account Validation
+  specs:
+  - openapi/_original/citizens-account-validation-v1.json
+  fields:
+  - referenceIdentifier
+  identifiers:
+  - referenceIdentifier
+- entity: Account
+  apis:
+  - Accounts
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - type
+  - accountType
+  - accountNumber
+  - routingNumber
+  - accountName
+  - isRealTimeAccount
+  identifiers:
+  - accountNumber
+  - routingNumber
+- entity: AccountDescriptor
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - accountId
+  - nickname
+  - accountType
+  - status
+  - accountNumberDisplay
+  identifiers:
+  - accountId
+- entity: AccountDescriptorList
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - accountDescriptor
+  identifiers: []
+- entity: Accounts
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - accounts
+  identifiers: []
+- entity: DepositAccount
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Currency
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - currencyCode
+  identifiers: []
+- entity: CurrencyCode
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Error
+  apis:
+  - Accounts
+  - Payments
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - code
+  - message
+  - result
+  - source
+  - errorDetails
+  identifiers: []
+- entity: UniqueIdentifier
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Number
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Timestamp
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: AccountStatus
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: AccountType
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: PageMetadata
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields:
+  - nextOffset
+  - prevOffset
+  - totalElements
+  identifiers: []
+- entity: PageMetadataLinks
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields:
+  - next
+  - prev
+  identifiers: []
+- entity: PaginatedArray
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields:
+  - page
+  - links
+  identifiers: []
+- entity: HateoasLink
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields:
+  - href
+  - action
+  - rel
+  - types
+  identifiers: []
+- entity: ContentTypes
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Transactions
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Transaction
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - accountId
+  - transactionId
+  - referenceTransactionId
+  - postedTimestamp
+  - transactionTimestamp
+  - description
+  - memo
+  - debitCreditMemo
+  - category
+  - status
+  - amount
+  identifiers:
+  - accountId
+  - transactionId
+  - referenceTransactionId
+- entity: String255
+  apis:
+  - Accounts
+  - Statements
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: String64
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: DepositTransactionType
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: DepositTransaction
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: AccountContact
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - holders
+  - emails
+  - addresses
+  - telephones
+  identifiers: []
+- entity: AccountPaymentNetwork
+  apis:
+  - Accounts
+  specs:
+  - openapi/_original/citizens-accounts-fdx-v1.json
+  - openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+  fields:
+  - bankId
+  - identifier
+  - identifierType
+  - type
+  - transferIn
+  - transferOut
+  identifiers:
+  - bankId
+- entity: Address
+  apis:
+  - ATM Locator
+  - Branch Locator
+  - Payments
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - line1
+  - city
+  - Warwick
+  - state
+  - postalCode
+  - country
+  - line2
+  identifiers: []
+- entity: Atm
+  apis:
+  - ATM Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  fields:
+  - features
+  identifiers: []
+- entity: AtmsDetails
+  apis:
+  - ATM Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  fields:
+  - locationNumber
+  - locationName
+  - phoneNumber
+  - latitude
+  - longitude
+  - cashDenomination
+  - routingNumber
+  - address
+  - atm
+  identifiers:
+  - locationNumber
+  - phoneNumber
+  - routingNumber
+- entity: GetLocationsResponse
+  apis:
+  - ATM Locator
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - locationDetails
+  - error
+  - numberOfLocations
+  identifiers: []
+- entity: LocationError
+  apis:
+  - ATM Locator
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - errorMessage
+  - errorNumber
+  identifiers:
+  - errorNumber
+- entity: Brand
+  apis:
+  - ATM Locator
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - BrandName
+  - ATM
+  - brandName
+  - atm
+  - Branch
+  identifiers: []
+- entity: SearchByPostalResponse
+  apis:
+  - ATM Locator
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - data
+  identifiers: []
+- entity: SearchByPostalResponseData
+  apis:
+  - ATM Locator
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-atm-locator-v1-sandbox.json
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - brand
+  identifiers: []
+- entity: Branch
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - features
+  - operatingHours
+  - driveupWindowHours
+  identifiers: []
+- entity: BranchDetails
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - locationNumber
+  - locationName
+  - phoneNumber
+  - latitude
+  - longitude
+  - cashDenomination
+  - routingNumber
+  - address
+  - branch
+  identifiers:
+  - locationNumber
+  - phoneNumber
+  - routingNumber
+- entity: DriveupWindowHour
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - dayOfWeek
+  - openingTime
+  - closingTime
+  identifiers: []
+- entity: OperatingHour
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - dayOfWeek
+  - openingTime
+  - closingTime
+  identifiers: []
+- entity: SearchBranchResponse
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - data
+  - error
+  identifiers: []
+- entity: SearchBranchResponseData
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - Brand
+  identifiers: []
+- entity: Location
+  apis:
+  - Branch Locator
+  specs:
+  - openapi/_original/citizens-branch-locator-v1-sandbox.json
+  fields:
+  - city
+  - postalCode
+  - state
+  - latitude
+  - longitude
+  - routingNumber
+  - radius
+  - isBranch
+  - isATM
+  - isOpenNow
+  - features
+  identifiers:
+  - routingNumber
+- entity: AccountDetailRequest
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - accountNumber
+  - routingNumber
+  identifiers:
+  - accountNumber
+  - routingNumber
+- entity: AccountListResponseData
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: BalanceInquiryResponseData
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: BalanceInquiryResponseData2
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: AccountDetail
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields: []
+  identifiers: []
+- entity: AccountListQueryResponse
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - accountList
+  - totalRows
+  - totalPages
+  - rowsPerPage
+  identifiers: []
+- entity: AccountTransactionRequest
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - accountNumber
+  - routingNumber
+  - startRangeOfDate
+  - endRangeOfDate
+  - limit
+  - nextKey
+  identifiers:
+  - accountNumber
+  - routingNumber
+- entity: AccountTransactionResponse
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - message
+  - description
+  - requestId
+  - requestTime
+  - data
+  - status
+  identifiers:
+  - requestId
+- entity: TransactionDetail
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - type
+  - description
+  - transactionId
+  - transactionStatus
+  - postedDate
+  - transactionDate
+  - amount
+  - availableBalance
+  - paymentReferenceNumber
+  - commercialCode
+  - memoDetails
+  identifiers:
+  - transactionId
+  - paymentReferenceNumber
+- entity: TransactionDetail_inner_baiMemo_memoDetails
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - key
+  - value
+  identifiers: []
+- entity: TransactionDetail_inner_baiMemo
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - baiCode
+  - memoDetails
+  identifiers: []
+- entity: AccountTransactionResponse_data
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - accountNumber
+  - transactions
+  identifiers:
+  - accountNumber
+- entity: TransactionDetail_memoDetails
+  apis:
+  - Information Reporting
+  specs:
+  - openapi/_original/citizens-information-reporting-v1.json
+  fields:
+  - MEMO DETAIL
+  identifiers: []
+- entity: ParticipantStatusQuery
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - routingNumber
+  - paymentType
+  identifiers:
+  - routingNumber
+- entity: ParticipantStatusSummary
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - routingNumber
+  - paymentType
+  - inNetwork
+  - available
+  - additionalInformation
+  - participantName
+  - eligibleServices
+  identifiers:
+  - routingNumber
+- entity: PaymentInitiationRequest
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - paymentId
+  - paymentAccountInformation
+  - counterpartyAccountInformation
+  - amount
+  - memo
+  - paymentType
+  - rtpDetails
+  - achDetails
+  identifiers:
+  - paymentId
+- entity: PaymentAccountInformation
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - routingNumber
+  - accountNumber
+  identifiers:
+  - routingNumber
+  - accountNumber
+- entity: CounterpartyAccountInformation
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - routingNumber
+  - accountNumber
+  identifiers:
+  - routingNumber
+  - accountNumber
+- entity: Debtor
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - name
+  - postalAddress
+  identifiers: []
+- entity: UltimateDebtor
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - name
+  - id
+  - postalAddress
+  identifiers:
+  - id
+- entity: UltimateCreditor
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - name
+  - id
+  - postalAddress
+  identifiers:
+  - id
+- entity: CounterpartyAddressInformation
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - name
+  - id
+  - postalAddress
+  identifiers:
+  - id
+- entity: CounterpartyInformation
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - counterpartyAccountType
+  - counterpartyName
+  identifiers: []
+- entity: RtpDetails
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - debtor
+  - ultimateDebtor
+  - ultimateCreditor
+  - counterpartyAddressInformation
+  identifiers: []
+- entity: AchDetails
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - standardEntryClassCode
+  - companyIdentification
+  - companyName
+  - companyDescriptiveDate
+  - effectiveEntryDate
+  - prenote
+  - companyDiscretionaryData
+  - companyEntryDescription
+  - counterpartyInformation
+  - identificationNumber
+  - addenda
+  - paymentTypeCode
+  identifiers:
+  - identificationNumber
+- entity: PaymentInitiationResponse
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - paymentId
+  - paymentStatus
+  - receivedDateTime
+  identifiers:
+  - paymentId
+- entity: PaymentStatusRequest
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - paymentId
+  - paymentType
+  identifiers:
+  - paymentId
+- entity: PaymentStatusResponse
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - paymentId
+  - paymentType
+  - paymentStatus
+  - rejectCode
+  - rejectDescription
+  - receivedDateTime
+  - statusDateTime
+  - bankReferenceNumber
+  - networkInstructionId
+  identifiers:
+  - paymentId
+  - bankReferenceNumber
+  - networkInstructionId
+- entity: Error_errorDetails
+  apis:
+  - Payments
+  specs:
+  - openapi/_original/citizens-payments-v3.json
+  fields:
+  - code
+  - description
+  - messageDetail
+  identifiers: []
+- entity: Statement
+  apis:
+  - Statements
+  specs:
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields:
+  - accountId
+  - statementId
+  - description
+  - status
+  identifiers:
+  - accountId
+  - statementId
+- entity: DocumentStatus
+  apis:
+  - Statements
+  specs:
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+- entity: Statements
+  apis:
+  - Statements
+  specs:
+  - openapi/_original/citizens-statements-fdx-v1.json
+  - openapi/_original/citizens-statements-fdx-v2-sandbox.json
+  fields: []
+  identifiers: []
+relationships:
+- from: ErrorResponse
+  to: ErrorResponse_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: UnauthorizedRequestErrorResponse
+  to: UnauthorizedRequestErrorResponse_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: UnauthorizedErrorResponse
+  to: UnauthorizedRequestErrorResponse_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: InternalServerErrorResponse
+  to: InternalServerErrorResponse_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountStatusInquiryRequest
+  to: AccountIdentifier
+  cardinality: has_one
+  via: accountIdentifier
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountStatusInquiryRequest
+  to: BankIdentifier
+  cardinality: has_one
+  via: bankIdentifier
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountInquiryResponse
+  to: AccountInquiryResponse_data
+  cardinality: has_one
+  via: data
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountInquiryInitiateResponse
+  to: AccountInquiryInitiateResponse_data
+  cardinality: has_one
+  via: data
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountInquiryResponse_data
+  to: AccountInquiryResponse_data_referenceIdentifier
+  cardinality: has_one
+  via: referenceIdentifier
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountInquiryResponse_data
+  to: AccountInquiryResponse_data_inquiryStatus
+  cardinality: has_one
+  via: inquiryStatus
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountInquiryInitiateResponse_data
+  to: AccountInquiryResponse_data_referenceIdentifier
+  cardinality: has_one
+  via: referenceIdentifier
+  spec: openapi/_original/citizens-account-validation-v1.json
+- from: AccountDescriptor
+  to: AccountType
+  cardinality: has_one
+  via: accountType
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: AccountDescriptor
+  to: AccountStatus
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: AccountDescriptorList
+  to: AccountDescriptor
+  cardinality: has_many
+  via: accountDescriptor
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: Accounts
+  to: DepositAccount
+  cardinality: has_many
+  via: accounts
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: Currency
+  to: CurrencyCode
+  cardinality: has_one
+  via: currencyCode
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: next
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: prev
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: PaginatedArray
+  to: PageMetadata
+  cardinality: has_one
+  via: page
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: PaginatedArray
+  to: PageMetadataLinks
+  cardinality: has_one
+  via: links
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: HateoasLink
+  to: ContentTypes
+  cardinality: has_many
+  via: types
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: Transaction
+  to: String255
+  cardinality: has_one
+  via: debitCreditMemo
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: Transaction
+  to: String255
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-accounts-fdx-v1.json
+- from: AccountDescriptor
+  to: AccountType
+  cardinality: has_one
+  via: accountType
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: AccountDescriptor
+  to: AccountStatus
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: AccountDescriptorList
+  to: AccountDescriptor
+  cardinality: has_many
+  via: accountDescriptor
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: Accounts
+  to: DepositAccount
+  cardinality: has_many
+  via: accounts
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: Currency
+  to: CurrencyCode
+  cardinality: has_one
+  via: currencyCode
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: next
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: prev
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: PaginatedArray
+  to: PageMetadata
+  cardinality: has_one
+  via: page
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: PaginatedArray
+  to: PageMetadataLinks
+  cardinality: has_one
+  via: links
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: HateoasLink
+  to: ContentTypes
+  cardinality: has_many
+  via: types
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: Transaction
+  to: String255
+  cardinality: has_one
+  via: debitCreditMemo
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: Transaction
+  to: String255
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+- from: AtmsDetails
+  to: Address
+  cardinality: has_one
+  via: address
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: AtmsDetails
+  to: Atm
+  cardinality: has_one
+  via: atm
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: GetLocationsResponse
+  to: AtmsDetails
+  cardinality: has_many
+  via: locationDetails
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: GetLocationsResponse
+  to: LocationError
+  cardinality: has_one
+  via: error
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: Brand
+  to: Atm
+  cardinality: has_many
+  via: ATM
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: Brand
+  to: Atm
+  cardinality: has_many
+  via: atm
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: SearchByPostalResponse
+  to: SearchByPostalResponseData
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: SearchByPostalResponseData
+  to: Brand
+  cardinality: has_many
+  via: brand
+  spec: openapi/_original/citizens-atm-locator-v1-sandbox.json
+- from: Branch
+  to: OperatingHour
+  cardinality: has_many
+  via: operatingHours
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: Branch
+  to: DriveupWindowHour
+  cardinality: has_many
+  via: driveupWindowHours
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: BranchDetails
+  to: Address
+  cardinality: has_one
+  via: address
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: BranchDetails
+  to: Branch
+  cardinality: has_one
+  via: branch
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: GetLocationsResponse
+  to: BranchDetails
+  cardinality: has_many
+  via: locationDetails
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: GetLocationsResponse
+  to: LocationError
+  cardinality: has_one
+  via: error
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: Brand
+  to: Branch
+  cardinality: has_many
+  via: Branch
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: SearchBranchResponse
+  to: SearchBranchResponseData
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: SearchBranchResponse
+  to: LocationError
+  cardinality: has_one
+  via: error
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: SearchBranchResponseData
+  to: Brand
+  cardinality: has_many
+  via: Brand
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: SearchByPostalResponseData
+  to: Brand
+  cardinality: has_many
+  via: brand
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: SearchByPostalResponse
+  to: SearchByPostalResponseData
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-branch-locator-v1-sandbox.json
+- from: ErrorResponse
+  to: ErrorResponse_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: AccountListResponseData
+  to: AccountListQueryResponse
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: BalanceInquiryResponseData
+  to: AccountDetail
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: BalanceInquiryResponseData2
+  to: AccountDetail
+  cardinality: has_many
+  via: data
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: AccountListQueryResponse
+  to: Account
+  cardinality: has_many
+  via: accountList
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: AccountTransactionResponse
+  to: AccountTransactionResponse_data
+  cardinality: has_one
+  via: data
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: TransactionDetail
+  to: TransactionDetail_memoDetails
+  cardinality: has_many
+  via: memoDetails
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: TransactionDetail_inner_baiMemo
+  to: TransactionDetail_inner_baiMemo_memoDetails
+  cardinality: has_many
+  via: memoDetails
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: AccountTransactionResponse_data
+  to: TransactionDetail
+  cardinality: has_many
+  via: transactions
+  spec: openapi/_original/citizens-information-reporting-v1.json
+- from: PaymentInitiationRequest
+  to: PaymentAccountInformation
+  cardinality: has_one
+  via: paymentAccountInformation
+  spec: openapi/_original/citizens-payments-v3.json
+- from: PaymentInitiationRequest
+  to: CounterpartyAccountInformation
+  cardinality: has_one
+  via: counterpartyAccountInformation
+  spec: openapi/_original/citizens-payments-v3.json
+- from: PaymentInitiationRequest
+  to: RtpDetails
+  cardinality: has_one
+  via: rtpDetails
+  spec: openapi/_original/citizens-payments-v3.json
+- from: PaymentInitiationRequest
+  to: AchDetails
+  cardinality: has_one
+  via: achDetails
+  spec: openapi/_original/citizens-payments-v3.json
+- from: Debtor
+  to: Address
+  cardinality: has_one
+  via: postalAddress
+  spec: openapi/_original/citizens-payments-v3.json
+- from: UltimateDebtor
+  to: Address
+  cardinality: has_one
+  via: postalAddress
+  spec: openapi/_original/citizens-payments-v3.json
+- from: UltimateCreditor
+  to: Address
+  cardinality: has_one
+  via: postalAddress
+  spec: openapi/_original/citizens-payments-v3.json
+- from: CounterpartyAddressInformation
+  to: Address
+  cardinality: has_one
+  via: postalAddress
+  spec: openapi/_original/citizens-payments-v3.json
+- from: RtpDetails
+  to: Debtor
+  cardinality: has_one
+  via: debtor
+  spec: openapi/_original/citizens-payments-v3.json
+- from: RtpDetails
+  to: UltimateDebtor
+  cardinality: has_one
+  via: ultimateDebtor
+  spec: openapi/_original/citizens-payments-v3.json
+- from: RtpDetails
+  to: UltimateCreditor
+  cardinality: has_one
+  via: ultimateCreditor
+  spec: openapi/_original/citizens-payments-v3.json
+- from: RtpDetails
+  to: CounterpartyAddressInformation
+  cardinality: has_one
+  via: counterpartyAddressInformation
+  spec: openapi/_original/citizens-payments-v3.json
+- from: AchDetails
+  to: CounterpartyInformation
+  cardinality: has_one
+  via: counterpartyInformation
+  spec: openapi/_original/citizens-payments-v3.json
+- from: Error
+  to: Error_errorDetails
+  cardinality: has_many
+  via: errorDetails
+  spec: openapi/_original/citizens-payments-v3.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: next
+  spec: openapi/_original/citizens-statements-fdx-v1.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: prev
+  spec: openapi/_original/citizens-statements-fdx-v1.json
+- from: PaginatedArray
+  to: PageMetadata
+  cardinality: has_one
+  via: page
+  spec: openapi/_original/citizens-statements-fdx-v1.json
+- from: PaginatedArray
+  to: PageMetadataLinks
+  cardinality: has_one
+  via: links
+  spec: openapi/_original/citizens-statements-fdx-v1.json
+- from: Statement
+  to: DocumentStatus
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-statements-fdx-v1.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: next
+  spec: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+- from: PageMetadataLinks
+  to: HateoasLink
+  cardinality: has_one
+  via: prev
+  spec: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+- from: PaginatedArray
+  to: PageMetadata
+  cardinality: has_one
+  via: page
+  spec: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+- from: PaginatedArray
+  to: PageMetadataLinks
+  cardinality: has_one
+  via: links
+  spec: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+- from: Statement
+  to: DocumentStatus
+  cardinality: has_one
+  via: status
+  spec: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+render: null
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

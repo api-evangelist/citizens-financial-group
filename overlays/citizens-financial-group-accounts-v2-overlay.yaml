@@ -1,0 +1,80 @@
+overlay: 1.0.0
+info:
+  title: Citizens Accounts (FDX v2.1, sandbox) API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is read from the harvested contract
+    itself or from a Citizens-published page named in the action description.
+extends: citizens-financial-group-accounts-v2-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://sandboxdeveloper.citizensbank.com/product/124/api/100
+    x-apis-io-environment: sandbox
+- target: $.info
+  description: Name the domain standard the contract declares in its own base path, and record the version
+    skew against production.
+  update:
+    x-domain-standard:
+      id: fdx
+      name: Financial Data Exchange (FDX) API
+      version: '2.1'
+      declared-at: $.basePath
+      see: conformance/citizens-financial-group-conformance.yml
+    x-version-skew:
+      sandbox: FDX v2.1 (this contract, Accounts 2.1.5)
+      production: FDX v1.0 (Accounts 1.0.5, https://api.citizensbank.com/fdx/v1.0)
+      note: Citizens publishes no migration note explaining the gap between the two.
+      see: lifecycle/citizens-financial-group-lifecycle.yml
+- target: $.paths['/accounts'].get
+  description: The published contract declares no operationId on any path. Supply a stable identifier; the
+    name is ours, not Citizens'.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: listAccounts
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}'].get
+  description: Supply a stable identifier for the account-detail read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccount
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/transactions'].get
+  description: Supply a stable identifier for the transaction read.
+  update:
+    tags:
+    - Transactions
+    x-apis-io-operation-id: listAccountTransactions
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/contact'].get
+  description: Supply a stable identifier for the account contact read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccountContact
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/payment-networks'].get
+  description: Supply a stable identifier for the payment-networks read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccountPaymentNetworks
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $
+  description: Record that the sandbox is a mandatory stage, not an optional convenience, and the error-contract
+    gap this contract shares with production.
+  update:
+    x-sandbox:
+      mandatory: true
+      portal: https://sandboxdeveloper.citizensbank.com/
+      see: sandbox/citizens-financial-group-sandbox.yml
+    x-error-contract-gap:
+      declared-status-codes:
+      - '200'
+      note: No 4xx or 5xx response is declared on any operation in this contract.
+      see: errors/citizens-financial-group-error-codes.yml

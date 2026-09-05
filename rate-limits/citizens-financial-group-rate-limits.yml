@@ -4,49 +4,155 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Citizens Financial Group
 providerId: citizens-financial-group
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-09-05'
+generated: '2026-09-05'
+method: searched
+source: >-
+  Plan rate limits read from the Citizens API Developer Portal product pages on 2026-09-05
+  (https://developer.citizensbank.com/product and https://sandboxdeveloper.citizensbank.com/product);
+  exhaustion codes read from the error tables in the Citizens API user guides at
+  https://developer.citizensbank.com/content/qut/.
+reconciled: true
 tags:
   - Banking
   - Financial Services
   - Payments
   - Rate Limiting
-description: Citizens Financial Group APIs are partner-onboarded via a developer portal. Public
-  quantitative rate-limit thresholds are not published; per-second / per-minute limits are documented
-  inside the partner developer portal once production access is provisioned. FDX consumer-data
-  sharing endpoints follow FDX recommended throttle / batch patterns.
-notes: Verify exact thresholds inside Citizens partner documentation after onboarding.
+description: >-
+  Citizens publishes a per-plan rate limit on every API product page in its IBM API Connect developer
+  portal, and each API's user guide names the error code returned on exhaustion. Limits are attached
+  to the plan a subscribed application holds, not to the endpoint. Applications see their own usage
+  against the plan limit under Apps > application > Product Subscriptions in the portal.
+notes: >-
+  These are the limits the portal advertises anonymously. A production plan is assigned during
+  onboarding and may be negotiated in the client's commercial banking agreement; verify the assigned
+  plan in the portal after provisioning.
 sources:
-  - https://www.citizensbank.com
-  - https://financialdataexchange.org
+  - https://developer.citizensbank.com/product
+  - https://developer.citizensbank.com/support
+  - https://sandboxdeveloper.citizensbank.com/product
+  - https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+  - https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+  - https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
 responseCodes:
   throttled: 429
   serviceUnavailable: 503
+responseHeaders:
+  published: false
+  note: >-
+    Citizens publishes no RateLimit-*, X-RateLimit-* or Retry-After header contract. No harvested
+    contract declares a rate-limit response header, and the exhaustion condition is signalled only by
+    the error code in the response body. An agent cannot read remaining quota from a response; it can
+    only read it from the portal UI.
+limit_count: 8
 limits:
-  - name: Sandbox limits
-    scope: app
-    metric: varies
-    limit: see Citizens Developer Portal partner documentation
-  - name: Production limits
-    scope: app/partner
-    metric: varies
-    limit: per partner agreement; documented inside developer portal after onboarding
-  - name: FDX bulk pull patterns
-    scope: aggregator
-    metric: varies
-    limit: follow FDX recommended off-peak batch and event-based update patterns
+  - name: commercial-banking - Default Plan (production)
+    scope: application/plan
+    product: commercial-banking
+    apis: [Payments, Account Transfer, Account Validation, Information Reporting]
+    metric: calls
+    limit: 100
+    window: hour
+    source: https://developer.citizensbank.com/product/commercial-banking
+  - name: accounts - Limited (production)
+    scope: application/plan
+    product: accounts
+    apis: [Accounts (FDX v1.0)]
+    metric: calls
+    limit: 1
+    window: second
+    source: https://developer.citizensbank.com/product/accounts
+  - name: accounts - Bronze / Silver / Gold (production)
+    scope: application/plan
+    product: accounts
+    apis: [Accounts (FDX v1.0)]
+    metric: calls
+    limit: unlimited
+    window: n/a
+    source: https://developer.citizensbank.com/product/accounts
+    note: All three tiers are advertised as "unlimited" on the portal; only the Limited tier carries a rate.
+  - name: statements - Platinum (production)
+    scope: application/plan
+    product: statements
+    apis: [Statements (FDX v1.0)]
+    metric: calls
+    limit: 3
+    window: second
+    source: https://developer.citizensbank.com/product/statements
+  - name: statements - GOLD (production)
+    scope: application/plan
+    product: statements
+    apis: [Statements (FDX v1.0)]
+    metric: calls
+    limit: 1
+    window: second
+    source: https://developer.citizensbank.com/product/statements
+  - name: Identity - Sandbox plan
+    scope: application/plan
+    product: Identity (Authorize / IDP)
+    apis: [Authorize]
+    metric: calls
+    limit: 100
+    window: hour
+    source: https://developer.citizensbank.com/product/88
+  - name: Accounts - DEFAULT (sandbox)
+    scope: application/plan
+    product: Accounts
+    apis: [Accounts (FDX v2.1)]
+    metric: calls
+    limit: 1000
+    window: hour
+    source: https://sandboxdeveloper.citizensbank.com/product/124
+  - name: Marketing - DEFAULT (sandbox)
+    scope: application/plan
+    product: Marketing
+    apis: [ATM Locator, Branch Locator]
+    metric: calls
+    limit: 1000
+    window: hour
+    source: https://sandboxdeveloper.citizensbank.com/product/127
+exhaustionCodes:
+  - code: AT-429
+    api: Account Transfer
+    http_status: 429
+    description: The user has sent too many requests in a given time frame (rate limiting).
+    source: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+  - code: IR-429
+    api: Information Reporting
+    http_status: 429
+    description: The user has sent too many requests in a given time frame (rate limiting).
+    source: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+  - code: AV-4001
+    api: Account Validation
+    http_status: null
+    description: You have exceeded the rate limit for the number of status requests.
+    source: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+operationLimits:
+  - operation: getAccountInquiryByRefId (GET /v1/account-validation/status)
+    limit: 3
+    window: per completed inquiry
+    description: >-
+      "Once the Account Validation is completed, the status can be requested up to three times."
+      Exceeding it returns AV-4001.
+    source: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+  - operation: getTransactions (POST /v1/information-reporting/transactions/query)
+    limit: 2000
+    window: per request
+    description: 100 transaction records returned by default; up to 2000 can be requested.
+    source: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
 policies:
   - name: Backoff Strategy
-    description: Implement exponential backoff with jitter on HTTP 429/503 and honor any Retry-After
-      header.
-  - name: FDX schedule alignment
-    description: Aggregators should align bulk consumer-data pulls with FDX-recommended off-peak
-      windows to avoid throttling.
-  - name: OAuth 2.0 / FAPI token handling
-    description: Reuse access tokens until expiry to avoid consuming Authorization-Server rate budget.
+    description: >-
+      Implement exponential backoff with jitter on HTTP 429/503. Citizens publishes no Retry-After
+      header, so the client must own the backoff schedule.
+  - name: Token reuse
+    description: >-
+      Reuse the OAuth access token until expiry; the assertion exp must not exceed 3600 seconds, so a
+      hourly token refresh is the expected pattern.
+  - name: Plan visibility
+    description: >-
+      Per-API usage against the plan limit is visible in the developer portal under
+      Apps > your application > Product Subscriptions.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

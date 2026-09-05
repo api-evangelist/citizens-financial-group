@@ -1,0 +1,335 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The Statement API sandbox enables users to retrieve Citizens Bank customer statements information for Retail flow.",
+    "version": "2.0.5",
+    "title": "Statements",
+    "x-ibm-name": "statements",
+    "x-pathalias": "statements-v2",
+    "x-ibm-summary": ""
+  },
+  "basePath": "/fdx/v2.1",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/accounts/{accountId}/statements": {
+      "get": {
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "Account Identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "oAuth Access token received using consent flow",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "x-fapi-interaction-id",
+            "in": "header",
+            "description": "Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "x-fapi-financial-id",
+            "in": "header",
+            "description": "Identifies the desired financial institution or partners.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "x-customer-user-agent",
+            "in": "header",
+            "description": "Header is designed to only collect statistics on the products using the FDX API data service.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "x-customer-last-logged-time",
+            "in": "header",
+            "description": "Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/Statements"
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/accounts/{accountId}/statements/{statementId}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "Account Identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "statementId",
+            "in": "path",
+            "description": "Statement Identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "oAuth Access token received using consent flow",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "x-fapi-interaction-id",
+            "in": "header",
+            "description": "Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "x-fapi-financial-id",
+            "in": "header",
+            "description": "Identifies the desired financial institution or partners.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "x-customer-user-agent",
+            "in": "header",
+            "description": "Header is designed to only collect statistics on the products using the FDX API data service.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "x-customer-last-logged-time",
+            "in": "header",
+            "description": "Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/String255"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "x-fapi-financial-id": {
+      "description": "Identifies the desired financial institution or partners.",
+      "type": "apiKey",
+      "name": "x-fapi-financial-id",
+      "in": "header",
+      "x-key-type": "client_id"
+    }
+  },
+  "definitions": {
+    "UniqueIdentifier": {
+      "type": "string",
+      "title": "UniqueIdentifier",
+      "maxLength": 256
+    },
+    "Number": {
+      "type": "number",
+      "title": "Number"
+    },
+    "Timestamp": {
+      "type": "string",
+      "title": "Timestamp",
+      "format": "date-time",
+      "description": "UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD</br> <br> Timestamp fields are in ISO 8601 date time format - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z or 2022-12-13"
+    },
+    "AccountType": {
+      "type": "string",
+      "title": "Account Type",
+      "enum": [
+        "CHECKING",
+        "SAVINGS"
+      ]
+    },
+    "PageMetadata": {
+      "type": "object",
+      "properties": {
+        "nextOffset": {
+          "type": "string",
+          "example": "2",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "prevOffset": {
+          "type": "string",
+          "example": "1",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "totalElements": {
+          "type": "integer",
+          "example": 3,
+          "description": "Total number of elements"
+        }
+      },
+      "title": "Page Metadata",
+      "description": "Offset IDs for paginated result sets"
+    },
+    "PageMetadataLinks": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "$ref": "#/definitions/HateoasLink"
+        },
+        "prev": {
+          "$ref": "#/definitions/HateoasLink"
+        }
+      },
+      "title": "Page Metadata Links",
+      "description": "Resource URLs for retrieving next or previous datasets"
+    },
+    "PaginatedArray": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageMetadata"
+        },
+        "links": {
+          "$ref": "#/definitions/PageMetadataLinks"
+        }
+      },
+      "title": "Paginated Array",
+      "description": "Base class for results that may be paginated"
+    },
+    "HateoasLink": {
+      "type": "object",
+      "required": [
+        "href"
+      ],
+      "properties": {
+        "href": {
+          "type": "string",
+          "format": "uri-reference",
+          "example": "https://api.citizensbank.com/fdx/v4/accounts/12345",
+          "description": "URL to invoke the action on the resource"
+        }
+      },
+      "title": "HATEOAS Link",
+      "description": "REST application constraint (Hypermedia As The Engine Of Application State)"
+    },
+    "ContentTypes": {
+      "type": "string",
+      "title": "Content Types",
+      "description": "Supported documented formats",
+      "example": "application/json",
+      "enum": [
+        "image/gif",
+        "image/jpeg",
+        "image/tiff",
+        "image/png",
+        "application/json"
+      ]
+    },
+    "String255": {
+      "type": "string",
+      "title": "String255",
+      "maxLength": 255
+    },
+    "Statement": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "accountId"
+        },
+        "statementId": {
+          "type": "string",
+          "description": "statementId"
+        },
+        "description": {
+          "type": "string",
+          "description": "description"
+        },
+        "status": {
+          "$ref": "#/definitions/DocumentStatus"
+        }
+      },
+      "title": "Statement entity",
+      "description": "Statement info for the account"
+    },
+    "DocumentStatus": {
+      "title": "Document Status",
+      "description": "Defines the status of a document",
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "PROCESSING",
+        "FAILED"
+      ]
+    },
+    "Statements": {
+      "title": "An array of statements",
+      "description": "A paginated array of account statements",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedArray"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "statements": {
+              "type": "array",
+              "description": "An array of Statement, each with its HATEOAS link to retrieve the account statement",
+              "items": {
+                "$ref": "#/definitions/Statement"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "x-ibm-configuration": {
+    "enforced": true,
+    "testable": true,
+    "phase": "realized",
+    "cors": {
+      "enabled": true
+    },
+    "type": "rest",
+    "application-authentication": {
+      "certificate": false
+    },
+    "servers": [
+      {
+        "url": "https://sandboxapi.citizensbank.com/fdx/v2.1",
+        "type": [
+          "production",
+          "development"
+        ]
+      }
+    ]
+  },
+  "host": "sandboxapi.citizensbank.com"
+}

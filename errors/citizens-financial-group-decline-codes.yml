@@ -1,0 +1,373 @@
+generated: '2026-09-05'
+method: searched
+source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf (v1.3, updated 2025-12-11)
+  section 6.4 "RTP Reject Codes".
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+applies_to: Payments API v3 - RTP rail only. ACH returns are not exposed as a code list in the published contract.
+delivery:
+  operation: retrievePaymentStatus (POST /v3/payments/payment-status/query)
+  envelope_fields:
+  - paymentStatus (RECEIVED | IN_PROGRESS | COMPLETED | REJECTED | EXPORTED | ACKNOWLEDGED)
+  - rejectCode
+  - rejectDescription
+  - bankReferenceNumber
+  - networkInstructionId
+  note: For RTP the final accept/reject outcome is NOT available from the initiate-payment response; a subsequent
+    payment-status query is required. Example rejectCode published in the OpenAPI is PMT2005 "Debtor account type
+    invalid".
+masked_to_buyers: Not applicable / not published. Citizens does not document any code that is withheld from the
+  API consumer; the reject code and description are returned verbatim on the payment status response.
+standard:
+  name: ISO 20022 external payment status reason codes
+  note: The majority of these codes (AC02/AC03/AC04/AC06/AC11/AC13/AC14, AG01/AG03, AM02-AM14, BE04-BE17, DS04/DS24,
+    DT04, DUPL, FF02/FF08, MD07, NARR, RC01-RC04, TM01) are ISO 20022 ExternalStatusReason1Code values carried through
+    The Clearing House RTP network. Citizens mixes them with network-specific numeric codes (650, 690, 9909-9964)
+    and its own TK/GF/RF prefixes.
+decline_code_count: 85
+decline_codes:
+- code: TECH
+  meaning: Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: NSF
+  meaning: Turn Down/Insufficient originator funds (NSF)
+  action: Do not retry as-is; the originator has insufficient funds. Fund the account and re-submit under a new
+    paymentId.
+  iso20022_external_reason_code: false
+- code: AC02
+  meaning: Debtor account number is invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: AC03
+  meaning: Creditor account number is invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: AC04
+  meaning: Creditor account number is closed
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: true
+- code: AC06
+  meaning: Creditor account number is blocked
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: true
+- code: AC11
+  meaning: Creditor account currency is invalid or missing
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: AC13
+  meaning: Debtor account type invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: AC14
+  meaning: Creditor account type invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: AG01
+  meaning: Transaction type not supported by FI
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: AG03
+  meaning: Transaction type not supported by FI
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: AGNT
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: AM02
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: AM04
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: AM09
+  meaning: Amount received is not the amount agreed or expected
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: AM12
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: AM13
+  meaning: Max amount exceeded
+  action: Amount exceeds an agreed limit; split the payment or route over ACH.
+  iso20022_external_reason_code: true
+- code: AM14
+  meaning: Transaction amount exceeds limits agreed between FI and client
+  action: Amount exceeds an agreed limit; split the payment or route over ACH.
+  iso20022_external_reason_code: true
+- code: BE04
+  meaning: Required creditor's address is missing/incorrect
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: BE06
+  meaning: Customer is not known
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: true
+- code: BE07
+  meaning: Required debtor's address is missing/incorrect
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: BE10
+  meaning: Debtor country code is missing or invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: BE11
+  meaning: Creditor country code is missing or invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: BE16
+  meaning: Debtor identification code missing or invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: BE17
+  meaning: Creditor identification code missing or invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: DS04
+  meaning: Credit transfer has been rejected due to a technical error.
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: DS24
+  meaning: System Time-out. Transaction did not complete.
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: true
+- code: DT04
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: DUPL
+  meaning: Duplicate Payment
+  action: The payment was already accepted. Query POST /payment-status/query before re-submitting.
+  iso20022_external_reason_code: true
+- code: DS0H
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: FF02
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: FF08
+  meaning: Required End to End Id missing or invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: MD07
+  meaning: Customer is deceased
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: true
+- code: NARR
+  meaning: Other Reason- provided in the Additional Info field.
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: TM01
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: true
+- code: '1100'
+  meaning: Other Reason- provided in the Additional Info field.
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: '650'
+  meaning: Network technical schema error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: '690'
+  meaning: Network technical signature error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: RC01
+  meaning: Invalid routing number (ABA) format
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: RC02
+  meaning: Invalid routing number (ABA)
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: true
+- code: RC03
+  meaning: Debtor routing number (ABA) is unavailable on the RTP network
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: true
+- code: RC04
+  meaning: Creditor routing number (ABA) is unavailable on the RTP network
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: true
+- code: SL03
+  meaning: Token Service did not respond
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: TK01
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK02
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK03
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK04
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK05
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK06
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK07
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: TK08
+  meaning: Token technical error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: NOAT
+  meaning: Receiving customer did not accept
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: true
+- code: '9909'
+  meaning: Switch Error; Unable to process RTPs
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: '9910'
+  meaning: Creditor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9912'
+  meaning: Creditor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9914'
+  meaning: Technical Schema Validation Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: '9934'
+  meaning: Debtor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9941'
+  meaning: Technical Schema Validation Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: '9946'
+  meaning: Debtor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9947'
+  meaning: Creditor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9948'
+  meaning: Switch Error; Unable to process RTPs
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: '9952'
+  meaning: Version incompatibility
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: '9956'
+  meaning: Technical Schema Validation Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: '9957'
+  meaning: Creditor RTP connection unavailable
+  action: Transient network condition; retry later or route over ACH.
+  iso20022_external_reason_code: false
+- code: '9964'
+  meaning: Invalid Participant ID
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: false
+- code: GF002
+  meaning: Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: GF004
+  meaning: Unable to determine the debit account
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: GF011
+  meaning: Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: GQ003
+  meaning: Creditor account number is invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: false
+- code: GQ004
+  meaning: Unable to determine the debit account
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: GQ030
+  meaning: Debit account number is closed
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: false
+- code: GQ031
+  meaning: Creditor account number is closed
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: false
+- code: GQ033
+  meaning: Same account number used for credit and debit account.
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: GQ034
+  meaning: Debtor account number is invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: false
+- code: GQ035
+  meaning: Creditor account number is closed
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: false
+- code: GQ038
+  meaning: Debtor account number is invalid
+  action: Correct the named field and re-submit under a new paymentId.
+  iso20022_external_reason_code: false
+- code: GQ039
+  meaning: Creditor account number is blocked
+  action: Do not retry; the counterparty account cannot receive the payment. Contact the payee.
+  iso20022_external_reason_code: false
+- code: GQ041
+  meaning: Network Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: GQ123
+  meaning: Turn Down/Insufficient originator funds (NSF)
+  action: Do not retry as-is; the originator has insufficient funds. Fund the account and re-submit under a new
+    paymentId.
+  iso20022_external_reason_code: false
+- code: PM003
+  meaning: Payment was rejected by the creditor FI
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: PM017
+  meaning: Payment was rejected by the creditor FI
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+- code: PM107
+  meaning: Duplicate Payment
+  action: The payment was already accepted. Query POST /payment-status/query before re-submitting.
+  iso20022_external_reason_code: false
+- code: RF002
+  meaning: Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: RF003
+  meaning: Technical Error
+  action: Transient or malformed-message condition; retry, and escalate to Citizens Client Services if it persists.
+  iso20022_external_reason_code: false
+- code: UK001
+  meaning: Unknown Error
+  action: See the additional information field on the payment status response.
+  iso20022_external_reason_code: false
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

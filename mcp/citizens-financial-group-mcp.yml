@@ -1,0 +1,90 @@
+generated: '2026-09-05'
+method: derived
+status: candidate
+source: >-
+  Derived from the operations in the 12 contracts under openapi/. Searched 2026-09-05 for a Citizens
+  MCP server - developer.citizensbank.com/mcp returns the portal search page (soft 404), no
+  /.well-known/ai-plugin.json or agent card is served on any Citizens host, and no npm or PyPI
+  package exists. No MCP server is published by Citizens Financial Group.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+note: >-
+  THIS IS A CANDIDATE, NOT A SERVER. Citizens publishes no MCP server, hosted or local. The tools
+  below are what an MCP server over the published Citizens contracts would expose; every one is
+  backed by a real operationId in openapi/. Any deployment would inherit the Citizens access model:
+  OAuth 2.0 private_key_jwt over mTLS, an IP allowlist provisioned at onboarding, and an
+  X-IBM-Client-Id issued by the developer portal - so this cannot be stood up by a third party.
+tools:
+  - name: initiate_payment
+    description: Submit an RTP or ACH payment instruction and receive a payment reference and status.
+    rest: [initiatePayment]
+    api: Payments
+    consequence: high - moves money, and no reversal operation is published
+  - name: get_payment_status
+    description: Retrieve the status of a previously submitted payment, including RTP reject code and description.
+    rest: [retrievePaymentStatus]
+    api: Payments
+    consequence: read-only
+  - name: check_rtp_participant
+    description: Check whether a routing number is in the RTP network and currently able to receive payments.
+    rest: [checkParticipantStatus]
+    api: Payments
+    consequence: read-only
+  - name: initiate_account_transfer
+    description: Initiate a single same-day transfer between the client's own Citizens accounts.
+    rest: [initiateTransfer]
+    api: Account Transfer
+    consequence: high - moves money, no reversal published
+  - name: validate_account
+    description: Validate payee account number, routing number and beneficiary name; returns a reference id.
+    rest: [getAccountInquiry]
+    api: Account Validation
+    consequence: billable - $1.25 per successful validation
+  - name: get_account_validation_status
+    description: Retrieve an account validation result by reference id (max three reads after completion).
+    rest: [getAccountInquiryByRefId]
+    api: Account Validation
+    consequence: read-only
+  - name: list_accounts
+    description: Retrieve the authorized account list for information reporting.
+    rest: [getAccountList]
+    api: Information Reporting
+    consequence: read-only
+  - name: query_balances
+    description: Retrieve balances for authorized deposit accounts.
+    rest: [getAccountDetails]
+    api: Information Reporting
+    consequence: read-only
+  - name: query_transactions
+    description: Retrieve transaction history for an authorized account (100 default, up to 2000 records).
+    rest: [getTransactions]
+    api: Information Reporting
+    consequence: read-only
+  - name: find_atms
+    description: Find Citizens ATMs by postal code, state/city or latitude/longitude.
+    rest: [findAtmsByPostalCode]
+    api: ATM Locator
+    consequence: read-only
+    note: Only the postal-code operation carries an operationId in the published contract; the state/city and lat/long operations are unnamed.
+  - name: find_branches
+    description: Find Citizens branches by postal code, state/city, latitude/longitude or routing number.
+    rest: [findBranchesByPostalCode]
+    api: Branch Locator
+    consequence: read-only
+    note: Only the postal-code operation carries an operationId in the published contract.
+tool_count: 11
+gaps:
+  - >-
+    The FDX Accounts and Statements contracts and the Authorize contract declare no operationIds at
+    all, so their operations cannot be bound to named tools without inventing identifiers. They are
+    deliberately omitted from the tool list rather than given made-up names.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

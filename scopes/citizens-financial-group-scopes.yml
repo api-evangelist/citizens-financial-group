@@ -1,0 +1,66 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Scope strings read from the harvested OpenAPI securitySchemes in openapi/ and from the sample token
+  requests published in the Citizens API user guides (Payments v1.3, Account Transfer v1.0, Account
+  Validation v1.6, Information Reporting v1.6).
+docs: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+authorization:
+  flow: clientCredentials
+  grant_type: client_credentials
+  client_authentication: private_key_jwt over mTLS
+  token_endpoint_production: https://apis.citizensbank.com/as/token.oauth2
+  token_endpoint_sandbox: https://sandboxapis.citizensbank.com/as/token.oauth2
+  note: >-
+    Scopes are requested as a space-delimited `scope` form parameter on the token request. Citizens
+    does not publish a consolidated scope reference page; the list below is the union of every scope
+    string that appears in a published contract or a published sample request.
+
+scopes:
+  - scope: ir:read
+    description: Access to read Information Reporting data (account list, balances, transactions).
+    flows: [clientCredentials]
+    evidence:
+      - openapi/citizens-financial-group-information-reporting-openapi.yml
+      - openapi/citizens-financial-group-payments-openapi.yml
+      - https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+  - scope: av:read
+    description: Access to read Account Validation data.
+    flows: [clientCredentials]
+    evidence:
+      - openapi/citizens-financial-group-account-validation-openapi.yml
+      - https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+  - scope: 'transfer:initiate'
+    description: Access to initiate an internal account transfer.
+    flows: [clientCredentials]
+    evidence:
+      - openapi/citizens-financial-group-account-transfer-openapi.yml
+  - scope: 'Payment:Initiate'
+    description: Submit an RTP or ACH payment instruction.
+    flows: [clientCredentials]
+    evidence:
+      - https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+    note: >-
+      Published only in the user guide's sample token request
+      (--data 'scope=Payment:Initiate Payment:Query'); the Payments OpenAPI declares ir:read instead,
+      which looks like a copy-paste carry-over from Information Reporting.
+  - scope: 'Payment:Query'
+    description: Retrieve participant status and payment status.
+    flows: [clientCredentials]
+    evidence:
+      - https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+
+gaps:
+  - >-
+    The Payments OpenAPI's oauth2 scope map disagrees with the Payments user guide sample request
+    (ir:read vs Payment:Initiate / Payment:Query). Recorded as published; not reconciled.
+  - >-
+    No scope reference page exists on developer.citizensbank.com. Scopes for the FDX Accounts /
+    Statements surface and for Authorize are not published - those contracts declare header key
+    schemes only.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

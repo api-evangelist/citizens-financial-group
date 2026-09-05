@@ -1,0 +1,799 @@
+openapi: 3.0.0
+info:
+  title: Information Reporting
+  description: "The Information Reporting API enables authenticated consumers to programmatically retrieve\
+    \ deposit account and transaction data for Citizens Bank customers. Designed exclusively for Savings\
+    \ and Checking accounts, it offers structured access to account metadata and detailed transaction\
+    \ histories to support use cases such as company finance management, digital banking, and financial\
+    \ reporting. The API enforces FAPI-compliant security standards, including OAuth 2.0 with fine-grained\
+    \ scopes, and delivers responses in standardized JSON format for seamless, secure integration.\n\n\
+    \ The **Information Reporting API** provides the following functionalities:\n \n<br> 1. **Account\
+    \ details Inquiry API**:\n   - Initiates an account balance inquiry by providing account number and\
+    \ an optional routing number.\n   - **Endpoint**: `v1/information-reporting/balance/query` (POST)\n\
+    \   - **Purpose**: To retrieve the balances and status of accounts.\n   \n<br> 2. **Account List Inquiry\
+    \ API**:\n   - Retrieves the list of accounts.\n   - **Endpoint**: `v1/information-reporting/list`\
+    \ (GET)\n   - **Purpose**: To retrieve the list of accounts.\n   \n<br> 3. **Account Transaction Inquiry\
+    \ Status API**:\n   - Retrieves the transaction history for a specific account with in provided start\
+    \ date and end date.\n   - **Endpoint**: `v1/information-reporting/transaction/query` (POST)\n   -\
+    \ **Purpose**: To retrieve the transaction history for a specific account."
+  version: 1.0.16
+  x-ibm-name: information-reporting
+  x-pathalias: informationreporting-v1
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/commercial-banking/api/informationreporting-v1
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+externalDocs:
+  description: API Documentation
+  url: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+servers:
+- url: https://apis.citizensbank.com/v1/information-reporting
+security:
+- client-id: []
+paths:
+  /balance/query:
+    post:
+      tags:
+      - Information Reporting
+      summary: 'Get accounts balances for a authorized Non human Account system identifier '
+      description: The Account Information API to retrieve list account balances associated with the API-User
+        id.
+      operationId: getAccountDetails
+      parameters:
+      - name: x-fapi-trace-id
+        in: header
+        description: Unique request id for each request to make it traceable if needed.
+        required: true
+        style: simple
+        schema:
+          maxLength: 36
+          type: string
+      - name: x-fapi-channel-id
+        in: header
+        description: Identifier used to distinguish between different communication channels or data streams
+          within a client system.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 20
+          type: string
+      - name: Authorization
+        in: header
+        description: OAuth 2.0 Authorization Bearer Token
+        required: true
+        style: simple
+        schema:
+          $ref: '#/components/schemas/AuthorizationHeader'
+        example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: Provide list of accounts with number, type and routing number
+              items:
+                $ref: '#/components/schemas/AccountDetailRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved the list of accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceInquiryResponseData'
+        '206':
+          description: Partially retrieved the list of accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceInquiryResponseData2'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /list:
+    get:
+      tags:
+      - Information Reporting
+      summary: 'Get accounts list for a authorized Non human Account system identifier '
+      description: The Account Information API to retrieve list accounts associated with the API-User
+        id.
+      operationId: getAccountList
+      parameters:
+      - name: x-fapi-trace-id
+        in: header
+        description: Unique request id for each request to make it traceable if needed.
+        required: true
+        style: simple
+        schema:
+          maxLength: 36
+          type: string
+      - name: x-fapi-channel-id
+        in: header
+        description: Identifier used to distinguish between different communication channels or data streams
+          within a client system.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 20
+          type: string
+      - name: Authorization
+        in: header
+        description: OAuth 2.0 Authorization Bearer Token
+        required: true
+        style: simple
+        schema:
+          $ref: '#/components/schemas/AuthorizationHeader'
+        example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+      - name: pageOffset
+        in: query
+        description: Page number for pagination
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageLimit
+        in: query
+        description: Maximum number of records per page
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Successfully retrieved the list of accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountListResponseData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /transactions/query:
+    post:
+      tags:
+      - Information Reporting
+      summary: Get the list of transaction(s) of the requested Account.
+      description: 'The Account Information API to retrieve list of account transaction(s) the user is
+        entitled. '
+      operationId: getTransactions
+      parameters:
+      - name: x-fapi-trace-id
+        in: header
+        description: Unique request id for each request to make it traceable if needed.
+        required: true
+        style: simple
+        schema:
+          maxLength: 36
+          type: string
+      - name: x-fapi-channel-id
+        in: header
+        description: Identifier used to distinguish between different communication channels or data streams
+          within a client system.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 20
+          type: string
+      - name: Authorization
+        in: header
+        description: OAuth 2.0 Authorization Bearer Token
+        required: true
+        style: simple
+        schema:
+          $ref: '#/components/schemas/AuthorizationHeader'
+        example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: Provide account number, optional routing number and other optional parameters.
+              items:
+                $ref: '#/components/schemas/AccountTransactionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved the list of transactions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountTransactionResponse'
+        '204':
+          description: Successfull, but no transaction found for the requested criteria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountTransactionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+          example: FATAL
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Information Reporting API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errorDetails'
+    AccountDetailRequest:
+      required:
+      - accountNumber
+      type: object
+      properties:
+        accountNumber:
+          maxLength: 14
+          minLength: 10
+          type: string
+          description: The account number associated with the account. Must be between 10 and 14 characters.
+          example: '123456789'
+        routingNumber:
+          maxLength: 9
+          minLength: 9
+          type: string
+          description: The routing number associated with the account. Must be exactly 9 characters.
+          example: '010023232'
+      description: Represents the request for account details.
+    AccountListResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: abc123
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: array
+          description: The actual data returned in the response. Can be of any type.
+          example:
+            accountList:
+            - accountNumber: '123456789'
+              accountName: Joe Down Saving Acct
+              routingNumber: '987654321'
+              accountType: SAVING
+              isRealTimeAccount: true
+            - accountNumber: '0123456101'
+              accountName: Alesya Checking Prev Day Acct
+              routingNumber: '987650011'
+              accountType: CHECKING
+              isRealTimeAccount: false
+          items:
+            $ref: '#/components/schemas/AccountListQueryResponse'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
+    BalanceInquiryResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: array
+          description: The actual data returned in the response. Can be of any type.
+          example:
+          - accountNumber: '1234567890'
+            routingNumber: '987654321'
+            accountType: SAVINGS
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+          - accountNumber: '1234567101'
+            routingNumber: '987652221'
+            accountType: CHECKING
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+            previousDayAvailableBalance: 1000.05
+            previousDayLedgerBalance: 1010.05
+          items:
+            $ref: '#/components/schemas/AccountDetail'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
+    BalanceInquiryResponseData2:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Partially processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: array
+          description: The actual data returned in the response. Can be of any type.
+          example:
+          - accountNumber: '123456789'
+            routingNumber: '987654321'
+            accountType: CHECKING
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+            previousDayAvailableBalance: 1000.05
+            previousDayLedgerBalance: 1010.05
+          items:
+            $ref: '#/components/schemas/AccountDetail'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 206
+      description: 'Represents the response data containing the API status and additional data. '
+    Account:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the account.
+          example: Saving
+        accountType:
+          type: string
+          description: The specific type of the account.
+          example: Personal
+        accountNumber:
+          type: string
+          description: The account number.
+          example: '123456789'
+        routingNumber:
+          type: string
+          description: The routing number associated with the account.
+          example: '987654321'
+        accountName:
+          type: string
+          description: The name of the account.
+          example: John Doe Savings Account
+        isRealTimeAccount:
+          type: boolean
+          description: Indicates if the account is a real-time account.
+          example: true
+    AccountDetail:
+      allOf:
+      - $ref: '#/components/schemas/Account'
+      - type: object
+        properties:
+          currentDayLedgerBalance:
+            type: number
+            description: The current day ledger balance of the account.
+            format: double
+            example: 1000.5
+          currentDayAvailableBalance:
+            type: number
+            description: The current day available balance of the account.
+            format: double
+            example: 950.75
+          previousDayLedgerBalance:
+            type: number
+            description: The previous day ledger balance of the account.
+            format: double
+            example: 900
+          previousDayAvailableBalance:
+            type: number
+            description: The previous day available balance of the account.
+            format: double
+            example: 900
+          accountStatus:
+            type: string
+            description: The status of the account.
+            example: HOLD
+    AccountListQueryResponse:
+      type: object
+      properties:
+        accountList:
+          type: array
+          description: The list of accounts returned by the query.
+          items:
+            $ref: '#/components/schemas/Account'
+        totalRows:
+          type: integer
+          description: The total number of rows available.
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages available.
+          example: 5
+        rowsPerPage:
+          type: integer
+          description: The number of rows per page.
+          example: 20
+    AccountTransactionRequest:
+      required:
+      - accountNumber
+      type: object
+      properties:
+        accountNumber:
+          maxLength: 14
+          minLength: 10
+          type: string
+          description: The account number associated with the account. Must be between 10 and 14 characters.
+          example: '123456789'
+        routingNumber:
+          maxLength: 9
+          minLength: 9
+          type: string
+          description: The routing number associated with the account. Must be exactly 9 characters.
+          example: '010023232'
+        startRangeOfDate:
+          type: string
+          description: Start range of transaction posted date. It would be in yyyy-MM-dd format.
+          format: date
+          example: '2025-01-01'
+        endRangeOfDate:
+          type: string
+          description: End range of transaction posted date. It would be in yyyy-MM-dd format.
+          format: date
+          example: '2025-06-01'
+        limit:
+          maximum: 2000
+          minimum: 100
+          type: integer
+          description: Total number of transaction(s) records to return (should be in multiple of 100).
+          example: 1000
+        nextKey:
+          maxLength: 45
+          type: string
+          description: This field can be used by the consumers to fetch the records from a specific page.  This
+            value is returned as part of the response indicating the key for the next page.
+          example: ODC-CIS0100100000000001014625202501500000123
+      description: Represents the request for account details.
+    AccountTransactionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Successfully retrieved transactions
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          example: '2026-05-06T12:01:50.370Z'
+        data:
+          $ref: '#/components/schemas/AccountTransactionResponse_data'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
+    TransactionDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          example: DEBIT
+        description:
+          type: string
+          example: 'RealTime Debit SENDER REF: NOREF'
+        transactionId:
+          type: string
+          example: '610028267902062025101290000005'
+        transactionStatus:
+          type: string
+          example: posted
+        postedDate:
+          type: string
+          format: date
+          example: '2025-02-06'
+        transactionDate:
+          type: string
+          format: date
+          example: '2025-02-06'
+        amount:
+          type: number
+          format: double
+          example: 101
+        availableBalance:
+          type: number
+          format: double
+          example: 97548631517.07
+        paymentReferenceNumber:
+          type: string
+          example: '25071783860405'
+        commercialCode:
+          type: string
+          example: '165'
+        memoDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDetail_memoDetails'
+    AuthorizationHeader:
+      title: JWT Access Token
+      type: string
+    ErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation
+            layer. A list of error codes will be provided in the user guide.
+          example: IR-500
+        description:
+          maxLength: 250
+          type: string
+          description: Description of the operation's status. It will have detailed error description
+            in case of any error.
+          example: Internal server error.
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any
+            handled error.
+          example: Your request cannot be processed.
+    TransactionDetail_inner_baiMemo_memoDetails:
+      type: object
+      properties:
+        key:
+          type: string
+          description: BAI [Bank Administration Institute] memo field name
+          example: TRANS ID
+        value:
+          type: string
+          description: BAI [Bank Administration Institute] memo field value
+          example: US24102382804004
+    TransactionDetail_inner_baiMemo:
+      type: object
+      properties:
+        baiCode:
+          type: string
+          description: bai [Bank Administration Institute] code
+          example: '699'
+        memoDetails:
+          type: array
+          example:
+          - key: SENDER BNK
+            value: CITIZENS BANK, N.A.
+          - key: SENDER ID
+            value: '123400120'
+          - key: SENDER REF
+            value: '120606001234'
+          - key: BNF NAME
+            value: WIRE TRANSFER - PROCESSING
+          - key: RFB(SRF)
+            value: '2025060700101234'
+          items:
+            $ref: '#/components/schemas/TransactionDetail_inner_baiMemo_memoDetails'
+    AccountTransactionResponse_data:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: account number
+          example: '6011282679'
+        transactions:
+          type: array
+          description: 'The actual data returned in the response (Schema : TransactionDetail).'
+          example:
+          - type: DEBIT
+            description: 'RealTime Debit SENDER REF: NOREF'
+            transactionId: '610028267902062025101290000005'
+            transactionStatus: POSTED
+            postedDate: '2025-02-06T00:00:00.000Z'
+            transactionDate: '2025-02-06T00:00:00.000Z'
+            amount: 101
+            availableBalance: '97548631517.07'
+            paymentReferenceNumber: '25071783860405'
+            commercialCode: '165'
+            memoDetails:
+            - memoDetail: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
+          - type: CREDIT
+            description: WIRE XFER
+            transactionId: '610028267901232025101690000007'
+            transactionStatus: POSTED
+            postedDate: '2025-01-23T00:00:00.000Z'
+            transactionDate: '2025-01-23T00:00:00.000Z'
+            amount: 7.66
+            availableBalance: '97546086101.17'
+            wireNumber: '250627000220'
+            commercialCode: '165'
+            memoDetails:
+            - memoDetail: 'BENEFICIARY NAME : TEST ORIG TO BNF INFO'
+          items:
+            $ref: '#/components/schemas/TransactionDetail'
+    TransactionDetail_memoDetails:
+      type: object
+      properties:
+        MEMO DETAIL:
+          type: string
+          example: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
+  parameters:
+    x-fapi-trace-id:
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      required: true
+      style: simple
+      schema:
+        maxLength: 36
+        type: string
+    x-fapi-channel-id:
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams
+        within a client system.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        type: string
+    authorization:
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+  securitySchemes:
+    client-id:
+      type: apiKey
+      name: X-IBM-Client-Id
+      in: header
+      x-key-type: client_id
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+          scopes:
+            ir:read: Access to read IR data
+      x-ibm-oauth-provider: externalpingfederate
+x-ibm-configuration:
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  application-authentication:
+    certificate: false
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v1/information-reporting

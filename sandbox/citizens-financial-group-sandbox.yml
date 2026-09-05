@@ -1,0 +1,88 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://sandboxdeveloper.citizensbank.com/ (probed 2026-09-05, HTTP 200) and
+  https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 2
+  "Onboarding Process" / section 3.1.3.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+sandbox:
+  published: true
+  mandatory: true
+  mandatory_note: >-
+    "You may test as many times as needed prior to production, with all testing conducted in the
+    Sandbox environment. Sandbox testing and message signing are required for the Citizens Payment
+    API." Production access is granted only after sandbox sign-off.
+  portal: https://sandboxdeveloper.citizensbank.com/
+  api_host: https://sandboxapi.citizensbank.com
+  token_endpoint: https://sandboxapis.citizensbank.com/as/token.oauth2
+  jwt_audience: https://pf-fam-sb.internal.citizensbank.com
+  gated: true
+  gate: >-
+    The sandbox is not self-service. Portal access arrives by email invitation from the Citizens API
+    team after an Implementation Manager kickoff; the API catalog and product pages are browsable
+    anonymously but Apps, credentials and the Try-It console require login.
+
+environments:
+  - name: sandbox
+    portal: https://sandboxdeveloper.citizensbank.com/
+    api_host: https://sandboxapi.citizensbank.com
+    token_endpoint: https://sandboxapis.citizensbank.com/as/token.oauth2
+    apis:
+      - Payments v3
+      - Account Transfer v1
+      - Account Validation v1
+      - Information Reporting v1
+      - Accounts (FDX v2.1)
+      - Statements (FDX v2.1)
+      - Authorize (IDP v2.0)
+      - ATM Locator v1
+      - Branch Locator v1
+  - name: production
+    portal: https://developer.citizensbank.com/
+    api_hosts:
+      - https://apis.citizensbank.com
+      - https://api.citizensbank.com
+    token_endpoint: https://apis.citizensbank.com/as/token.oauth2
+    jwt_audience: https://pf-fam.citizensbank.com
+
+key_model:
+  separation: environment-scoped credentials, not prefix-scoped keys
+  note: >-
+    Citizens does not publish a test-vs-live key prefix convention. Each environment issues its own
+    IBM API Connect application with its own Client ID (shown as "API Key" under
+    Apps > application > Subscriptions) and its own mTLS certificate and JWKS registration.
+
+test_data:
+  published: false
+  note: >-
+    No test cards, magic account numbers, seeded test identities or fixture/trigger tooling are
+    published anywhere on the public portal or in the user guides. The sample values that appear in
+    the guides are illustrative and, where they name a real institution, are masked in the request
+    bodies (routingNumber "XXXXXXXXX").
+  rehearsal_affordances:
+    - name: RTP participant status lookup
+      operation: checkParticipantStatus (POST /v3/payments/participant-status/query)
+      note: >-
+        Optional pre-flight that confirms a counterparty routing number is in the RTP network and
+        currently available before any money is moved.
+    - name: ACH prenote
+      note: >-
+        A zero-amount ACH entry validates an account without moving funds; the guide requires
+        amount = 0 when prenote is YES (error PMT1223 otherwise).
+
+try_it_console:
+  available: true
+  note: >-
+    The IBM API Connect portal explorer exposes a "Try" button per operation with code samples in
+    ruby, python, curl, php, java, node, go, swift, c and csharp. Calling it requires a logged-in
+    application's client id/secret.
+
+message_signing:
+  required: true
+  note: Message signing is required for the Payments API and is validated during sandbox testing.
+
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

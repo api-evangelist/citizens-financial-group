@@ -1,0 +1,674 @@
+generated: '2026-09-05'
+method: searched
+source: Error / reject code tables published in the Citizens API user guides at https://developer.citizensbank.com/content/qut/
+  (Payments v1.3 2025-12-11 section 6; Account Transfer v1.0 2026-05-29 section 6; Account Validation v1.6 2026-04-30
+  section 8; Information Reporting v1.6 2026-07-22).
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+format: proprietary
+envelope:
+  media_type: application/json
+  fields:
+  - result (FATAL | WARNING)
+  - source (originating system)
+  - errorDetails[] { code, description, messageDetail }
+  schema_reference: openapi/_original/citizens-payments-v3.json#/components/schemas/Error
+support:
+  phone: 877-550-5933 (401-282-1362)
+  email: clientservices@mail.client.citizensbank.com
+  hours: 24 hours a day, 7 days a week
+  note: Published in the Account Validation user guide for errors that cannot be resolved by correcting the request.
+catalogs:
+- api: Payments
+  docs: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+  code_count: 105
+  codes:
+  - code: AUT4001
+    status: Authorization Error
+    description: Authorization Error
+    http_status: 401
+  - code: CON5000
+    status: Connection Error
+    description: Connection Error
+    http_status: 500
+  - code: DEF0001
+    status: Internal Error
+    description: Internal Error
+    http_status: 500
+  - code: BDR4000
+    status: Bad Request
+    description: Bad Request
+    http_status: 400
+  - code: REQ1001
+    description: Request Id should not be more than 36 characters long
+    http_status: 400
+  - code: REQ1002
+    description: requestId is a mandatory parameter in the request. It cannot be null or blank.
+    http_status: 400
+  - code: UNK9999
+    status: Internal Server Error
+    description: Internal Server Error
+    http_status: 500
+  - code: PMT3001
+    description: Routing Number is required parameter in the request; it cannot be Null or Blank
+    http_status: 400
+  - code: PMT3002
+    description: Routing Number should be 9 digits long
+    http_status: 400
+  - code: PMT3003
+    description: paymentType is a mandatory parameter in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PAY3004
+    description: Invalid Payment Type
+    http_status: 400
+  - code: BDR4001
+    description: Request body should not be null
+    http_status: 400
+  - code: REQ1003
+    description: requestId must contain only alphabets, digits, period(.), comma (,), space, hyphen (-), underscore
+      (_) and @ characters.
+    http_status: 400
+  - code: PMT1001
+    description: paymentId is a mandatory parameter in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1002
+    description: paymentId should not be more than 15 characters long.
+    http_status: 400
+  - code: PMT1003
+    description: paymentId should be unique. paymentId provided in this request has already been processed.
+  - code: PMT1004
+    description: paymentAccountInformation is a mandatory object in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1005
+    description: routingNumber is a mandatory parameter inside paymentAccountInformation. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1006
+    description: accountNumber is a mandatory parameter inside paymentAccountInformation. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1007
+    description: counterpartyAccountInformation is a mandatory object in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1008
+    description: routingNumber is a mandatory parameter inside counterpartyAccountInformation. It cannot be null
+      or blank.
+    http_status: 400
+  - code: PMT1009
+    description: accountNumber is a mandatory parameter inside counterpartyAccountInformation. It cannot be null
+      or blank.
+    http_status: 400
+  - code: PMT1010
+    description: accountNumber should not contain any special characters.
+    http_status: 400
+  - code: PMT1011
+    description: routingNumber should contain 9 digits only.
+    http_status: 400
+  - code: PMT1012
+    description: accountNumber should not be more than 17 characters long.
+    http_status: 400
+  - code: PMT1013
+    description: amount is a mandatory parameter in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1015
+    description: amount should be positive and greater than zero.
+    http_status: 400
+  - code: PMT1016
+    description: memo should be between 1 and 140 characters long.
+    http_status: 400
+  - code: PMT1017
+    description: paymentType is a mandatory parameter in the request. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1018
+    description: Invalid value provided for paymentType. Valid values are RTP, ACH_CREDIT, ACH_DEBIT.
+    http_status: 400
+  - code: PMT1019
+    description: line1 is a mandatory parameter in the debtor postalAddress object. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1020
+    description: line1 in debtor postalAddress object should not be more than 70 characters long.
+    http_status: 400
+  - code: PMT1021
+    description: line2 in debtor postalAddress object should not be more than 70 characters long.
+    http_status: 400
+  - code: PMT1022
+    description: city is a mandatory parameter in the in the debtor postalAddress object. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1023
+    description: city in debtor postalAddress object should not be more than 35 characters long.
+    http_status: 400
+  - code: PMT1024
+    description: state in debtor postalAddress object should be between 1 and 35 characters long.
+    http_status: 400
+  - code: PMT1025
+    description: postalCode is a mandatory parameter in the debtor postalAddress object. It cannot be null or blank
+    http_status: 400
+  - code: PMT1026
+    description: postalCode in debtor postalAddress object should not be more than 16 characters long
+    http_status: 400
+  - code: PMT1027
+    description: country in debtor postalAddress object should be 2 characters long.
+    http_status: 400
+  - code: PMT1028
+    description: Invalid paymentId. It should not contain spaces.
+    http_status: 400
+  - code: PMT1029
+    description: There is no transaction matching the provided paymentId.
+    http_status: 404
+  - code: PMT1030
+    description: country in debtor postalAddress object should only contain capital letters.
+    http_status: 400
+  - code: PMT1031
+    description: line1 is a mandatory parameter in the ultimateDebtor postalAddress object. It cannot be null or
+      blank.
+    http_status: 400
+  - code: PMT1032
+    description: line1 in ultimateDebtor postalAddress object should not be more than 70 characters long.
+    http_status: 400
+  - code: PMT1033
+    description: line2 in ultimateDebtor postalAddress object should not be more than 70 characters long.
+    http_status: 400
+  - code: PMT1034
+    description: city is a mandatory parameter in the ultimateDebtor postalAddress object. It cannot be null or
+      blank.
+    http_status: 400
+  - code: PMT1035
+    description: city in ultimateDebtor postalAddress object should not be more than 35 characters long.
+    http_status: 400
+  - code: PMT1036
+    description: state in ultimateDebtor postalAddress object should be between 1 and 35 characters long.
+    http_status: 400
+  - code: PMT1037
+    description: postalCode is a mandatory parameter in the ultimateDebtor postalAddress object. It cannot be null
+      or blank
+    http_status: 400
+  - code: PMT1038
+    description: postalCode in ultimateDebtor postalAddress object should not be more than 16 characters long
+    http_status: 400
+  - code: PMT1039
+    description: country in ultimateDebtor postalAddress object should be 2 characters long.
+    http_status: 400
+  - code: PMT1040
+    description: country in ultimateDebtor postalAddress object should only contain capital letters.
+    http_status: 400
+  - code: PMT1100
+    description: name is a mandatory parameter in the ultimateDebtor object. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1101
+    description: name is a mandatory parameter in the counterpartyAddressInformation object. It cannot be null or
+      blank.
+    http_status: 400
+  - code: PMT1102
+    description: counterpartyAddressInformation object is mandatory in the request when rtpDetails are provided.
+    http_status: 400
+  - code: PMT1103
+    description: rtpDetails object becomes mandatory in the request when paymentType provided is RTP.
+    http_status: 400
+  - code: PMT1104
+    description: Either one of rtpDetails or achDetails should be passed in the request based on the paymentType
+      provided.
+    http_status: 400
+  - code: PMT1105
+    description: name in the ultimateDebtor object should not be more than 140 characters long
+    http_status: 400
+  - code: PMT1106
+    description: id in the ultimateDebtor object should not be more than 35 characters longachDetails object is
+      not required in this request. Please remove and initiate payment again.
+    http_status: 400
+  - code: PMT1107
+    description: name is a mandatory parameter in the debtor object. It cannot be null or blank. name in the ultimateCreditor
+      object should not be more than 140 characters long
+    http_status: 400
+  - code: PMT1108
+    description: id name in the ultimateCreditor debtor object should not be more than 14035 characters long.
+    http_status: 400
+  - code: PMT1109
+    description: id in the ultimateCreditor object should not be more than 35 characters long
+    http_status: 400
+  - code: PMT1110
+    description: id in the counterpartyAddressInformation object should not be more than 35 characters long
+    http_status: 400
+  - code: PMT1111
+    description: amount for an RTP transaction can have a maximum of 11 digits before decimalthe decimal and maximuma
+      maximum of 2 digits after the decimal.
+    http_status: 400
+  - code: PMT1112
+    description: name in the counterpartyAddressInformation object should not be more than 140 characters long.
+    http_status: 400
+  - code: PMT1113
+    description: line1 is a mandatory parameter in the counterpartyAddressInformation postalAddress object. It cannot
+      be null or blank.
+    http_status: 400
+  - code: PMT1114
+    description: line1 in the counterpartyAddressInformation postalAddress object should not be more than 70 characters
+      long.
+    http_status: 400
+  - code: PMT1115
+    description: line2 in counterpartyAddressInformation postalAddress object should not be more than 70 characters
+      long.
+    http_status: 400
+  - code: PMT1116
+    description: city is a mandatory parameter in the counterpartyAddressInformation postalAddress object. It cannot
+      be null or blank.
+    http_status: 400
+  - code: PMT1117
+    description: city in counterpartyAddressInformation postalAddress object should not be more than 35 characters
+      long.
+    http_status: 400
+  - code: PMT1118
+    description: state in counterpartyAddressInformation postalAddress object should be between 1 and 35 characters
+      long.
+    http_status: 400
+  - code: PMT1119
+    description: postalCode is a mandatory parameter in the counterpartyAddressInformation postalAddress object.
+      It cannot be null or blank
+    http_status: 400
+  - code: PMT1120
+    description: postalCode in counterpartyAddressInformation postalAddress object should not be more than 16 characters
+      long.
+    http_status: 400
+  - code: PMT1121
+    description: country in counterpartyAddressInformation postalAddress object should only contain capital letters.
+    http_status: 400
+  - code: PMT1122
+    description: country in counterpartyAddressInformation postalAddress object should be 2 characters long.
+    http_status: 400
+  - code: PMT1200
+    description: achDetails object becomes mandatory in the request when paymentType provided is ACH_CREDIT or ACH_DEBIT.
+    http_status: 400
+  - code: PMT1201
+    description: standardEntryClassCode is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1202
+    description: Invalid value provided for StandardEntryClassCode. Valid values are CCD, PPD, WEB, CTX.
+    http_status: 400
+  - code: PMT1203
+    description: cCompanyDescriptiveDate in achDetails should not be more than 6 characters long.
+    http_status: 400
+  - code: PMT1204
+    description: effectiveEntryDate is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1205
+    description: effectiveEntryDate in achDetails should not be more than 10 characters long.
+    http_status: 400
+  - code: PMT1206
+    description: Invalid value provided for prenote. Valid values are YES, NO.
+    http_status: 400
+  - code: PMT1207
+    description: companyDiscretionaryData in achDetails should not be more than 20 characters long.
+    http_status: 400
+  - code: PMT1208
+    description: companyEntryDescription is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1209
+    description: companyEntryDescription in achDetails should not be more than 10 characters long.
+    http_status: 400
+  - code: PMT1210
+    description: counterpartyAccountType is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1211
+    description: Invalid value provided for counterpartyAccountType. Valid values are CHECKING, SAVINGS.
+    http_status: 400
+  - code: PMT1212
+    description: counterpartyName is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1213
+    description: counterpartyName in achDetails should not be more than 16 characters long for transactions having
+      SEC code as CTX and 22 characters long for transactions with SEC codes other than CTX.
+    http_status: 400
+  - code: PMT1214
+    description: identificationNumber in achDetails should not be more than 15 characters long.
+    http_status: 400
+  - code: PMT1215
+    description: addenda in achDetails should not be more than 80 characters long.
+    http_status: 400
+  - code: PMT1216
+    description: Invalid value provided for paymentTypeCode. Valid values are RECURRING, SINGLE or STANDING_AUTHORIZATION.
+    http_status: 400
+  - code: PMT1217
+    description: rtpDetails object is not required in this request. Please remove and initiate payment again.
+  - code: PMT1218
+    description: Invalid pattern for effectiveEntryDate. Valid pattern is YYYY-MM-DD.
+    http_status: 400
+  - code: PMT1219
+    description: counterpartyInformation is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1220
+    description: amount for an ACH transaction can have a maximum of 8 digits before decimal and maximum of 2 digits
+      after the decimal.
+    http_status: 400
+  - code: PMT1221
+    description: Only one addenda record can be passed for transactions having SEC code as CCD, PPD, WEB.
+    http_status: 400
+  - code: PMT1222
+    description: Maximum 9999 addenda records can be passed for transactions having SEC code as CTX.
+    http_status: 400
+  - code: PMT1223
+    description: amount should be 0 if prenote is set as YES
+    http_status: 400
+  - code: PMT1224
+    description: effectiveEntryDate provided is an invalid date.
+    http_status: 400
+  - code: PMT1225
+    description: companyIdentification in achDetails should not be more than 10 characters long.
+    http_status: 400
+  - code: PMT1226
+    description: companyIdentification is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: PMT1227
+    description: companyName in achDetails should not be more than 16 characters long.
+    http_status: 400
+  - code: PMT1228
+    description: companyName is a mandatory parameter in achDetails. It cannot be null or blank.
+    http_status: 400
+  - code: ENT1001
+    description: User is not entitled to initiate payment from this account number.
+    http_status: 401
+- api: Account Transfer
+  docs: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+  code_count: 9
+  codes:
+  - code: AUT4001
+    status: Authorization Error
+    description: 'Occurs when: (1) JWT token is invalid, (2) JWT token is expired, or (3) scope provided is incorrect
+      or not permitted'
+    http_status: 401
+  - code: CON5000
+    status: Connection Error
+    description: Occurs when the backend API is down or a connection cannot be successfully established
+    http_status: 500
+  - code: DEF0001
+    status: Internal Error
+    description: Indicates an unexpected failure in the backend or gateway server during request processing
+    http_status: 500
+  - code: BDR4000
+    status: Bad Request
+    description: Occurs when requested request headers are missing or invalid, including cases where x-fapi-trace-id
+      exceeds 36 characters or x- fapi-channel-id exceeds 20 characters
+    http_status: 400
+  - code: AT-404
+    status: Not Found
+    description: The requested resource does not exist on the server
+    http_status: 404
+  - code: AT-408
+    status: Request Timeout
+    description: The server timed out waiting for the request
+    http_status: 408
+  - code: AT-409
+    status: Conflict
+    description: The request could not be completed due to a conflict with the current state of the resource
+    http_status: 409
+  - code: AT-429
+    status: Too many requests
+    description: The user has sent too many requests in a given time frame (rate limiting)
+    http_status: 429
+  - code: AT-500
+    status: Internal Server Error
+    description: A generic error occurred on the server. Could be due to an upstream service failure
+    http_status: 500
+- api: Account Validation
+  docs: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+  code_count: 67
+  codes:
+  - code: AUT4001
+    status: Authorization Error
+    description: 'Occurs when: (1) JWT token is invalid, (2) JWT token is expired, or (3) scope provided is incorrect
+      or not permitted'
+    http_status: 401
+  - code: BDR4000
+    status: Bad Request
+    description: Occurs when required request headers are missing or invalid, including cases where x-fapi-trace-id
+      exceeds 36 characters or x-fapi-channel-id exceeds 20 characters
+    http_status: 400
+  - code: AV-3000
+    description: Billing account can't be found. Please try again next day.
+  - code: AV-3001
+    description: Returned inquiry status is not valid.
+  - code: AV-3002
+    description: Provided client details are invalid.
+  - code: AV-4000
+    description: Provided reference ID is not valid.
+  - code: AV-4001
+    description: You have exceeded the rate limit for the number of status requests.
+  - code: AV-4002
+    description: Provided reference ID is not valid for this requester.
+  - code: AV-4003
+    description: Provided country is not supported.
+  - code: AV-4004
+    description: Bank Id Type and Bank Account Type must be provided.
+  - code: AV-4005
+    description: Bank Id Type value and Bank Account Type value must be provided.
+  - code: AV-4006
+    description: Bank Id Type is not supported.
+  - code: AV-4007
+    description: Bank Account Type is not supported.
+  - code: AV-4008
+    description: Name field length is not valid.
+  - code: AV-4009
+    description: Either first name and last name or company name can be entered, not both.
+  - code: AV-4010
+    description: First name and last name are not allowed for countries other than US.
+  - code: AV-4011
+    description: National Id must not be empty when the country is BR or ZA.
+  - code: AV-4012
+    description: National Id may only contain letters, numbers, forward slashes (/), periods (.), and dashes (-),
+      and cannot be more than 35 chars in length.
+  - code: AV-4013
+    description: Branch Id must not be empty when bank id is BRAZIL_BANK_CODE.
+  - code: AV-4014
+    description: Branch Id may only contain numbers and dashes (-) and cannot be more than 8 chars in length.
+  - code: AV-4015
+    description: National Id must not be empty when the country is CN and Bank Id Type is CNAPS or SWIFT_ID.
+  - code: AV-4016
+    description: Business Name must not be empty when the country is HK, TH, MY or SG.
+  - code: AV-5001
+    description: provided Bank Account Type or Bank Id Type is not supported for the provided country.
+  - code: AV-6001
+    description: SWIFT_ID value may only contain letters and numbers and must be 8 or 11 chars in length.
+  - code: AV-6002
+    description: IBAN value may only contain letters, numbers, and hyphens (-); and must be between 5 and 34 chars
+      in length.
+  - code: AV-6003
+    description: IFSC value may only contain letters and numbers and must be 11 chars in length.
+  - code: AV-6004
+    description: CLABE value may only contain numbers and must be 18 chars in length.
+  - code: AV-6005
+    description: USABA value may only contain numbers and must be 9 chars in length.
+  - code: AV-6006
+    description: BRAZIL_BANK_CODE value may only contain numbers and must be 3 chars in length.
+  - code: AV-6007
+    description: CBU value may only contain numbers and must be 22 chars in length.
+  - code: AV-6008
+    description: CVU value may only contain numbers and must be 22 chars in length.
+  - code: AV-6009
+    description: CCI value may only contain numbers and must be 20 chars in length.
+  - code: AV-6010
+    description: CACPA value may only contain numbers and must be 9 chars in length.
+  - code: AV-6011
+    description: CNAPS value may only contain numbers and must be between 12 and 14 chars in length.
+  - code: AV-6012
+    description: ACCOUNT_NUMBER value may only contain letters, numbers, spaces, period (.) and hyphen (-); and
+      must be between 1 and 34 chars in length.
+  - code: AV-6013
+    description: ZANCC value may only contain numbers and must be up to 6 chars in length.
+  - code: AV-7001
+    description: IBAN account number may only contain letters, numbers, and hyphens (-); and must be between 5 and
+      34 chars in length.
+  - code: AV-7002
+    description: CLABE account number may only contain numbers and must be 18 chars in length.
+  - code: AV-7003
+    description: BBAN account number may only contain letters and numbers and must be between 10 and 30 chars in
+      length.
+  - code: AV-7004
+    description: ACCOUNT_NUMBER may only contain letters, numbers, spaces, period (.) and hyphen (-); and must be
+      between 1 and 34 chars in length.
+  - code: AV-7005
+    description: CBU account number may only contain numbers and must be 22 chars in length.
+  - code: AV-7006
+    description: CVU account number may only contain numbers and must be 22 chars in length.
+  - code: AV-301
+    description: The request has been moved to a new URL.
+  - code: AV-302
+    description: The requested resource resides temporarily under a different URL.
+  - code: AV-400
+    description: The request is invalid.
+  - code: AV-401
+    description: You do not have access to the requested resource.
+  - code: AV-403
+    description: You do not have access to the requested resource.
+  - code: AV-404
+    description: The requested resource could not be found.
+  - code: AV-408
+    description: The server timed out waiting for the request.
+  - code: AV-409
+    description: The requested resource having conflict in returning response.
+  - code: AV-429
+    description: The user has sent too many requests in a given amount of time.
+  - code: AV-500
+    description: The server has encountered an error and could not complete your request.
+  - code: AV-501
+    description: The server does not recognize the request.
+  - code: AV-502
+    description: The server was acting as a gateway or proxy and did not receive a timely response from the upstream
+      server.
+  - code: AV-503
+    description: The server is temporarily unavailable.
+  - code: AV-504
+    description: The server did not receive a timely response from the upstream.
+  - code: CIE-400
+    description: The request is invalid.
+  - code: CIE-401
+    description: You do not have access to the requested resource.
+  - code: CIE-403
+    description: You do not have access to the requested resource.
+  - code: CIE-404
+    description: The requested resource could not be found.
+  - code: CIE-408
+    description: The server timed out waiting for the request.
+  - code: CIE-409
+    description: The requested resource having conflict in returning response.
+  - code: CIE-500
+    description: The server has encountered an error and could not complete your request.
+  - code: CIE-501
+    description: The server does not recognize the request.
+  - code: CIE-502
+    description: The server was acting as a gateway or proxy and did not receive a timely response from the upstream
+      server.
+  - code: CIE-503
+    description: The server is temporarily unavailable.
+  - code: CIE-504
+    description: The server did not receive a timely response from the upstream.
+- api: Information Reporting
+  docs: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+  code_count: 26
+  codes:
+  - code: AUT4001
+    status: Authorization Error
+    description: 'Occurs when: (1) JWT token is invalid, (2) JWT token is expired, or (3) scope provided is incorrect
+      or not permitted'
+    http_status: 401
+  - code: BDR4000
+    status: Bad Request
+    description: When required request headers are missing or invalid, including cases where x-fapi-trace-id exceeds
+      36 characters or x-fapi-channel-id exceeds 20 characters
+    http_status: 400
+  - code: CON5000
+    status: Connection Error
+    description: Occurs when the backend API is down or a connection cannot be successfully established
+    http_status: 500
+  - code: DEF0001
+    status: Internal Error
+    description: This error indicates an unexpected failure in the backend or gateway server during request processing
+    http_status: 500
+  - code: IR-400
+    status: Bad Request
+    description: The request was malformed or missing required parameters
+    http_status: 400
+  - code: IR-401
+    status: Unauthorized
+    description: Authentication failed or user lacks valid credentials
+    http_status: 401
+  - code: IR-403
+    status: Forbidden
+    description: User is authenticated but not authorized to access the resource
+    http_status: 403
+  - code: IR-404
+    status: Not Found
+    description: The requested resource does not exist on the server
+    http_status: 404
+  - code: IR-408
+    status: Request Timeout
+    description: The server timed out waiting for the request. The request could not be completed due to a conflict
+      with the current
+    http_status: 408
+  - code: IR-409
+    status: Conflict
+    description: state of the resource. The user has sent too many requests in a given time frame (rate
+    http_status: 409
+  - code: IR-429
+    status: Too many requests
+    description: limiting). A generic error occurred on the server. Could be due to an upstream
+    http_status: 429
+  - code: IR-500
+    status: Internal Server Error
+    description: service failure. The server does not support the functionality required to fulfill the
+    http_status: 500
+  - code: IR-501
+    status: Not Implemented
+    description: request
+    http_status: 501
+  - code: IR-502
+    status: Bad Gateway
+    description: The server received an invalid response from an upstream server. Request timeout
+    http_status: 502
+  - code: IR-504
+    description: error The server did not receive a timely response from an upstream server.
+  - code: IR-999
+    status: System Error
+    description: An unspecified error occurred; no specific error code was configured
+    http_status: 500
+  - code: CIE-400
+    status: Bad Request
+    description: The request was invalid or cannot be served
+    http_status: 400
+  - code: CIE-401
+    status: Unauthorized
+    description: The request lacks valid authentication credentials
+    http_status: 401
+  - code: CIE-403
+    status: Forbidden
+    description: The user does not have permission to access the resource
+    http_status: 403
+  - code: CIE-404
+    status: Not Found
+    description: The requested resource could not be found
+    http_status: 404
+  - code: CIE-408
+    status: Request Timeout
+    description: The server timed out waiting for the request
+    http_status: 408
+  - code: CIE-409
+    status: Conflict
+    description: The request could not be processed due to a conflict
+    http_status: 409
+  - code: CIE-500
+    status: Internal Server Error
+    description: A server-side error occurred, possibly due to an upstream service failure
+    http_status: 500
+  - code: CIE-501
+    status: Not Implemented
+    description: The server does not recognize or support the request method
+    http_status: 501
+  - code: CIE-502
+    status: Bad Gateway
+    description: The server received an invalid response from an upstream server. Request timeout
+    http_status: 502
+  - code: CIE-504
+    description: error The server did not receive a timely response from an upstream server.
+code_count: 207
+notes:
+- 'Codes are shared across APIs by prefix: AUT4001 (authorization), CON5000 (connection), DEF0001 (internal), BDR4000/BDR4001
+  (bad request), REQ1001-REQ1003 (request id validation), CIE-4xx (gateway-level).'
+- RTP network reject codes are a separate ISO 20022 external-reason vocabulary and are catalogued in errors/citizens-financial-group-decline-codes.yml.
+- Citizens does not publish RFC 9457 application/problem+json; the envelope is proprietary.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

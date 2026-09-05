@@ -1,0 +1,29 @@
+overlay: 1.0.0
+info:
+  title: Citizens Account Transfer API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is quoted from a Citizens-published document
+    named in the action description.
+extends: citizens-financial-group-account-transfer-openapi.yml
+actions:
+- target: $.info
+  description: Record harvest provenance.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/commercial-banking/api/accounttransfer-v1
+- target: $.paths['/initiate'].post
+  description: Record the transfer constraints and the absence of a reversal path, both published in the user guide.
+  update:
+    x-constraints:
+      same-day-only: true
+      future-dated: false
+      scope: transfers between the client's own Citizens accounts
+    x-reversibility:
+      reversal-operation: null
+      window: null
+    x-idempotency:
+      mechanism: null
+      note: No duplicate-key protection is documented. AT-409 Conflict exists but its trigger is not specified.
+    x-rate-limit-error: AT-429

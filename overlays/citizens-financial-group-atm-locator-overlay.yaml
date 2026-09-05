@@ -1,0 +1,54 @@
+overlay: 1.0.0
+info:
+  title: Citizens ATM Locator API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is read from the harvested contract
+    itself or from a Citizens-published page named in the action description.
+extends: citizens-financial-group-atm-locator-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from. This API is
+    published only on the sandbox portal - it does not appear in the production API catalog.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://sandboxdeveloper.citizensbank.com/product/127/api/103
+    x-apis-io-environment: sandbox
+    x-apis-io-production-listing: none - ATM Locator is absent from https://developer.citizensbank.com/api
+- target: $.paths['/state/{state}/city/{city}'].get
+  description: The published contract names an operationId only on the postal-code path. Supply a stable
+    identifier for the state/city lookup; the name is ours, not Citizens'.
+  update:
+    tags:
+    - ATM Locator
+    x-apis-io-operation-id: findAtmsByStateAndCity
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/postalcode/{postalCode}'].get
+  description: Tag the one operation Citizens does name.
+  update:
+    tags:
+    - ATM Locator
+- target: $
+  description: Record a defect in the published contract. The latitude/longitude path template is written with
+    a literal backslash before the first brace, so the parameter does not bind and the path cannot be resolved
+    by a spec-driven client without hand editing.
+  update:
+    x-published-contract-defects:
+    - path: /latitude/\{latitude}/longitude/{longitude}
+      defect: A stray backslash escapes the opening brace, so `latitude` is not a valid path template parameter.
+      impact: A generated client emits the literal backslash in the request line. The lookup has to be hand-built.
+      observed-in: openapi/_original/citizens-atm-locator-v1-sandbox.json
+      note: Reported as observed, not corrected - the original contract is never mutated.
+    x-error-contract-gap:
+      declared-status-codes:
+      - '200'
+      note: No 4xx or 5xx response is declared on any operation in this contract.
+- target: $.securityDefinitions['Partner Id']
+  description: Record that this surface uses a different credential from the rest of the Citizens estate - a
+    Partner-ID header rather than the FAPI/OAuth commercial-banking scheme.
+  update:
+    x-credential-family: locator
+    x-note: The locator APIs are gated by a Partner-ID header issued to registered vendors, not by the
+      client-credentials + mTLS flow used across the commercial-banking and FDX surfaces.
+    x-source: authentication/citizens-financial-group-authentication.yml

@@ -1,0 +1,45 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Registry searches run 2026-09-05 against registry.npmjs.org, pypi.org, api.github.com and the
+  Citizens API Developer Portal (https://developer.citizensbank.com/api, /support, /product), plus
+  the four Citizens API user guides.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+package_count: 0
+official_package_count: 0
+packages: []
+findings:
+  - registry: npm
+    query: citizensbank / citizens-bank / citizenspay
+    result: no first-party package
+    note: >-
+      registry.npmjs.org search returns zero results for "citizensbank" and "citizenspay"; the
+      "citizens-bank" query returns only unrelated third-party packages (starkbank, cybrid,
+      us-bank-account-validator).
+  - registry: pypi
+    query: citizensbank / citizens-bank
+    result: 404 on both
+  - registry: github
+    query: orgs citizensbank / citizens-bank / CitizensFinancialGroup / citizens-financial-group
+    result: >-
+      Only github.com/citizensbank exists (org id 4281179, created 2013-04-28) and it has 0 public
+      repositories, no description and no verified domain. Ownership by Citizens Financial Group
+      cannot be established, so no GitHubOrganization pointer is claimed.
+code_samples:
+  available: true
+  distribution: in-portal only, not packaged
+  languages: [ruby, python, curl, php, java, node, go, swift, c, csharp]
+  note: >-
+    The IBM API Connect portal explorer generates per-operation request snippets in ten languages
+    (drupalSettings api.explorer.options.languages, defaultLanguage ruby), and the user guides
+    publish curl samples. These are generated snippets in a rendered page, not a versioned client
+    library a consumer can install or pin.
+conclusion: >-
+  Citizens ships no first-party SDK, client library or published package in any registry. A consumer
+  integrating the Payments, Information Reporting, Account Validation, Account Transfer, FDX or
+  locator APIs writes and maintains their own HTTP client, including the private_key_jwt assertion
+  and mTLS handshake. No SDKs pointer is emitted in apis.yml, because there is nothing to point at.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

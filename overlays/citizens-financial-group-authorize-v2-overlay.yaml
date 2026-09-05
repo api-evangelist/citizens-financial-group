@@ -1,0 +1,48 @@
+overlay: 1.0.0
+info:
+  title: Citizens Authorize (IDP v2.0, sandbox) API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is read from the harvested contract
+    itself or from a Citizens-published page named in the action description.
+extends: citizens-financial-group-authorize-v2-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://sandboxdeveloper.citizensbank.com/product/121/api/97
+    x-apis-io-environment: sandbox
+    x-version-skew:
+      sandbox: Authorize 2.0.4, base path /authorize/v2.0
+      production: Authorize 1.0.4, base path /authorize/v1.0
+      note: The identity surface is a major version ahead in sandbox. Citizens publishes no migration note.
+      see: lifecycle/citizens-financial-group-lifecycle.yml
+- target: $.paths['/revoke'].post
+  description: Supply a stable identifier for the only operation in this contract; the published contract
+    declares none.
+  update:
+    tags:
+    - Identity
+    x-apis-io-operation-id: revokeToken
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $
+  description: Record the same discovery gap the production identity contract carries.
+  update:
+    x-identity-surface:
+      declared-operations:
+      - POST /revoke
+      undeclared-but-required:
+      - name: token endpoint
+        sandbox: https://sandboxapis.citizensbank.com/as/token.oauth2
+        source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 3.1.3
+      discovery-documents:
+        openid-configuration: not served (probed 2026-09-05 on every Citizens host)
+        oauth-authorization-server: not served (probed 2026-09-05 on every Citizens host)
+        see: well-known/citizens-financial-group-well-known.yml
+      see: authentication/citizens-financial-group-authentication.yml
+    x-error-contract-gap:
+      declared-status-codes:
+      - '200'
+      note: No 4xx or 5xx response is declared on the revoke operation.

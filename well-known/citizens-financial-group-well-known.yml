@@ -1,0 +1,102 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Direct HTTPS probes of the named /.well-known/ paths on every host this record knows, run
+  2026-09-05 with a browser User-Agent, following redirects.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+result: >-
+  No Citizens host serves any /.well-known/ document. The two developer-portal hosts answer HTTP 200
+  on several paths, but every one of those 200s is the portal's Drupal "Search Content" HTML page - a
+  soft 404, not a document - so they are recorded as misses. No WellKnown or SecurityTxt pointer is
+  emitted in apis.yml as a result.
+hosts:
+  - host: citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404, file: null}
+      - {path: /.well-known/openid-configuration, status: 404, file: null}
+      - {path: /.well-known/oauth-authorization-server, status: 404, file: null}
+      - {path: /.well-known/api-catalog, status: 404, file: null}
+      - {path: /.well-known/ai-plugin.json, status: 404, file: null}
+      - {path: /.well-known/agent-card.json, status: 404, file: null}
+      - {path: /.well-known/agent.json, status: 404, file: null}
+  - host: www.citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404, file: null}
+      - {path: /.well-known/openid-configuration, status: 404, file: null}
+      - {path: /.well-known/oauth-authorization-server, status: 404, file: null}
+      - {path: /.well-known/api-catalog, status: 404, file: null}
+      - {path: /.well-known/ai-plugin.json, status: 404, file: null}
+      - {path: /.well-known/agent-card.json, status: 404, file: null}
+      - {path: /.well-known/agent.json, status: 404, file: null}
+  - host: developer.citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404, file: null}
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: null
+        note: >-
+          Soft 404 - 31KB of HTML titled "Search Content | API Developer Portal". Not a discovery
+          document; treated as a miss.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: null
+        note: Soft 404 - the same portal "Search Content" HTML page. Treated as a miss.
+      - path: /.well-known/api-catalog
+        status: 200
+        file: null
+        note: Soft 404 - the same portal "Search Content" HTML page. Treated as a miss.
+      - {path: /.well-known/ai-plugin.json, status: 404, file: null}
+      - {path: /.well-known/agent-card.json, status: 404, file: null}
+      - {path: /.well-known/agent.json, status: 404, file: null}
+  - host: sandboxdeveloper.citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404, file: null}
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: null
+        note: Soft 404 - the portal "Search Content" HTML page. Treated as a miss.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: null
+        note: Soft 404 - the portal "Search Content" HTML page. Treated as a miss.
+      - path: /.well-known/api-catalog
+        status: 200
+        file: null
+        note: Soft 404 - the portal "Search Content" HTML page. Treated as a miss.
+      - {path: /.well-known/ai-plugin.json, status: 404, file: null}
+      - {path: /.well-known/agent-card.json, status: 404, file: null}
+      - {path: /.well-known/agent.json, status: 404, file: null}
+  - host: apis.citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 403, file: null}
+      - {path: /.well-known/openid-configuration, status: 403, file: null}
+      - {path: /.well-known/oauth-authorization-server, status: 403, file: null}
+      - {path: /.well-known/api-catalog, status: 403, file: null}
+      - {path: /.well-known/ai-plugin.json, status: 403, file: null}
+      - {path: /.well-known/agent-card.json, status: 403, file: null}
+      - {path: /.well-known/agent.json, status: 403, file: null}
+    note: >-
+      Production API gateway behind Akamai. Every anonymous request is refused with a 403 Access
+      Denied page, including the control path, so nothing can be established about what it serves.
+  - host: api.citizensbank.com
+    documents:
+      - {path: /.well-known/security.txt, status: 0, file: null}
+      - {path: /.well-known/openid-configuration, status: 0, file: null}
+      - {path: /.well-known/oauth-authorization-server, status: 0, file: null}
+      - {path: /.well-known/api-catalog, status: 0, file: null}
+      - {path: /.well-known/ai-plugin.json, status: 0, file: null}
+      - {path: /.well-known/agent.json, status: 0, file: null}
+      - {path: /.well-known/agent-card.json, status: 0, file: null}
+    note: >-
+      The FDX host resolves to an AWS NLB (api-7400-prod-public-nlb...elb.us-east-1.amazonaws.com)
+      but the TCP connection times out from an unallowlisted source IP. Client IPs are provisioned by
+      Citizens at onboarding, so this is expected, not an outage.
+control_probe:
+  note: >-
+    The developer-portal 200s were validated against the body, not the status line: each returned the
+    same "Search Content | API Developer Portal" page that /this-path-does-not-exist returns, which
+    is why they are scored as absent rather than present.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

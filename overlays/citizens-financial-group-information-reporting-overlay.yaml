@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: Citizens Information Reporting API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is quoted from a Citizens-published document
+    named in the action description.
+extends: citizens-financial-group-information-reporting-openapi.yml
+actions:
+- target: $.info
+  description: Record harvest provenance.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/commercial-banking/api/informationreporting-v1
+- target: $.paths['/list'].get
+  description: Record the offset pagination contract published in the user guide.
+  update:
+    x-pagination:
+      style: offset
+      params:
+      - pageOffset
+      - pageLimit
+- target: $.paths['/transactions/query'].post
+  description: Record the published default and maximum record counts.
+  update:
+    x-pagination:
+      default-records: 100
+      max-records: 2000
+      source: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+    x-rate-limit-error: IR-429

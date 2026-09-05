@@ -1,0 +1,56 @@
+overlay: 1.0.0
+info:
+  title: Citizens Statements (FDX v1.0) API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is read from the harvested contract
+    itself or from a Citizens-published page named in the action description.
+extends: citizens-financial-group-statements-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/statements/api/statements-v1
+    x-apis-io-environment: production
+- target: $.info
+  description: Name the domain standard the contract declares in its own base path.
+  update:
+    x-domain-standard:
+      id: fdx
+      name: Financial Data Exchange (FDX) API
+      version: '1.0'
+      declared-at: $.basePath
+      see: conformance/citizens-financial-group-conformance.yml
+- target: $.paths['/accounts/{accountId}/statements'].get
+  description: The published contract declares no operationId. Supply a stable identifier; the name is ours,
+    not Citizens'.
+  update:
+    tags:
+    - Statements
+    x-apis-io-operation-id: listAccountStatements
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/statements/{statementId}'].get
+  description: Supply a stable identifier for the single-statement read.
+  update:
+    tags:
+    - Statements
+    x-apis-io-operation-id: getAccountStatement
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.securityDefinitions['x-fapi-financial-id']
+  description: Record the credentials the call actually needs beyond the single header the contract advertises.
+  update:
+    x-additional-required-credentials:
+    - Authorization Bearer token from https://apis.citizensbank.com/as/token.oauth2 (private_key_jwt over mTLS)
+    - X-IBM-Client-Id issued at developer-portal onboarding
+    - source-IP allowlisting provisioned by the Citizens Implementation Manager
+    x-source: authentication/citizens-financial-group-authentication.yml
+- target: $
+  description: Record the error-contract gap - only a 200 is declared on either path.
+  update:
+    x-error-contract-gap:
+      declared-status-codes:
+      - '200'
+      note: No 4xx or 5xx response is declared on any operation in this contract.
+      see: errors/citizens-financial-group-error-codes.yml

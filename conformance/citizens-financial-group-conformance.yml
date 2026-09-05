@@ -1,0 +1,158 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Contracts harvested into openapi/ on 2026-09-05 plus the Citizens API user guides at
+  https://developer.citizensbank.com/content/qut/ (Payments v1.3, Account Transfer v1.0, Account
+  Validation v1.6, Information Reporting v1.6).
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+conformance:
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      openapi/_original/citizens-payments-v3.json declares an oauth2 securityScheme with a
+      clientCredentials flow; CitizensPaymentAPIUserGuide.pdf section 3.1.3 publishes the token
+      endpoint https://apis.citizensbank.com/as/token.oauth2 and a working curl sample.
+  - id: rfc7523-jwt-client-assertion
+    conforms: true
+    evidence: >-
+      CitizensPaymentAPIUserGuide.pdf section 3.1.2-3.1.3 - client_assertion_type
+      urn:ietf:params:oauth:client-assertion-type:jwt-bearer with iss/sub/aud/exp/jti claims signed
+      RS256 and a client-hosted JWKS URL.
+  - id: fapi
+    conforms: true
+    standard: 'Financial-grade API Security Profile 1.0 - Part 2: Advanced'
+    evidence: >-
+      "Citizens APIs are built on top of 2-legged OAuth 2.0 Authentication workflow using the
+      Financial-grade API Security Profile 1.0 - Part 2: Advanced with Authorization Grant Type" -
+      https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 3.
+      Corroborated in the contracts by the required x-fapi-trace-id / x-fapi-channel-id headers
+      and the x-fapi-financial-id security scheme on the FDX surface.
+    note: >-
+      A self-declared profile claim plus matching header vocabulary. No OpenID Foundation FAPI
+      certification entry was found for Citizens Financial Group.
+  - id: mutual-tls
+    conforms: true
+    evidence: >-
+      CitizensPaymentAPIUserGuide.pdf section 3.1.1 - client and authorization server both present
+      certificates validated against a shared CA; the public key for the mTLS certificate is
+      collected at onboarding.
+  - id: oidc
+    conforms: false
+    evidence: >-
+      /.well-known/openid-configuration probed 2026-09-05 on citizensbank.com, www.citizensbank.com,
+      developer.citizensbank.com, sandboxdeveloper.citizensbank.com, apis.citizensbank.com and
+      api.citizensbank.com - 404, 403, or the portal's "Search Content" HTML shell. No OIDC discovery
+      document is served. The published flow is 2-legged client-credentials, which is not OIDC.
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      No declared response uses application/problem+json. The envelope is proprietary -
+      { result, source, errorDetails[] } - see errors/citizens-financial-group-problem-types.yml.
+  - id: pagination
+    conforms: true
+    evidence: >-
+      Information Reporting GET /list declares required pageOffset and pageLimit query parameters;
+      CitizensInformationReportingAPIUserGuide.pdf states 100 transaction records by default and up
+      to 2000 on request. Scoped to Information Reporting only.
+  - id: idempotency
+    conforms: partial
+    evidence: >-
+      Consumer-assigned paymentId on POST /v3/payments/initiate-payment with server-side duplicate
+      rejection (PMT1003, "paymentId provided in this request has already been processed"). No
+      Idempotency-Key header; replay returns an error rather than the original response. See
+      conventions/citizens-financial-group-conventions.yml.
+  - id: openapi
+    conforms: true
+    evidence: >-
+      Four contracts are OpenAPI 3.0.0 (Payments 3.1.11, Account Transfer 1.0.6, Account Validation
+      1.0.13, Information Reporting 1.0.16); eight are Swagger 2.0. All twelve are published through
+      the IBM API Connect developer portal explorer.
+
+domain_standards:
+  - id: fdx
+    name: Financial Data Exchange (FDX) API
+    conforms: true
+    version_observed:
+      - 'FDX v1.0 (production: https://api.citizensbank.com/fdx/v1.0)'
+      - 'FDX v2.1 (sandbox: https://sandboxapi.citizensbank.com/fdx/v2.1)'
+    evidence: >-
+      The contract declares the standard in its own base path. openapi/_original/citizens-accounts-fdx-v1.json
+      carries "basePath": "/fdx/v1.0" and "host": "api.citizensbank.com"; the sandbox Accounts
+      contract (v2.1.5) carries "basePath": "/fdx/v2.1". The FDX-shaped resource tree is present in
+      the paths themselves - /accounts, /accounts/{accountId}, /accounts/{accountId}/transactions,
+      /accounts/{accountId}/contact, /accounts/{accountId}/payment-networks and
+      /accounts/{accountId}/statements - and the security scheme is the FDX/FAPI x-fapi-financial-id
+      header.
+    spec_locations:
+      - openapi/_original/citizens-accounts-fdx-v1.json#/basePath
+      - openapi/_original/citizens-accounts-fdx-v2-sandbox.json#/basePath
+      - openapi/_original/citizens-statements-fdx-v1.json#/basePath
+      - openapi/_original/citizens-statements-fdx-v2-sandbox.json#/basePath
+    buyer_impact: >-
+      An aggregator that already speaks FDX can consume Citizens account, transaction and statement
+      data with no bespoke connector.
+  - id: iso20022
+    name: ISO 20022 external status reason codes
+    conforms: true
+    evidence: >-
+      The Payments API's published RTP reject-code vocabulary is ISO 20022 ExternalStatusReason1Code
+      - AC02/AC03/AC04/AC06/AC11/AC13/AC14, AG01/AG03, AM02-AM14, BE04-BE17, DS04/DS24, DT04, DUPL,
+      FF02/FF08, MD07, NARR, RC01-RC04, TM01 - carried through The Clearing House RTP network.
+    spec_locations:
+      - https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 6.4
+      - errors/citizens-financial-group-decline-codes.yml
+  - id: nacha-ach
+    name: Nacha ACH Standard Entry Class codes
+    conforms: true
+    evidence: >-
+      achDetails carries Nacha SEC codes (CCD, PPD, WEB, CTX) with the standard per-SEC constraints
+      published as validation errors - PMT1213 (counterpartyName 16 chars for CTX, 22 for others),
+      PMT1221 (one addenda record for CCD/PPD/WEB), PMT1222 (up to 9999 addenda for CTX), PMT1223
+      (amount 0 for a prenote).
+    spec_locations:
+      - https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 6.2
+      - openapi/_original/citizens-payments-v3.json#/components/schemas/AchDetails
+  - id: tch-rtp
+    name: The Clearing House RTP network
+    conforms: true
+    evidence: >-
+      POST /v3/payments/participant-status/query returns inNetwork / available / participantName and
+      an eligibleServices list drawn from the RTP service vocabulary (CREDIT_TRANSFER,
+      REQUEST_FOR_PAYMENT, ACKNOWLEDGMENT, REMITTANCE, REQUEST_FOR_INFORMATION,
+      REQUEST_FOR_RETURN_OF_FUNDS), described as "the TCH clearing scheme".
+    spec_locations:
+      - https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 5.1
+      - openapi/_original/citizens-payments-v3.json#/components/schemas/ParticipantStatusSummary
+  - id: iso13616-iban
+    name: International bank identifier schemes (IBAN, SWIFT BIC, IFSC, CLABE, CBU, CVU, CCI, CNAPS)
+    conforms: true
+    evidence: >-
+      Account Validation publishes per-scheme format rules as error codes AV-6001 through AV-6010 -
+      SWIFT_ID 8 or 11 alphanumerics, IBAN 5-34, IFSC 11, CLABE 18, USABA 9, BRAZIL_BANK_CODE 3,
+      CBU 22, CVU 22, CCI 20, CACPA 9.
+    spec_locations:
+      - https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf section 8
+
+not_applicable:
+  - id: psd2
+    reason: US-only institution; no EU/UK open-banking regime applies. FDX is the US equivalent and is claimed above.
+  - id: scim
+    reason: No identity-provisioning surface is published.
+  - id: odata
+    reason: No OData $metadata surface.
+  - id: fhir
+    reason: Not a healthcare provider.
+
+certifications_published: none-found
+certification_note: >-
+  No trust center, SOC 2 / ISO 27001 / PCI attestation page or compliance-certification listing was
+  found on citizensbank.com or developer.citizensbank.com on 2026-09-05. Citizens is a US
+  bank holding company regulated by the Federal Reserve and OCC, and its bank subsidiary is an FDIC
+  member ("Citizens is a brand name of Citizens Bank, N.A. Member FDIC", published in the developer
+  portal footer) - but supervisory status is not an API compliance program and is not recorded as one.
+
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

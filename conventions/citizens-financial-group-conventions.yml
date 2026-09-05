@@ -1,0 +1,191 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Citizens API user guides (Payments v1.3 2025-12-11, Account Transfer v1.0 2026-05-29, Account
+  Validation v1.6 2026-04-30, Information Reporting v1.6 2026-07-22) at
+  https://developer.citizensbank.com/content/qut/, cross-checked against the contracts harvested into
+  openapi/.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+auth_style:
+  summary: >-
+    OAuth 2.0 client-credentials with a private_key_jwt assertion over mTLS, plus an IBM API Connect
+    X-IBM-Client-Id header. Citizens states conformance with FAPI 1.0 Part 2 Advanced.
+  see: authentication/citizens-financial-group-authentication.yml
+
+versioning:
+  style: path
+  pattern: https://apis.citizensbank.com/{major}/{service}
+  examples:
+    - /v3/payments
+    - /v1/account-transfer
+    - /v1/account-validation
+    - /v1/information-reporting
+    - /fdx/v1.0 (api.citizensbank.com)
+    - /fdx/v2.1 (sandboxapi.citizensbank.com)
+  note: >-
+    Major version is in the path; the developer portal additionally shows a full semantic version per
+    API (Payments 3.1.11, Information Reporting 1.0.16, Account Validation 1.0.13, Account Transfer
+    1.0.6, Accounts 1.0.5 / 2.1.5, Statements 1.0.7 / 2.0.5, Authorize 1.0.4 / 2.0.4).
+
+request_id_tracing:
+  supported: true
+  headers:
+    - name: x-fapi-trace-id
+      required: true
+      max_length: 36
+      description: Unique UUID per request, used to trace the request end to end.
+    - name: x-fapi-channel-id
+      required: false
+      max_length: 20
+      description: Distinguishes communication channels or data streams within a client system.
+    - name: requestid
+      required: false
+      max_length: 36
+      description: >-
+        Consumer-assigned identifier on the Payments API, echoed back as `requestId` for tracking,
+        logging, error handling and correlation.
+  source: CitizensPaymentAPIUserGuide.pdf 5.1.2 / 5.1.5; information-reporting + account-validation OpenAPI parameters
+
+pagination:
+  style: offset
+  scope: Information Reporting only
+  params:
+    - name: pageOffset
+      in: query
+      required: true
+      description: Page number the pagination starts from.
+    - name: pageLimit
+      in: query
+      required: true
+      description: Maximum number of records per page.
+    - name: limit
+      in: body
+      required: false
+      description: Number of transaction records to return.
+  defaults:
+    transactions_default: 100
+    transactions_maximum: 2000
+  source: >-
+    https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf -
+    "By default, 100 records are returned. Optionally, up to 2000 transaction records can be returned."
+  note: >-
+    The FDX Accounts / Statements contracts and the ATM / Branch Locator contracts publish no
+    pagination parameters.
+
+error_envelope:
+  shape: proprietary
+  rfc9457: false
+  media_type: application/json
+  fields:
+    - name: result
+      values: [FATAL, WARNING]
+      description: FATAL = processing failed. WARNING = success carrying information that the transaction is not absolutely complete.
+    - name: source
+      description: Source or provider system that caused the error.
+    - name: errorDetails[]
+      description: Array of { code, description, messageDetail }.
+  example_reference: openapi/_original/citizens-payments-v3.json#/components/schemas/Error
+  see: errors/citizens-financial-group-error-codes.yml
+
+idempotency:
+  coverage: partial
+  mechanism: >-
+    Client-supplied unique key with server-side duplicate rejection. The Payments API requires a
+    consumer-assigned `paymentId` (max 15 chars) on POST /initiate-payment, and Citizens rejects a
+    replay with error PMT1003 - "paymentId should be unique. paymentId provided in this request has
+    already been processed." This prevents a double-fire but is NOT idempotent replay: the retry
+    returns a 400 error, not the original 200 response, so a client that lost the first response
+    must reconcile through POST /payment-status/query rather than by retrying.
+  header: none
+  scope:
+    - initiatePayment
+  retention: not published
+  source: >-
+    https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 6.2
+    (Initiate Payment Error Codes, PMT1003)
+  gaps:
+    - No Idempotency-Key header anywhere in the published surface.
+    - >-
+      initiateTransfer (Account Transfer) and getAccountInquiry (Account Validation) are mutating
+      operations with no documented duplicate-key protection; Account Transfer publishes an AT-409
+      Conflict code but does not document what triggers it.
+    - Replay window / key retention period is not published.
+
+reversibility:
+  grade: documented
+  summary: >-
+    Citizens publishes no reversal, cancel, void or refund operation on any of its 12 published
+    contracts. The only stated undo is automatic, not client-initiated, and it applies to one
+    read-path inquiry rather than to a money movement.
+  write_surface:
+    - operation: initiatePayment
+      api: Payments
+      reversal_operation: null
+      window: null
+      note: >-
+        Once submitted there is no cancel or recall operation. For RTP, POST /payment-status/query is
+        required to learn whether the receiving bank accepted or rejected the payment, because the
+        final status is not available from the initial submission. Rejection is a network outcome
+        (RTP reject codes), not a caller-initiated reversal.
+      source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf sections 5.2.1, 6.4
+    - operation: initiateTransfer
+      api: Account Transfer
+      reversal_operation: null
+      window: null
+      note: >-
+        Single same-day internal transfers only; future-dated transfers are not supported and no
+        cancel operation is published.
+      source: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+    - operation: getAccountInquiry
+      api: Account Validation
+      reversal_operation: automatic cancellation (server-side, no client operation)
+      window: 24 hours
+      window_statement: >-
+        "If inquiry status is not received within 24 hours, the request will be automatically
+        canceled."
+      source: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf section 4
+  read_only_surface:
+    - Accounts (FDX)
+    - Statements (FDX)
+    - Information Reporting
+    - ATM Locator
+    - Branch Locator
+  note: >-
+    Graded `documented` rather than `verified`: one stated window exists (the 24-hour Account
+    Validation auto-cancel) but it does not attach to a caller-invocable reversal, and the two real
+    money-movement operations publish no reversal path at all.
+
+rate_limit_signaling:
+  see: rate-limits/citizens-financial-group-rate-limits.yml
+  status_code: 429
+  codes:
+    - AT-429 (Account Transfer) - "The user has sent too many requests in a given time frame (rate limiting)."
+    - IR-429 (Information Reporting) - same wording.
+    - AV-4001 (Account Validation) - "You have exceeded the rate limit for the number of status requests."
+  response_headers: none published
+
+expansion_and_sparse_fields:
+  supported: false
+  note: No field-expansion, sparse-fieldset or metadata convention is published on any Citizens API.
+
+dry_run_mode:
+  supported: partial
+  note: >-
+    Not a dry-run flag, but two rehearsal affordances exist: an ACH prenote (amount sent as zero, per
+    PMT1223) validates an account without moving money, and POST /participant-status/query checks RTP
+    counterparty eligibility before initiating. A full sandbox environment is mandatory before
+    production (see sandbox/).
+
+cross_links:
+  errors: errors/citizens-financial-group-error-codes.yml
+  decline_codes: errors/citizens-financial-group-decline-codes.yml
+  problem_types: errors/citizens-financial-group-problem-types.yml
+  lifecycle: lifecycle/citizens-financial-group-lifecycle.yml
+  authentication: authentication/citizens-financial-group-authentication.yml
+  scopes: scopes/citizens-financial-group-scopes.yml
+  rate_limits: rate-limits/citizens-financial-group-rate-limits.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

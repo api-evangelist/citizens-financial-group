@@ -1,0 +1,81 @@
+overlay: 1.0.0
+info:
+  title: Citizens Accounts (FDX v1.0) API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is read from the harvested contract
+    itself or from a Citizens-published page named in the action description.
+extends: citizens-financial-group-accounts-openapi.yml
+actions:
+- target: $.info
+  description: Record the harvest provenance and the portal page the contract was read from.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/accounts/api/70
+    x-apis-io-environment: production
+- target: $.info
+  description: Name the domain standard the contract declares in its own base path. /fdx/v1.0 plus the
+    FDX-shaped resource tree is the definitive signal, not a marketing claim.
+  update:
+    x-domain-standard:
+      id: fdx
+      name: Financial Data Exchange (FDX) API
+      version: '1.0'
+      declared-at: $.basePath
+      see: conformance/citizens-financial-group-conformance.yml
+- target: $.paths['/accounts'].get
+  description: The published contract declares no operationId on any path. Supply a stable identifier so
+    the operation can be referenced by agents and crosswalks; the name is ours, not Citizens'.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: listAccounts
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}'].get
+  description: Supply a stable identifier for the account-detail read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccount
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/transactions'].get
+  description: Supply a stable identifier for the transaction read.
+  update:
+    tags:
+    - Transactions
+    x-apis-io-operation-id: listAccountTransactions
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/contact'].get
+  description: Supply a stable identifier for the account contact read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccountContact
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.paths['/accounts/{accountId}/payment-networks'].get
+  description: Supply a stable identifier for the payment-networks read.
+  update:
+    tags:
+    - Accounts
+    x-apis-io-operation-id: getAccountPaymentNetworks
+    x-apis-io-operation-id-source: assigned by API Evangelist; the published contract declares none
+- target: $.securityDefinitions['x-fapi-financial-id']
+  description: Record how the surface is actually reached. The contract advertises only the FAPI financial-id
+    header; the user guides state the call additionally requires a bearer token from the client-credentials
+    flow and an X-IBM-Client-Id issued by the developer portal.
+  update:
+    x-additional-required-credentials:
+    - Authorization Bearer token from https://apis.citizensbank.com/as/token.oauth2 (private_key_jwt over mTLS)
+    - X-IBM-Client-Id issued at developer-portal onboarding
+    - source-IP allowlisting provisioned by the Citizens Implementation Manager
+    x-source: authentication/citizens-financial-group-authentication.yml
+- target: $
+  description: Record the error-contract gap. Every path in this contract declares a 200 and nothing else,
+    so no failure mode is machine-readable; the real code registry is published only in the PDF user guides.
+  update:
+    x-error-contract-gap:
+      declared-status-codes:
+      - '200'
+      note: No 4xx or 5xx response is declared on any operation in this contract.
+      see: errors/citizens-financial-group-error-codes.yml

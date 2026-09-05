@@ -1,0 +1,620 @@
+openapi: 3.0.0
+info:
+  title: Account Validation
+  description: "With the Account Validation API you can validate payee details to reduce payment processing\
+    \ errors. You can validate Account Number, Routing Number, and Beneficiary. Many payments are made\
+    \ in real-time and are irrevocable, confirming those payments go to the right counterparty is essential.\
+    \ The following functions are available:\n\n   - Verify a bank account based on account number and\
+    \ routing number.\n   - Verify the account status (open, closed, unverified, incorrect, rejected,\
+    \ open credits only).\n   - Verify a beneficiary name match status (partial, full, no match).\n<br><br>\n\
+    \nThe **Account Validation Services** offer the following key features:\n\n1. **Initiate Account Inquiry\
+    \ API**:\n   - This endpoint initiates an account validation request by submitting the account details,\
+    \ bank details, and beneficiary name. Upon successful submission, a unique reference ID is returned,\
+    \ which can be used to track the status of the inquiry. If status is available immediately, /initiation\
+    \ API response includes reference Id along with account inquiry status and name match status.\n  \
+    \ - **Endpoint**: `v1/account-validation/initiation` (POST)\n   - **Purpose**: To initiate an account\
+    \ validation request.\n\n2. **Get Account Inquiry Status API**:\n   - This endpoint retrieves the\
+    \ status of an account inquiry request by providing the reference ID returned during the initiation\
+    \ step. This API checks if the validation is still in progress, completed, or has failed, along with\
+    \ any relevant status messages. Once the account inquiry is completed, the status can be requested\
+    \ up to three times.\n   - **Endpoint**: `v1/account-validation/status` (GET)\n   - **Purpose**: To\
+    \ retrieve account validation result using the reference ID.\n"
+  contact:
+    name: Commercial Sales team
+    url: https://www.citizensbank.com/corporate-finance/overview.aspx?cmclmkt#next-step
+  version: 1.0.13
+  x-ibm-name: account-validation
+  x-pathalias: accountvalidation-v1
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/commercial-banking/api/accountvalidation-v1
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+externalDocs:
+  description: API Documentation
+  url: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+security:
+- client-id: []
+paths:
+  /initiation:
+    post:
+      tags:
+      - Initiate Account Validation Inquiry
+      summary: Initiate account validation request with account and bank details.
+      description: This endpoint allows users to initiate an account inquiry by providing beneficiary
+        name, account details and bank details.
+      operationId: getAccountInquiry
+      parameters:
+      - name: x-fapi-trace-id
+        in: header
+        description: Unique request id for each request to make it traceable if needed.
+        required: true
+        style: simple
+        schema:
+          maxLength: 36
+          type: string
+      - name: x-fapi-channel-id
+        in: header
+        description: Identifier used to distinguish between different communication channels or data streams
+          within a client system.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 20
+          type: string
+      - name: Authorization
+        in: header
+        description: OAuth 2.0 Authorization Bearer Token
+        required: true
+        style: simple
+        schema:
+          $ref: '#/components/schemas/AuthorizationHeader'
+        example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+      requestBody:
+        description: The request body must include account identifiers and bank identifiers to initiate
+          account inquiry process.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountStatusInquiryRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully initiated account inquiry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        '400':
+          description: Bad request. This may occur if the input data is invalid or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized. The user does not have permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedErrorResponse'
+        '500':
+          description: Internal Server Error. An unexpected error occurred on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+  /status:
+    get:
+      tags:
+      - Get Account Inquiry Status
+      summary: Retrieve account inquiry status by reference ID
+      description: This endpoint retrieves the status of an account inquiry using a reference ID.
+      operationId: getAccountInquiryByRefId
+      parameters:
+      - name: x-fapi-trace-id
+        in: header
+        description: Unique request id for each request to make it traceable if needed.
+        required: true
+        style: simple
+        schema:
+          maxLength: 36
+          type: string
+      - name: x-fapi-channel-id
+        in: header
+        description: Identifier used to distinguish between different communication channels or data streams
+          within a client system.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          maxLength: 20
+          type: string
+      - name: Authorization
+        in: header
+        description: OAuth 2.0 Authorization Bearer Token
+        required: true
+        style: simple
+        schema:
+          $ref: '#/components/schemas/AuthorizationHeader'
+        example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+      - name: referenceId
+        in: query
+        description: The unique reference ID associated with the account inquiry.
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the account inquiry status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInquiryResponse'
+        '401':
+          description: Unauthorized. The user does not have permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedRequestErrorResponse'
+        '500':
+          description: Internal Server Error. An unexpected error occurred on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errorDetails'
+    UnauthorizedRequestErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
+    UnauthorizedErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
+    InternalServerErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
+    AccountIdentifier:
+      type: object
+      properties:
+        businessName:
+          type: string
+          description: Business name, if the account is a business account.
+          example: ABC CORP
+        accountNumber:
+          type: string
+          description: The account number being validated.
+          example: '112234000'
+        accountType:
+          type: string
+          description: The type of account identifer.
+          example: ACCOUNT_NUMBER
+          enum:
+          - IBAN
+          - CLABE
+          - BBAN
+          - ACCOUNT_NUMBER
+          - CBU
+          - CVU
+          - CCI
+          - SHID
+          - MBNO
+        country:
+          type: string
+          description: Country associated with the account.
+          example: US
+          enum:
+          - US
+          - AR
+          - BR
+          - CA
+          - CN
+          - CO
+          - EU
+          - HK
+          - IN
+          - ID
+          - MY
+          - MX
+          - NP
+          - NG
+          - PK
+          - PE
+          - SG
+          - ZA
+          - KR
+          - TW
+          - TH
+          - AE
+          - UY
+          - VN
+      description: Schema for account identifiers, including personal and account details.
+    AccountStatusInquiryRequest:
+      type: object
+      properties:
+        accountIdentifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        bankIdentifier:
+          $ref: '#/components/schemas/BankIdentifier'
+      description: Schema for the request body to initiate an account inquiry. Includes account and bank
+        identifiers.
+    BankIdentifier:
+      type: object
+      properties:
+        idType:
+          type: string
+          description: Type of bank identifier (e.g., SWIFT, ABA).
+          example: USABA
+          enum:
+          - SWIFT_ID
+          - IBAN
+          - IFSC
+          - CLABE
+          - USABA
+          - BRAZIL_BANK_CODE
+          - CBU
+          - CVU
+          - CACPA
+          - CNAPS
+          - ACCOUNT_NUMBER
+          - SHID
+          - MBNO
+          - ZANCC
+        idValue:
+          type: string
+          description: Value of the bank identifier.
+          example: '101000019'
+      description: Schema for bank identifiers, includes bank id type and bank id value.
+    AccountInquiryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message about the response.
+          example: Successfully processed
+        description:
+          type: string
+          description: Detailed description of the response.
+          example: Successfully retrieved inquiry status.
+        requestId:
+          type: string
+          description: Unique identifier for the request.
+          example: 6823527217cf82e16df9244b569cf1d2
+        requestTime:
+          type: string
+          description: Timestamp of the request.
+          format: date-time
+        data:
+          $ref: '#/components/schemas/AccountInquiryResponse_data'
+        status:
+          type: integer
+          description: HTTP status code of the response.
+          format: int32
+          example: 200
+      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry
+        status, and metadata.
+    AccountInquiryInitiateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message about the response.
+          example: Successfully processed
+        description:
+          type: string
+          description: Detailed description of the response.
+          example: Account Inquiry Initiated.
+        requestId:
+          type: string
+          description: Unique identifier for the request.
+          example: 6823527217cf82e16df9244b569cf1d2
+        requestTime:
+          type: string
+          description: Timestamp of the request.
+          format: date-time
+        data:
+          $ref: '#/components/schemas/AccountInquiryInitiateResponse_data'
+        status:
+          type: integer
+          description: HTTP status code of the response.
+          format: int32
+          example: 200
+      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry
+        status, and metadata.
+    inline_response_200:
+      oneOf:
+      - $ref: '#/components/schemas/AccountInquiryInitiateResponse'
+      - $ref: '#/components/schemas/AccountInquiryResponse'
+    ErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation
+            layer. A list of error codes will be provided in the user guide.
+          example: AV-400
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any
+            handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    UnauthorizedRequestErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation
+            layer. A list of error codes will be provided in the user guide.
+          example: AV-401
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any
+            handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    InternalServerErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation
+            layer. A list of error codes will be provided in the user guide.
+          example: AV-500
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any
+            handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    AccountInquiryResponse_data_referenceIdentifier:
+      type: object
+      properties:
+        referenceId:
+          type: string
+          description: Unique reference ID for the inquiry.
+          example: c9820cbb-ee63-443d-859c-45556514fd3c
+    AccountInquiryResponse_data_inquiryStatus:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: The account number being validated.
+          example: '112234000'
+        routingNumber:
+          type: string
+          description: The routing number associated with the account.
+          example: '311079474'
+        accountName:
+          type: string
+          description: Name associated with the account.
+          example: ABC CORP
+        accountStatus:
+          type: string
+          description: Status of the account (e.g., OPEN, CLOSED).
+          example: OPEN
+        accountStatusMessage:
+          type: string
+          description: Detailed message about the account status.
+          example: Open
+        accountStatusCode:
+          type: string
+          description: Code representing the account status.
+          example: AC00
+        nameMatchStatus:
+          type: string
+          description: Status of the name match (e.g., FULL, PARTIAL).
+          example: FULL
+    AccountInquiryResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+        inquiryStatus:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
+    AccountInquiryInitiateResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+    AuthorizationHeader:
+      title: JWT Access Token
+      type: string
+  parameters:
+    x-fapi-trace-id:
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      required: true
+      style: simple
+      schema:
+        maxLength: 36
+        type: string
+    x-fapi-channel-id:
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams
+        within a client system.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        type: string
+    authorization:
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+  securitySchemes:
+    client-id:
+      type: apiKey
+      name: X-IBM-Client-Id
+      in: header
+      x-key-type: client_id
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+          scopes:
+            av:read: Access to read AV data
+      x-ibm-oauth-provider: externalpingfederate
+x-ibm-configuration:
+  cors:
+    enabled: true
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  application-authentication:
+    certificate: false
+servers:
+- url: https://apis.citizensbank.com/v1/account-validation
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v1/account-validation

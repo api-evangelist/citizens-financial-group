@@ -1,0 +1,61 @@
+swagger: '2.0'
+info:
+  title: Authorize
+  x-ibm-name: authorize
+  version: 2.0.4
+  description: The IDP v2.0 is a system that allows authentication of a customer (e.g. Partners) and grants
+    permission to the customer to access the bank resources such as Accounts and Transactions for sandbox.
+  x-ibm-summary: ''
+  x-source-url: https://sandboxdeveloper.citizensbank.com/product/121/api/97
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: sandbox
+schemes:
+- https
+basePath: /authorize/v2.0
+produces:
+- application/json
+consumes:
+- application/json
+security: []
+securityDefinitions:
+  x-client-id:
+    type: apiKey
+    description: Identifies the desired financial institution or partners.
+    name: x-client-id
+    in: header
+    x-key-type: client_id
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: false
+  type: rest
+  application-authentication:
+    certificate: false
+  servers:
+  - url: https://sandboxapi.citizensbank.com/authorize/v2.0
+    type:
+    - production
+    - development
+paths:
+  /revoke:
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: The token that client wants to revoke
+      type: string
+    - name: x-client-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    post:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
+host: sandboxapi.citizensbank.com

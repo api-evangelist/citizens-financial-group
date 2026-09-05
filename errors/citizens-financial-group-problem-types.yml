@@ -1,0 +1,310 @@
+generated: '2026-09-05'
+method: derived
+source: Derived from the 4xx/5xx responses declared in the 12 contracts under openapi/_original/, harvested 2026-09-05
+  from the Citizens API Developer Portal.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+format: proprietary
+rfc9457: false
+note: Citizens does not serve application/problem+json. Every declared error response uses application/json carrying
+  the proprietary { result, source, errorDetails[] } envelope (or a per-API ErrorResponse variant). The human-readable
+  code registry behind these responses is catalogued in errors/citizens-financial-group-error-codes.yml; RTP network
+  rejects in errors/citizens-financial-group-decline-codes.yml.
+problem_type_count: 32
+problem_types:
+- api: Account Transfer
+  operationId: initiateTransfer
+  method: POST
+  path: /initiate
+  status: 400
+  title: Bad request
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse400'
+  spec: openapi/citizens-account-transfer-v1
+- api: Account Transfer
+  operationId: initiateTransfer
+  method: POST
+  path: /initiate
+  status: 401
+  title: Unauthorized
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse401'
+  spec: openapi/citizens-account-transfer-v1
+- api: Account Transfer
+  operationId: initiateTransfer
+  method: POST
+  path: /initiate
+  status: 500
+  title: Internal Server Error
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-account-transfer-v1
+- api: Account Validation
+  operationId: getAccountInquiry
+  method: POST
+  path: /initiation
+  status: 400
+  title: Bad request. This may occur if the input data is invalid or missing required fields.
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-account-validation-v1
+- api: Account Validation
+  operationId: getAccountInquiry
+  method: POST
+  path: /initiation
+  status: 401
+  title: Unauthorized. The user does not have permission to access this resource.
+  media_type: application/json
+  schema: '#/components/schemas/UnauthorizedErrorResponse'
+  spec: openapi/citizens-account-validation-v1
+- api: Account Validation
+  operationId: getAccountInquiry
+  method: POST
+  path: /initiation
+  status: 500
+  title: Internal Server Error. An unexpected error occurred on the server.
+  media_type: application/json
+  schema: '#/components/schemas/InternalServerErrorResponse'
+  spec: openapi/citizens-account-validation-v1
+- api: Account Validation
+  operationId: getAccountInquiryByRefId
+  method: GET
+  path: /status
+  status: 401
+  title: Unauthorized. The user does not have permission to access this resource.
+  media_type: application/json
+  schema: '#/components/schemas/UnauthorizedRequestErrorResponse'
+  spec: openapi/citizens-account-validation-v1
+- api: Account Validation
+  operationId: getAccountInquiryByRefId
+  method: GET
+  path: /status
+  status: 500
+  title: Internal Server Error. An unexpected error occurred on the server.
+  media_type: application/json
+  schema: '#/components/schemas/InternalServerErrorResponse'
+  spec: openapi/citizens-account-validation-v1
+- api: Information Reporting
+  operationId: getAccountDetails
+  method: POST
+  path: /balance/query
+  status: 400
+  title: Bad request
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountDetails
+  method: POST
+  path: /balance/query
+  status: 401
+  title: Unauthorized
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountDetails
+  method: POST
+  path: /balance/query
+  status: 404
+  title: Resource not found
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountDetails
+  method: POST
+  path: /balance/query
+  status: 500
+  title: Internal Server Error
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountList
+  method: GET
+  path: /list
+  status: 400
+  title: Bad request
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountList
+  method: GET
+  path: /list
+  status: 401
+  title: Unauthorized
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountList
+  method: GET
+  path: /list
+  status: 404
+  title: Resource not found
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getAccountList
+  method: GET
+  path: /list
+  status: 500
+  title: Internal Server Error
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getTransactions
+  method: POST
+  path: /transactions/query
+  status: 400
+  title: Bad request
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getTransactions
+  method: POST
+  path: /transactions/query
+  status: 401
+  title: Unauthorized
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getTransactions
+  method: POST
+  path: /transactions/query
+  status: 404
+  title: Resource not found
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Information Reporting
+  operationId: getTransactions
+  method: POST
+  path: /transactions/query
+  status: 500
+  title: Internal Server Error
+  media_type: application/json
+  schema: '#/components/schemas/ErrorResponse'
+  spec: openapi/citizens-information-reporting-v1
+- api: Payments
+  operationId: checkParticipantStatus
+  method: POST
+  path: /participant-status/query
+  status: 400
+  title: Bad Request.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: checkParticipantStatus
+  method: POST
+  path: /participant-status/query
+  status: 401
+  title: Unauthorized Access or app-token is not valid.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: checkParticipantStatus
+  method: POST
+  path: /participant-status/query
+  status: 404
+  title: Record not found or Resource not available .
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: checkParticipantStatus
+  method: POST
+  path: /participant-status/query
+  status: 500
+  title: Internal server error or any other provider system error.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: initiatePayment
+  method: POST
+  path: /initiate-payment
+  status: 400
+  title: Bad Request.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: initiatePayment
+  method: POST
+  path: /initiate-payment
+  status: 401
+  title: Unauthorized Access or app-token is not valid.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: initiatePayment
+  method: POST
+  path: /initiate-payment
+  status: 404
+  title: Resource not found.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: initiatePayment
+  method: POST
+  path: /initiate-payment
+  status: 500
+  title: Internal server error.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: retrievePaymentStatus
+  method: POST
+  path: /payment-status/query
+  status: 400
+  title: Bad Request.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: retrievePaymentStatus
+  method: POST
+  path: /payment-status/query
+  status: 401
+  title: Unauthorized Access or app-token is not valid.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: retrievePaymentStatus
+  method: POST
+  path: /payment-status/query
+  status: 404
+  title: Resource not found.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+- api: Payments
+  operationId: retrievePaymentStatus
+  method: POST
+  path: /payment-status/query
+  status: 500
+  title: Internal server error.
+  media_type: application/json
+  schema: '#/components/schemas/Error'
+  spec: openapi/citizens-payments-v3
+gaps:
+- The FDX Accounts / Statements contracts and the ATM / Branch Locator contracts declare only a 200 response - no
+  error responses are modelled at all.
+- No response declares an error code enum, so a client cannot map an HTTP status to a Citizens error code from the
+  contract alone; the code tables live only in the PDF user guides.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

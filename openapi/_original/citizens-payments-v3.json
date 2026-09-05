@@ -1,0 +1,1026 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payments",
+    "x-ibm-name": "Payments",
+    "version": "3.1.11",
+    "description": "The Payment API provides authenticated clients with a secure and streamlined way to initiate payments and retrieve transaction status programmatically. Designed specifically for ACH and RTP payment rails.  The API enforces FAPI-compliant security standards, including OAuth 2.0 with fine-grained scopes, and delivers responses in standardized JSON format for seamless, secure integration.\n\n The **Payment API** provides the following functionalities:\n \n<br> 1. **Participant Status Inquiry API**:\n   - Retrieves the supported status of a financial institution for the specified routing number and payment type (ACH or RTP).\n   - **Endpoint**: `v3/payments/participant-status/query` (POST)\n   - **Purpose**: To retrieve the payment participant status.\n   \n<br> 2. **Initiate Payment API**:\n   -  Submit payment instructions of different payment types (ACH and RTP).\n   - **Endpoint**: `v3/payments/initiate-payment` (POST)\n   - **Purpose**: To create payment initiation.\n   \n<br> 3. **Transaction Inquiry Status API**:\n   - Retrieves the status of a transaction initiated by the payer using the payment ID.\n   - **Endpoint**: `v3/payments/payment-status/query` (POST)\n   - **Purpose**: To retrieve the transaction status by paymentId and payment type.",
+    "x-pathalias": "payments-v3",
+    "contact": {
+      "url": "https://www.citizensbank.com/corporate-finance/overview.aspx?cmclmkt#next-step",
+      "name": "Commercial Sales team"
+    },
+    "x-ibm-summary": ""
+  },
+  "externalDocs": {
+    "description": "API Documentation",
+    "url": "https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf"
+  },
+  "security": [
+    {
+      "client-id": []
+    }
+  ],
+  "paths": {
+    "/participant-status/query": {
+      "post": {
+        "summary": "Allows you to retrieve status and basic information of the financial institution based on the routing number and payment type.",
+        "description": "Retrieves the payment type (WIRE and RTP) supported status of  financial institution for the routing number and payment type provided. Additionally, returns the bank name, address and availability of participant to do a payment.",
+        "operationId": "checkParticipantStatus",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-fapi-trace-id"
+          },
+          {
+            "$ref": "#/components/parameters/x-fapi-channel-id"
+          },
+          {
+            "$ref": "#/components/parameters/authorization"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The request body must include account identifiers and bank identifiers  to initiate account inquiry process.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantStatusQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of accounts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantStatusSummary"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content available."
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access or app-token is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found or Resource not available .",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error or any other provider system error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/initiate-payment": {
+      "post": {
+        "summary": "Initiates a payment instruction.",
+        "description": "Allows consumer to submit payment instructions of different payment types.",
+        "operationId": "initiatePayment",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-fapi-trace-id"
+          },
+          {
+            "$ref": "#/components/parameters/x-fapi-channel-id"
+          },
+          {
+            "$ref": "#/components/parameters/authorization"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The request body must include account identifiers and bank identifiers  to initiate account inquiry process.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInitiationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The operation was successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInitiationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access or app-token is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment-status/query": {
+      "post": {
+        "summary": "The Payment Status resource retrieves the status of a transaction initiated by the consumer.",
+        "description": "Retrieves the status of a transaction initiated by the payer by sending the payment id in the request.",
+        "operationId": "retrievePaymentStatus",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-fapi-trace-id"
+          },
+          {
+            "$ref": "#/components/parameters/x-fapi-channel-id"
+          },
+          {
+            "$ref": "#/components/parameters/authorization"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The request body must include account identifiers and bank identifiers  to initiate account inquiry process.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The operation was successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentStatusResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content available."
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access or app-token is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ParticipantStatusQuery": {
+        "type": "object",
+        "required": [
+          "paymentType",
+          "routingNumber"
+        ],
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "example": 21000089,
+            "description": "A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.",
+            "minLength": 9,
+            "maxLength": 9
+          },
+          "paymentType": {
+            "type": "string",
+            "example": "RTP",
+            "description": "Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.",
+            "enum": [
+              "WIRE",
+              "RTP"
+            ]
+          }
+        }
+      },
+      "ParticipantStatusSummary": {
+        "type": "object",
+        "required": [
+          "available",
+          "inNetwork",
+          "paymentType",
+          "routingNumber"
+        ],
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "example": 21000089,
+            "description": "A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.",
+            "minLength": 9,
+            "maxLength": 9
+          },
+          "paymentType": {
+            "type": "string",
+            "example": "RTP",
+            "description": "Describes the type of payment for which the routing number is searched for.Possible values WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.",
+            "maxLength": 4,
+            "enum": [
+              "WIRE",
+              "RTP"
+            ]
+          },
+          "inNetwork": {
+            "type": "string",
+            "example": "YES",
+            "description": "Describes the presence of a Financial Institution in clearing network(The Clearing House/Fed Wire/Automate Clearing House).",
+            "maxLength": 3,
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          },
+          "available": {
+            "type": "string",
+            "example": "YES",
+            "description": "Describes the availability of a Financial Institution to receive payments.",
+            "maxLength": 3,
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          },
+          "additionalInformation": {
+            "type": "string",
+            "example": "The Financial Institution is suspended or signedOff by clearing network",
+            "description": "This field is populated only when the value of 'available' field is 'NO'. It contains the reason for unavailability of the Financial Institution/participant.",
+            "maxLength": 140
+          },
+          "participantName": {
+            "type": "string",
+            "example": "Citizens Bank",
+            "description": "Name of the participant/Financial Institution registered in the payment clearing scheme.",
+            "maxLength": 36
+          },
+          "eligibleServices": {
+            "type": "array",
+            "example": [
+              "CREDIT_TRANSFER",
+              "REQUEST_FOR_PAYMENT",
+              "REQUEST_FOR_INFORMATION",
+              "REMITANCE",
+              "ACKNOWLEDGMENT"
+            ],
+            "description": "These are the list of eligible services provided/supported by the financial Institution for RTP payment type. Possible values are CREDIT_TRANSFER - These are push payments supported by the clearing network. REQUEST_FOR_PAYMENT - These are pull payments supported by the clearing network. ACKNOWLEDGMENT - Bank is capable of sending a confirmation that the payment has been received and settled REMITTANCE - Bank is capable of receiving remittance information like the payment has been received and settled REQUEST_FOR_INFORMATION - Bank has capability to receive request for information messages. REQUEST_FOR_RETURN_OF_FUND - Bank has capability to receive request for return of funds messages.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 6,
+            "minItems": 1
+          }
+        }
+      },
+      "PaymentInitiationRequest": {
+        "type": "object",
+        "required": [
+          "amount",
+          "counterpartyAccountInformation",
+          "paymentAccountInformation",
+          "paymentId",
+          "paymentType"
+        ],
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "example": "MCCSAP20190404A",
+            "description": "Unique identifier assigned by the consumer for the payment submission request",
+            "maxLength": 15
+          },
+          "paymentAccountInformation": {
+            "$ref": "#/components/schemas/PaymentAccountInformation"
+          },
+          "counterpartyAccountInformation": {
+            "$ref": "#/components/schemas/CounterpartyAccountInformation"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double",
+            "example": 100.23,
+            "description": "Initiated payment amount for the transaction. Decimal point has to be added in the amount sent and it can have maximum 11 digits before the decimal and maximum 2 digits after the decimal for RTP transactions. ACH transactions can have maximum 8 digits before the decimal and maximum 2 digits after the decimal. The amount for an ACH prenote should be sent as zero."
+          },
+          "memo": {
+            "type": "string",
+            "example": "DIGITAL WALLET PAYMENT- text will be visible to the receiver",
+            "description": "Free-form information to be conveyed to the receiver.",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "paymentType": {
+            "type": "string",
+            "example": "RTP",
+            "description": "The type of transaction being initiated. Possible values are RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included. ACH_CREDIT - Credit transfers done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions. ACH_DEBIT - Direct debits done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions.",
+            "maxLength": 10,
+            "enum": [
+              "RTP",
+              "ACH_CREDIT",
+              "ACH_DEBIT"
+            ]
+          },
+          "rtpDetails": {
+            "$ref": "#/components/schemas/RtpDetails"
+          },
+          "achDetails": {
+            "$ref": "#/components/schemas/AchDetails"
+          }
+        }
+      },
+      "PaymentAccountInformation": {
+        "type": "object",
+        "required": [
+          "accountNumber",
+          "routingNumber"
+        ],
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "example": "2523216",
+            "description": "Client account holder's ABA(routing) number.",
+            "minLength": 9,
+            "maxLength": 9
+          },
+          "accountNumber": {
+            "type": "string",
+            "example": "766060252",
+            "description": "Client account holder's account number.",
+            "maxLength": 17
+          }
+        },
+        "description": "The client party's account details"
+      },
+      "CounterpartyAccountInformation": {
+        "type": "object",
+        "required": [
+          "accountNumber",
+          "routingNumber"
+        ],
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "example": 53000196,
+            "description": "Counteryparty account holder's ABA(routing) number.",
+            "minLength": 9,
+            "maxLength": 9
+          },
+          "accountNumber": {
+            "type": "string",
+            "example": 123456789,
+            "description": "Counteryparty account holder's account number.",
+            "maxLength": 17
+          }
+        },
+        "description": "Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit."
+      },
+      "Debtor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "JOHN SMITH",
+            "description": "Originator or Debtor Account Holder's Name.",
+            "maxLength": 140
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "UltimateDebtor": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ACME CORP",
+            "description": "Name of the ultimate debtor party.",
+            "maxLength": 140
+          },
+          "id": {
+            "type": "string",
+            "example": "187658",
+            "description": "Id of the ultimate debtor party.",
+            "maxLength": 35
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "description": "Ultimate debtor (3rd party) details"
+      },
+      "UltimateCreditor": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "JOHN SMITH",
+            "description": "Name of the ultimate creditor party.",
+            "maxLength": 140
+          },
+          "id": {
+            "type": "string",
+            "example": "210356",
+            "description": "Id of the ultimate creditor party.",
+            "maxLength": 35
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "description": "Ultimate debtor (3rd party) details"
+      },
+      "CounterpartyAddressInformation": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "JOHN SMITH",
+            "description": "Counteryparty account holder's name.",
+            "maxLength": 140
+          },
+          "id": {
+            "type": "string",
+            "example": "187658",
+            "description": "Id assigned to the creditor/counterparty.",
+            "maxLength": 35
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "description": "Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal to $3000."
+      },
+      "CounterpartyInformation": {
+        "type": "object",
+        "required": [
+          "counterpartyAccountType",
+          "counterpartyName"
+        ],
+        "properties": {
+          "counterpartyAccountType": {
+            "type": "string",
+            "example": "SAVINGS",
+            "description": "Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.\nCHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.",
+            "enum": [
+              "CHECKING",
+              "SAVINGS"
+            ]
+          },
+          "counterpartyName": {
+            "type": "string",
+            "example": "JOHN SMITH",
+            "description": "Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.",
+            "maxLength": 22
+          }
+        },
+        "description": "Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit."
+      },
+      "RtpDetails": {
+        "type": "object",
+        "required": [
+          "counterpartyAddressInformation"
+        ],
+        "properties": {
+          "debtor": {
+            "$ref": "#/components/schemas/Debtor"
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/UltimateDebtor"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/UltimateCreditor"
+          },
+          "counterpartyAddressInformation": {
+            "$ref": "#/components/schemas/CounterpartyAddressInformation"
+          }
+        },
+        "description": "This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP."
+      },
+      "AchDetails": {
+        "type": "object",
+        "required": [
+          "companyEntryDescription",
+          "companyIdentification",
+          "companyName",
+          "counterpartyInformation",
+          "effectiveEntryDate",
+          "standardEntryClassCode"
+        ],
+        "properties": {
+          "standardEntryClassCode": {
+            "type": "string",
+            "example": "CCD",
+            "description": "Three-character code used to identify types  of entries. Values of Standard Entry Class code should be PPD - An entry initiated by an organization to consumer account of the receiver where authorization is obtained in writing. WEB - A single, recurring or standing authorization for by an organization to a consumer for an ACH debit entry when the internet or mobile device is used to initiate the payment. CCD - A single or a recurring ACH credit or debit originated to a corporate account. CTX - A single or a recurring ACH credit or debit originated to a corporate account that supports up to 9,999 addenda records.",
+            "enum": [
+              "PPD",
+              "WEB",
+              "CCD",
+              "CTX"
+            ]
+          },
+          "companyIdentification": {
+            "type": "string",
+            "example": "Achme1234",
+            "description": "Used to identify the Originator.  Assigned by the ODFI."
+          },
+          "companyName": {
+            "type": "string",
+            "example": "Achme",
+            "description": "Name of the Originator known and recognized by the Receiver."
+          },
+          "companyDescriptiveDate": {
+            "type": "string",
+            "example": 93024,
+            "description": "Allows originator to establish for descriptive purpose to identify the date. It may or may not be displayed to the receiver."
+          },
+          "effectiveEntryDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-09-30",
+            "description": "This field will enable the originator to specify a banking day controlling the settlement of the entries in the batch."
+          },
+          "prenote": {
+            "type": "string",
+            "example": "NO",
+            "description": "A prenote is a zero-dollar payment sent to a bank to verify a recipient's account and routing information before sending a live transaction."
+          },
+          "companyDiscretionaryData": {
+            "type": "string",
+            "example": "DIGIAL WALLET PAYOUT",
+            "description": "Allows the company to include information of significance only to you.",
+            "maxLength": 20
+          },
+          "companyEntryDescription": {
+            "type": "string",
+            "example": "PAYOUT",
+            "description": "Allows originator to insert a description of the entry's purpose.",
+            "maxLength": 10
+          },
+          "counterpartyInformation": {
+            "$ref": "#/components/schemas/CounterpartyInformation"
+          },
+          "identificationNumber": {
+            "type": "string",
+            "example": "MCCSAP20190404B",
+            "description": "The number by which the receiver is known to the originator. It is included for further identification. If not provided in the request then the paymentId would be passed in this field.",
+            "maxLength": 15
+          },
+          "addenda": {
+            "type": "array",
+            "example": [
+              "DIGITAL WALLET PAYMENT",
+              "INVOICE# 673425"
+            ],
+            "description": "A freeform text field that will travel with the payment instruction to the receiving financial institution. Multiple addenda records can be sent only for payments having CTX as the SEC code.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "paymentTypeCode": {
+            "type": "string",
+            "example": "SINGLE",
+            "description": "Allows the consumer to include codes of significance to enable specialized handling of the entry.",
+            "enum": [
+              "RECURRING",
+              "SINGLE",
+              "STANDING_AUTHORIZATION"
+            ]
+          }
+        },
+        "description": "This object provides the list of request fields needed to originate an ACH credit/debit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType ACH."
+      },
+      "PaymentInitiationResponse": {
+        "type": "object",
+        "required": [
+          "paymentId",
+          "paymentStatus",
+          "receivedDateTime"
+        ],
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "example": "M20190404OR",
+            "description": "Unique identifier for the payment submission request",
+            "maxLength": 15
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "RECEIVED",
+            "description": "Status of the payment instruction.",
+            "maxLength": 30,
+            "enum": [
+              "RECEIVED"
+            ]
+          },
+          "receivedDateTime": {
+            "format": "date",
+            "example": "2024-09-30",
+            "description": "The date and time when the request was received."
+          }
+        },
+        "description": "Response fields of the ACH Credit transfer initiated."
+      },
+      "PaymentStatusRequest": {
+        "type": "object",
+        "required": [
+          "paymentId",
+          "paymentType"
+        ],
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "example": "M20190404OR",
+            "description": "Unique identifier for the payment submission request.",
+            "maxLength": 15
+          },
+          "paymentType": {
+            "type": "string",
+            "example": "RTP",
+            "description": "The type of transaction that was initiated.",
+            "enum": [
+              "RTP",
+              "ACH_CREDIT",
+              "ACH_DEBIT"
+            ]
+          }
+        },
+        "description": "Request fields of the Payments Response."
+      },
+      "PaymentStatusResponse": {
+        "type": "object",
+        "required": [
+          "paymentId",
+          "paymentStatus",
+          "paymentType",
+          "receivedDateTime",
+          "statusDateTime"
+        ],
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "example": "M20190404OR",
+            "description": "Unique identifier for the payment submission request.",
+            "maxLength": 15
+          },
+          "paymentType": {
+            "type": "string",
+            "example": "RTP",
+            "description": "The type of transaction that was initiated.",
+            "enum": [
+              "RTP",
+              "ACH_CREDIT",
+              "ACH_DEBIT"
+            ]
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "REJECTED",
+            "description": "The status of the transaction. Possible values for RTP are RECEIVED - The payment has been received for processing. IN_PROGRESS - The payment processing is in progress. COMPLETED - The payment has been completed. REJECTED - The payment has been rejected.\nPossible values for ACH are RECEIVED - API payment request received and staged for exported. EXPORTED - API payment request exported for backend processing system. ACKNOWLEDGED - Backend processing system acknowledged receipt of payment.",
+            "maxLength": 30,
+            "enum": [
+              "RECEIVED",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "REJECTED",
+              "EXPORTED",
+              "ACKNOWLEDGED"
+            ]
+          },
+          "rejectCode": {
+            "type": "string",
+            "example": "PMT2005",
+            "description": "The rejection code in case the transaction was rejected"
+          },
+          "rejectDescription": {
+            "type": "string",
+            "example": "Debtor account type invalid",
+            "description": "The description for the rejection code"
+          },
+          "receivedDateTime": {
+            "format": "date",
+            "example": "2024-09-30",
+            "description": "The date and time when the payment transaction was received."
+          },
+          "statusDateTime": {
+            "format": "date",
+            "example": "2024-09-30",
+            "description": "The date and time when the status was updated."
+          },
+          "bankReferenceNumber": {
+            "type": "string",
+            "example": "US24100482608794",
+            "description": "The bank assigned transaction id."
+          },
+          "networkInstructionId": {
+            "type": "string",
+            "example": "20241004011500120T1BUSRT61960896581",
+            "description": "The network assigned payment reference number."
+          }
+        },
+        "description": "Response fields of the Payments Response."
+      },
+      "Address": {
+        "type": "object",
+        "required": [
+          "city",
+          "line1",
+          "postalCode"
+        ],
+        "properties": {
+          "line1": {
+            "type": "string",
+            "example": "1 CITIZENS PLAZA",
+            "description": "Address line 1, associated with the address.",
+            "maxLength": 70
+          },
+          "line2": {
+            "type": "string",
+            "example": "SUITE 100",
+            "description": "Address line 2, associated with the address.",
+            "maxLength": 70
+          },
+          "city": {
+            "type": "string",
+            "example": "PROVIDENCE",
+            "description": "City.",
+            "maxLength": 35
+          },
+          "postalCode": {
+            "type": "string",
+            "example": 2903,
+            "description": "Postal Code of address.",
+            "maxLength": 16
+          },
+          "state": {
+            "type": "string",
+            "example": "RI",
+            "description": "State of address.",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "country": {
+            "type": "string",
+            "example": "US",
+            "description": "Two digit ISO country code of address.",
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[a-zA-Z]+$"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "errorDetails",
+          "result",
+          "source"
+        ],
+        "properties": {
+          "result": {
+            "type": "string",
+            "example": "FATAL",
+            "description": "It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.",
+            "maxLength": 7,
+            "enum": [
+              "FATAL",
+              "WARNING"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "example": "Payments System",
+            "description": "Source system or provider system which causes error.",
+            "maxLength": 100
+          },
+          "errorDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error_errorDetails"
+            }
+          }
+        }
+      },
+      "Error_errorDetails": {
+        "type": "object",
+        "required": [
+          "code",
+          "description"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "REQ1001",
+            "description": "This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.",
+            "maxLength": 7
+          },
+          "description": {
+            "type": "string",
+            "example": "Request Id should not be more than 36 characters long.",
+            "description": "Description of the operation's status. It will have detailed error description in case of any error.",
+            "maxLength": 250
+          },
+          "messageDetail": {
+            "type": "string",
+            "example": "Invalid requestId",
+            "description": "Details about error including stack traces. This will not be populated for any handled error.",
+            "maxLength": 250
+          }
+        }
+      },
+      "AuthorizationHeader": {
+        "type": "string",
+        "title": "JWT Access Token"
+      }
+    },
+    "securitySchemes": {
+      "client-id": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-IBM-Client-Id",
+        "x-key-type": "client_id"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "x-ibm-oauth-provider": "externalpingfederate",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://pf-fam.internal.citizensbank.com/as/token.oauth2",
+            "scopes": {
+              "ir:read": "Access to read IR data"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "x-fapi-trace-id": {
+        "schema": {
+          "maxLength": 36,
+          "type": "string"
+        },
+        "name": "x-fapi-trace-id",
+        "in": "header",
+        "description": "Unique request id for each request to make it traceable if needed.",
+        "style": "simple",
+        "required": true
+      },
+      "x-fapi-channel-id": {
+        "schema": {
+          "maxLength": 20,
+          "type": "string"
+        },
+        "name": "x-fapi-channel-id",
+        "in": "header",
+        "description": "Identifier used to distinguish between different communication channels or data streams within a client system.",
+        "style": "simple",
+        "required": false,
+        "explode": false
+      },
+      "authorization": {
+        "schema": {
+          "$ref": "#/components/schemas/AuthorizationHeader"
+        },
+        "name": "Authorization",
+        "in": "header",
+        "description": "OAuth 2.0 Authorization Bearer Token",
+        "style": "simple",
+        "required": true,
+        "example": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA"
+      }
+    }
+  },
+  "x-ibm-configuration": {
+    "type": "rest",
+    "phase": "realized",
+    "enforced": true,
+    "testable": true,
+    "cors": {
+      "enabled": true
+    },
+    "application-authentication": {
+      "certificate": false
+    }
+  },
+  "servers": [
+    {
+      "url": "https://apis.citizensbank.com/v3/payments"
+    }
+  ],
+  "x-ibm-endpoints": [
+    {
+      "url": "https://apis.citizensbank.com/v3/payments"
+    }
+  ]
+}

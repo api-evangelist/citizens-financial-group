@@ -1,0 +1,168 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf (v1.3, updated
+  2025-12-11) section 3 "AUTHENTICATION"; the same section appears in the Account Transfer (v1.0,
+  2026-05-29), Account Validation (v1.6, 2026-04-30) and Information Reporting (v1.6, 2026-07-22)
+  user guides. Scheme detail derived from the harvested specs in openapi/.
+docs: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+summary:
+  model: >-
+    Two-legged OAuth 2.0 client-credentials with a private_key_jwt client assertion over mutual TLS,
+    stated by Citizens to follow the Financial-grade API (FAPI) Security Profile 1.0 - Part 2:
+    Advanced. Every commercial-banking call additionally carries an IBM API Connect client id header
+    (X-IBM-Client-Id) issued by the developer portal, and a required x-fapi-trace-id correlation
+    header. The FDX account/statement surface and the ATM/branch locator surface are key-header only
+    in the published contracts.
+  types:
+    - oauth2
+    - apiKey
+    - mutualTLS
+  api_key_in:
+    - header
+  oauth2_flows:
+    - clientCredentials
+
+token_endpoints:
+  - environment: production
+    url: https://apis.citizensbank.com/as/token.oauth2
+    source: CitizensPaymentAPIUserGuide.pdf section 3.1.3
+  - environment: sandbox
+    url: https://sandboxapis.citizensbank.com/as/token.oauth2
+    source: CitizensPaymentAPIUserGuide.pdf section 3.1.3
+  - environment: production (JWT `aud` claim value)
+    url: https://pf-fam.citizensbank.com
+    source: CitizensPaymentAPIUserGuide.pdf section 3.1.2
+  - environment: sandbox (JWT `aud` claim value)
+    url: https://pf-fam-sb.internal.citizensbank.com
+    source: CitizensPaymentAPIUserGuide.pdf section 3.1.2
+  - environment: as published in the OpenAPI securitySchemes
+    url: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+    source: openapi/_original/citizens-payments-v3.json
+    note: >-
+      The tokenUrl carried in the specs' oauth2 securityScheme names an .internal. host that does not
+      resolve publicly; the user guides publish apis.citizensbank.com / sandboxapis.citizensbank.com
+      as the callable token endpoints. Recorded as-published, not reconciled.
+
+flow:
+  name: OAuth 2.0 JWT client assertion (private_key_jwt) over mTLS
+  grant_type: client_credentials
+  client_assertion_type: urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+  steps:
+    - Client and Citizens authorization server present certificates validated against a shared CA (mTLS).
+    - Client builds a JWT assertion with iss = sub = Client ID from the developer portal, aud = the
+      token endpoint URL, exp <= 3600 seconds, and a unique jti to prevent replay.
+    - JWT is signed with the client private key (RS256); the client hosts a JWKS URL exposing the
+      public key for Citizens to verify.
+    - Client POSTs client_id, grant_type, client_assertion_type, client_assertion and scope to the
+      token endpoint over the mTLS channel.
+    - Citizens validates the assertion and the client certificate and issues a Bearer access token.
+    - Client calls the resource server with the Bearer token plus X-IBM-Client-Id and x-fapi-trace-id.
+  jwt_claims:
+    - iss (Client ID from the developer portal)
+    - sub (same as iss)
+    - aud (token endpoint URL)
+    - exp (must not exceed 3600 seconds)
+    - jti (unique, to prevent replay)
+  signing_algorithm: RS256
+  client_key_distribution: JWKS endpoint hosted by the client, or a key store supplied at onboarding
+  mutual_tls: true
+  ip_allowlisting: >-
+    Client IPs are provisioned by the Citizens Implementation Manager during onboarding
+    (CitizensPaymentAPIUserGuide.pdf section 2).
+
+schemes:
+  - name: OAuth2
+    type: oauth2
+    flow: clientCredentials
+    applies_to:
+      - Payments
+      - Account Transfer
+      - Account Validation
+      - Information Reporting
+    sources:
+      - openapi/citizens-financial-group-payments-openapi.yml
+      - openapi/citizens-financial-group-account-transfer-openapi.yml
+      - openapi/citizens-financial-group-account-validation-openapi.yml
+      - openapi/citizens-financial-group-information-reporting-openapi.yml
+  - name: client-id
+    type: apiKey
+    in: header
+    parameter: X-IBM-Client-Id
+    description: >-
+      IBM API Connect application client id (called "API Key" in the portal). Retrieved from
+      Apps > your application > Subscriptions in the developer portal.
+    applies_to:
+      - Payments
+      - Account Transfer
+      - Account Validation
+      - Information Reporting
+  - name: x-fapi-financial-id
+    type: apiKey
+    in: header
+    parameter: x-fapi-financial-id
+    description: Identifies the desired financial institution or partners.
+    applies_to:
+      - Accounts (FDX v1.0 and v2.1)
+      - Statements (FDX v1.0 and v2.1)
+  - name: x-client-id
+    type: apiKey
+    in: header
+    parameter: x-client-id
+    description: Identifies the desired financial institution or partners.
+    applies_to:
+      - Authorize (IDP v1.0 / v2.0)
+  - name: Partner Id
+    type: apiKey
+    in: header
+    parameter: Partner-ID
+    description: Used for differentiating the registered vendors/partners.
+    applies_to:
+      - ATM Locator
+      - Branch Locator
+
+required_headers:
+  - name: x-fapi-trace-id
+    required: true
+    max_length: 36
+    description: Unique request id (UUID) for each request to make it traceable.
+  - name: x-fapi-channel-id
+    required: false
+    max_length: 20
+    description: Distinguishes communication channels or data streams within a client system.
+  - name: Authorization
+    required: true
+    description: OAuth 2.0 Bearer access token.
+  - name: X-IBM-Client-Id
+    required: true
+    description: Developer-portal application client id.
+  - name: requestid
+    required: false
+    max_length: 36
+    description: >-
+      Consumer-assigned request identifier echoed back as requestId for tracking, logging and
+      correlation (Payments user guide 5.1.2 / 5.1.5).
+
+onboarding:
+  process: >-
+    Access is not self-service. A Citizens Implementation Manager runs a kickoff, collects authorized
+    security contacts, the client IPs to allowlist, the public key for the mTLS certificate and a
+    private key via JWKS endpoint or key store. All testing happens in the sandbox; message signing
+    and sandbox sign-off are required before a production date is agreed and the application is
+    registered by the Citizens API team.
+  portal_roles:
+    - Owner - manages organization settings, applications and credentials; may invite additional users.
+    - Administrator - same permissions as owner.
+    - Developer - view/manage organization settings, application settings/credentials, subscriptions, analytics.
+    - Viewer - view-only access to organization, applications and analytics.
+  source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+
+notes:
+  - No public OpenID Connect discovery document is served; /.well-known/openid-configuration on every
+    Citizens host probed on 2026-09-05 either 404s or returns the portal search page (see well-known/).
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

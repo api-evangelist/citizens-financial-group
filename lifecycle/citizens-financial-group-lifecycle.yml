@@ -1,0 +1,146 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://developer.citizensbank.com/api and /product (IBM API Connect developer portal, versions and
+  plan state read from the product/API pages 2026-09-05), plus the version/date blocks on the four
+  Citizens API user guides at https://developer.citizensbank.com/content/qut/.
+provider: Citizens Financial Group
+providerId: citizens-financial-group
+
+versioning:
+  scheme: major version in the URL path, full semver shown per API in the portal
+  path_pattern: https://apis.citizensbank.com/{vN}/{service}
+  current_versions:
+    - api: Payments
+      version: 3.1.11
+      path: /v3/payments
+      environment: production
+    - api: Information Reporting
+      version: 1.0.16
+      path: /v1/information-reporting
+      environment: production
+    - api: Account Validation
+      version: 1.0.13
+      path: /v1/account-validation
+      environment: production
+    - api: Account Transfer
+      version: 1.0.6
+      path: /v1/account-transfer
+      environment: production
+    - api: Accounts (FDX)
+      version: 1.0.5
+      path: /fdx/v1.0
+      environment: production
+    - api: Statements (FDX)
+      version: 1.0.7
+      path: /fdx/v1.0
+      environment: production
+    - api: Authorize (IDP)
+      version: 1.0.4
+      path: /authorize/v1.0
+      environment: production
+    - api: Accounts (FDX)
+      version: 2.1.5
+      path: /fdx/v2.1
+      environment: sandbox
+    - api: Statements (FDX)
+      version: 2.0.5
+      path: /fdx/v2.1
+      environment: sandbox
+    - api: Authorize (IDP)
+      version: 2.0.4
+      path: /authorize/v2.0
+      environment: sandbox
+    - api: ATM Locator
+      version: 1.0.10
+      path: /v1/atm-locator
+      environment: sandbox
+    - api: Branch Locator
+      version: 1.0.10
+      path: /v1/branch-locator
+      environment: sandbox
+  observation: >-
+    The FDX and Authorize surfaces are a major version ahead in sandbox (FDX v2.1 / Authorize v2.0)
+    than in production (FDX v1.0 / Authorize v1.0), and ATM Locator and Branch Locator appear ONLY on
+    the sandbox portal. Citizens publishes no migration note explaining either gap.
+
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy, sunset schedule or RFC 8594 Deprecation/Sunset header is published on
+    developer.citizensbank.com, and no operation in any of the 12 harvested contracts carries
+    `deprecated: true`. Version retirement appears to be handled bilaterally through the
+    Implementation Manager rather than announced publicly.
+
+status_page:
+  published: false
+  probes:
+    - url: https://status.citizensbank.com/
+      status: 0
+      note: DNS does not resolve.
+    - url: https://developer.citizensbank.com/status
+      status: 200
+      note: Returns the portal's "Search Content" page - a soft 404, not a status page.
+  note: >-
+    Citizens publishes no API status page. The error tables direct clients to Citizens Client
+    Services (877-550-5933 / clientservices@mail.client.citizensbank.com, 24x7) for persistent
+    failures, which is the only availability channel published.
+
+changelog:
+  published: false
+  note: >-
+    developer.citizensbank.com/changelog and /release-notes both return the portal search page, and
+    the portal blog reports "No blog entries have been created." The only dated change signal
+    Citizens publishes is the version + revision date on each PDF user guide.
+  document_revisions:
+    - document: Citizens API User Guide - Payments
+      version: '1.3'
+      updated: '2025-12-11'
+      url: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+    - document: Citizens API User Guide - Account Validation
+      version: '1.6'
+      updated: '2026-04-30'
+      url: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+    - document: Citizens API User Guide - Account Transfer
+      version: '1.0'
+      updated: '2026-05-29'
+      url: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+    - document: Citizens API User Guide - Information Reporting
+      version: '1.6'
+      updated: '2026-07-22'
+      url: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+
+sla:
+  published: false
+  note: >-
+    No SLA, uptime commitment or support-response target is published on the public developer portal.
+    Commercial terms are set in the client's Citizens commercial banking agreement.
+
+onboarding_lifecycle:
+  stages:
+    - name: Implementation
+      detail: Implementation Manager kickoff; authorized security contacts named, client IPs collected for allowlisting, mTLS public key and JWKS endpoint supplied.
+    - name: Testing and Signoff
+      detail: All testing in the sandbox (https://sandboxdeveloper.citizensbank.com). Sandbox testing and message signing are required for the Payments API.
+    - name: Going Live
+      detail: A mutually agreed production date is set; Citizens registers the application and emails an invitation to create developer-portal credentials and retrieve the Client ID.
+  source: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf section 2
+
+retired_surfaces:
+  - name: Citizens Pay developer portal
+    url: https://developer-citizenspay.citizensbank.com/
+    observed_status: DNS does not resolve (NXDOMAIN, checked 2026-09-05)
+    note: Previously carried in this record as a live portal; the host is gone. Pointer removed from apis.yml.
+  - name: Open Bank Project sandbox
+    url: https://citizensbank.openbankproject.com/
+    observed_status: DNS does not resolve (NXDOMAIN, checked 2026-09-05)
+    note: >-
+      The OBP-hosted sandbox referenced in earlier profiles of Citizens no longer resolves. The live
+      sandbox is Citizens' own IBM API Connect portal at https://sandboxdeveloper.citizensbank.com/.
+
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

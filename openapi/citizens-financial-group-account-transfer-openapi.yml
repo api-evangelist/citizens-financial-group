@@ -1,0 +1,403 @@
+openapi: 3.0.0
+info:
+  title: Account Transfer
+  x-ibm-name: account-transfer
+  version: 1.0.6
+  description: "The Account Transfer API enables near real‑time movement of funds between a client’s own\
+    \ accounts at Citizens. Designed to support day‑to‑day cash‑management needs, this API provides a\
+    \ simple, secure way to initiate single, same‑day transfers (future‑dated transfers are not supported\
+    \ in the current version).\nWhile the Payments API handles external disbursements, clients often need\
+    \ a separate capability to move money internally across their accounts. The Account Transfer API fulfills\
+    \ this need with a streamlined process built for automation and integration.\n\n**Key features include:**\n\
+    \n- **Near real‑time internal transfers between a client’s own accounts**\n- **Single‑transaction\
+    \ initiation (batch transfers not supported)**\n- **FAPI‑compliant security, including OAuth 2.0 with\
+    \ fine‑grained scopes**\n- **Standardized JSON-based responses for consistent, easy integration**\n\
+    \nThis API gives clients a secure, modern, API-driven mechanism to manage liquidity across their accounts\
+    \ without relying on manual or online banking processes.\n\n The **Account To Account Transfer API**\
+    \ provides the following functionalities:\n \n<br>  **Account Transfer API**:\n   - Initiates fund\
+    \ transfer by providing account numbers and Amount atleast $ 0.01 .\n   - **Endpoint**: `v1/account-transfer/initiate`\
+    \ (POST)\n   - **Purpose**: To initiate the transfer between accounts.\n   \n"
+  x-pathalias: accounttransfer-v1
+  contact:
+    url: https://www.citizensbank.com/corporate-finance/overview.aspx?cmclmkt#next-step
+    name: Commercial Sales team
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/commercial-banking/api/accounttransfer-v1
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+externalDocs:
+  description: API Documentation
+  url: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+security:
+- client-id: []
+paths:
+  /initiate:
+    post:
+      tags:
+      - Account Transfer
+      summary: 'Initiate the transfer for a authorized Non human Account system identifier '
+      description: The Account Transfer API is used to initiate transfers between Citizens Bank accounts
+        that are entitled to the Trasnfer using the associated API‑User ID.
+      operationId: initiateTransfer
+      parameters:
+      - $ref: '#/components/parameters/x-fapi-trace-id'
+      - $ref: '#/components/parameters/x-fapi-channel-id'
+      - $ref: '#/components/parameters/authorization'
+      requestBody:
+        description: Provide amount and from / to account number
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountTransferRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully processed the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountTransferResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AccountTransferResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 696888e9c7efa981ebd718089c71dxxae
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: object
+          description: The actual data returned in the response. Can be of any type.
+          example:
+            transactionId: 69657e9c7efa981ebd718089c71dd5f1
+            confirmationNumber: '12345'
+          items:
+            $ref: '#/components/schemas/AccountTransferData'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+      description: Bearer Token required for Client authorization validated against Ping Federate
+    AccountTransferRequest:
+      required:
+      - fromAccountNumber
+      - toAccountNumber
+      - amount
+      type: object
+      properties:
+        fromAccountNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+          description: The from account number is the number that identifies the account from which funds
+            are being transferred.. Must be 10 characters.
+          example: '1123456789'
+        toAccountNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+          title: To Account Number of Max size 10 digit char
+          description: The to account number is the number that identifies the account to which funds
+            are being transferred.
+          example: '1234567890'
+        amount:
+          type: number
+          title: 'Amount with minimum of $0.01 '
+          description: The amount is ensure being transferred between the From/To accounts
+          example: 0.01
+        memo:
+          maxLength: 50
+          type: string
+          title: Instruction of A debit memo on a company’s bank statement
+          description: Document that helps account holders understand deductions from their accounts,
+            ensuring clarity and accuracy in their financial records.
+          example: Maximum 50 Character
+      description: Represents the request for account transfer.
+    AccountTransferData:
+      type: object
+      properties:
+        transactionId:
+          maxLength: 10
+          type: string
+          title: Unique Transaction Id to track the transaction details
+        confirmationNumber:
+          maxLength: 10
+          type: string
+          title: Ensure the transaction is successfull and generate a unique id in the system
+      required:
+      - transactionId
+      - confirmationNumber
+    ErrorResponse401:
+      type: object
+      properties:
+        result:
+          type: string
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+          example: WARNING
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+        source:
+          type: string
+          maxLength: 100
+          example: Account Transfer API -Entitlement
+          description: Source of error occured in the system
+        requestId:
+          type: string
+          maxLength: 36
+          example: 685af2c80f9b1a93ca106902937c2e01
+          description: traceid to track the error in the APM logs.
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                maxLength: 10
+                example: AT-401
+                description: This is the application error code returned by the API layer or the Implementation
+                  layer. A list of error codes will be provided in the user guide.
+              description:
+                type: string
+                maxLength: 250
+                example: Your request could not be processed. Please refer to the user guide for error
+                  codes information.
+                description: Description of the operation's status. It will have detailed error description
+                  in case of any error.
+              messageDetail:
+                type: string
+                maxLength: 250
+                example:
+                - AT-1010
+                - AT-1011
+                description: Capture all the error codes occured due to entitlement issue
+            required:
+            - code
+            - description
+      required:
+      - result
+      - source
+      - errorDetails
+    ErrorResponse400:
+      type: object
+      properties:
+        result:
+          type: string
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+          example: WARNING
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+        source:
+          type: string
+          maxLength: 100
+          example: Account Transfer API
+          description: Source of error occured in the system
+        requestId:
+          type: string
+          maxLength: 36
+          example: 685af2c80f9b1a93ca106902937c2e01
+          description: traceid to track the error in the APM logs.
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                maxLength: 10
+                example: AT-400
+                description: This is the application error code returned by the API layer or the Implementation
+                  layer. A list of error codes will be provided in the user guide.
+              description:
+                type: string
+                maxLength: 250
+                example: Your request could not be processed. Please refer to the user guide for error
+                  codes information.
+                description: Description of the operation's status. It will have detailed error description
+                  in case of any error.
+              messageDetail:
+                type: string
+                maxLength: 250
+                example:
+                - AT-1001
+                - AT-1002
+                - AT-1003
+                - AT-1004
+                - AT-1005
+                - AT-1006
+                - AT-1007
+                - AT-1008
+                - AT-1009
+                description: Capture all the error codes occured due t0 invalid client request
+            required:
+            - code
+            - description
+      required:
+      - result
+      - source
+      - errorDetails
+    ErrorResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. *
+            `FATAL` - is an error which represents that something is not correct while processing the
+            request, it could be because of the request or something is not correct with the processing
+            system. * `WARNING` - is a success with some info which means it is not absolute successful
+            transaction, however response will have information about what is needed in order to have
+            absolute successful transaction.
+        source:
+          type: string
+          maxLength: 100
+          example: Account Transfer API
+          description: Source system or provider system which causes error.
+        requestId:
+          type: string
+          maxLength: 36
+          example: 685af2c80f9b1a93ca106902937c2e01
+          description: traceid to track the error in the APM logs.
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                maxLength: 10
+                example: IR-500
+                description: This is the application error code returned by the API layer or the Implementation
+                  layer. A list of error codes will be provided in the user guide.
+              description:
+                type: string
+                maxLength: 250
+                example: Internal server error.
+                description: Description of the operation's status. It will have detailed error description
+                  in case of any error.
+              messageDetail:
+                type: string
+                maxLength: 250
+                example: Due to technical error, your request cannot be processed. Please try later again!
+                description: Details about error including stack traces. This will not be populated for
+                  any handled error.
+            required:
+            - code
+            - description
+      required:
+      - result
+      - source
+      - errorDetails
+  securitySchemes:
+    client-id:
+      type: apiKey
+      in: header
+      name: X-IBM-Client-Id
+      x-key-type: client_id
+    OAuth2:
+      type: oauth2
+      x-ibm-oauth-provider: externalpingfederate
+      flows:
+        clientCredentials:
+          tokenUrl: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+          scopes:
+            transfer:initiate: Access to initiate the transfer
+  parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
+    x-fapi-channel-id:
+      schema:
+        maxLength: 20
+        type: string
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams
+        within a client system.
+      style: simple
+      required: false
+      explode: false
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+x-ibm-configuration:
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  application-authentication:
+    certificate: false
+  application-authentication-source: []
+servers:
+- url: https://apis.citizensbank.com/v1/account-transfer
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v1/account-transfer

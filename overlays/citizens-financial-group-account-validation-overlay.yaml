@@ -1,0 +1,35 @@
+overlay: 1.0.0
+info:
+  title: Citizens Account Validation API enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-09-05'
+  x-method: generated
+  x-source: API Evangelist enrichment pass 2026-09-05; every value is quoted from a Citizens-published document
+    named in the action description.
+extends: citizens-financial-group-account-validation-openapi.yml
+actions:
+- target: $.info
+  description: Record harvest provenance and the published unit price.
+  update:
+    x-apis-io-harvested: '2026-09-05'
+    x-apis-io-source: https://developer.citizensbank.com/product/commercial-banking/api/accountvalidation-v1
+    x-pricing:
+      price: '1.25'
+      currency: USD
+      unit: per validation
+      condition: No charge when the account cannot be found.
+      source: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+- target: $.paths['/initiation'].post
+  description: Record the 24-hour auto-cancellation window published in the user guide.
+  update:
+    x-reversibility:
+      reversal-operation: automatic cancellation (server-side)
+      window: 24 hours
+      statement: If inquiry status is not received within 24 hours, the request will be automatically canceled.
+- target: $.paths['/status'].get
+  description: Record the published per-inquiry read cap and its error code.
+  update:
+    x-operation-limit:
+      limit: 3
+      window: per completed inquiry
+      error: AV-4001 - You have exceeded the rate limit for the number of status requests.

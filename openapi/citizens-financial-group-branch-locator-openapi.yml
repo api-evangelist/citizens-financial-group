@@ -1,0 +1,274 @@
+swagger: '2.0'
+info:
+  title: Branch Locator
+  x-ibm-name: branch-locator
+  version: 1.0.10
+  description: The Citizens Bank Branch Locator API enables users to locate all Citizens Bank branches
+    throughout the USA. Using Zip Code, Street Address or longitudinal and latitudinal data, users can
+    find the location of the branch, the hours of operation and the whether the location is a standalone
+    branch or part of another entity (e.g. Supermarket).
+  x-ibm-summary: ''
+  x-source-url: https://sandboxdeveloper.citizensbank.com/product/127/api/106
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: sandbox
+schemes:
+- https
+basePath: /v1/branch-locator
+produces:
+- application/json
+consumes:
+- application/json
+security:
+- Partner Id: []
+securityDefinitions:
+  Partner Id:
+    type: apiKey
+    description: Used for differentiating the registered vendors/partners
+    name: Partner-ID
+    in: header
+    x-key-type: client_id
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  type: rest
+  application-authentication:
+    certificate: false
+  servers:
+  - url: https://sandboxapi.citizensbank.com/v1/branch-locator
+    type:
+    - production
+    - development
+definitions:
+  Address:
+    type: object
+    properties:
+      line1:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      postalCode:
+        type: string
+      country:
+        type: string
+  Branch:
+    type: object
+    properties:
+      features:
+        type: array
+        items:
+          type: string
+      operatingHours:
+        type: array
+        items:
+          $ref: '#/definitions/OperatingHour'
+      driveupWindowHours:
+        type: array
+        items:
+          $ref: '#/definitions/DriveupWindowHour'
+  BranchDetails:
+    type: object
+    properties:
+      locationNumber:
+        type: string
+      locationName:
+        type: string
+      phoneNumber:
+        type: string
+      latitude:
+        type: integer
+        format: int32
+      longitude:
+        type: integer
+        format: int32
+      cashDenomination:
+        type: string
+      routingNumber:
+        type: string
+      address:
+        $ref: '#/definitions/Address'
+      branch:
+        $ref: '#/definitions/Branch'
+  DriveupWindowHour:
+    type: object
+    properties:
+      dayOfWeek:
+        type: string
+      openingTime:
+        type: string
+      closingTime:
+        type: string
+  GetLocationsResponse:
+    type: object
+    properties:
+      locationDetails:
+        type: array
+        items:
+          $ref: '#/definitions/BranchDetails'
+      error:
+        $ref: '#/definitions/LocationError'
+      numberOfLocations:
+        type: integer
+        format: int32
+  LocationError:
+    type: object
+    properties:
+      errorMessage:
+        type: string
+      errorNumber:
+        type: string
+  OperatingHour:
+    type: object
+    properties:
+      dayOfWeek:
+        type: string
+      openingTime:
+        type: string
+      closingTime:
+        type: string
+  Brand:
+    type: object
+    properties:
+      BrandName:
+        type: string
+      Branch:
+        type: array
+        items:
+          $ref: '#/definitions/Branch'
+  SearchBranchResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/SearchBranchResponseData'
+      error:
+        $ref: '#/definitions/LocationError'
+  SearchBranchResponseData:
+    type: object
+    properties:
+      Brand:
+        type: array
+        items:
+          $ref: '#/definitions/Brand'
+  Location:
+    type: object
+    properties:
+      city:
+        type: string
+      postalCode:
+        type: string
+      state:
+        type: string
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
+      routingNumber:
+        type: string
+      radius:
+        type: integer
+        format: int32
+      isBranch:
+        type: string
+      isATM:
+        type: string
+      isOpenNow:
+        type: string
+      features:
+        type: array
+        items:
+          type: string
+  SearchByPostalResponseData:
+    type: object
+    properties:
+      brand:
+        type: array
+        items:
+          $ref: '#/definitions/Brand'
+  SearchByPostalResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/SearchByPostalResponseData'
+paths:
+  /routingnumber/{routingnumber}:
+    parameters:
+    - name: routingnumber
+      in: path
+      required: true
+      description: Input routingnumber
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
+  /latitude/\{latitude}/longitude/{longitude}:
+    parameters:
+    - name: latitude
+      in: path
+      required: true
+      description: input latitude value
+      type: string
+    - name: longitude
+      in: path
+      required: true
+      description: input longitude value
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
+  /state/{state}/city/{city}:
+    parameters:
+    - name: state
+      in: path
+      required: true
+      description: Input state code
+      type: string
+    - name: city
+      in: path
+      required: true
+      description: Input city code
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
+  /postalcode/{postalCode}:
+    get:
+      summary: findBranchesByPostalCode
+      x-swagger-router-controller: branch-controller
+      description: ''
+      operationId: findBranchesByPostalCode
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: postalCode
+        description: To get atm information
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchByPostalResponse'
+host: sandboxapi.citizensbank.com

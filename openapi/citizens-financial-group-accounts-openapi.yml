@@ -1,0 +1,650 @@
+swagger: '2.0'
+info:
+  title: Accounts
+  x-ibm-name: accounts
+  version: 1.0.5
+  description: The  Accounts API v1.0 enables users to retrieve Citizens Bank customer account and transactions
+    information.
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/accounts/api/70
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+schemes:
+- https
+basePath: /fdx/v1.0
+produces:
+- application/json
+consumes:
+- application/json
+security:
+- x-fapi-financial-id: []
+securityDefinitions:
+  x-fapi-financial-id:
+    type: apiKey
+    description: Identifies the desired financial institution or partners.
+    name: x-fapi-financial-id
+    in: header
+    x-key-type: client_id
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  type: rest
+  application-authentication:
+    certificate: false
+  servers:
+  - url: https://api.citizensbank.com/fdx/v1.0
+    type:
+    - production
+    - development
+tags: []
+definitions:
+  Account:
+    title: Account Entity
+    description: Have Account information with header and details
+    allOf:
+    - $ref: '#/definitions/AccountDescriptor'
+    - type: object
+      properties:
+        parentAccountId:
+          description: Account header information
+          allOf:
+          - $ref: '#/definitions/UniqueIdentifier'
+        currency:
+          allOf:
+          - $ref: '#/definitions/Currency'
+          description: Account currency code. Supports only the USD currency code
+          type: object
+        interestRate:
+          allOf:
+          - $ref: '#/definitions/Number'
+          description: Interest rate of the account.
+        lastActivityDate:
+          allOf:
+          - $ref: '#/definitions/Timestamp'
+          description: Last activity occured in Accounts.
+  AccountDescriptor:
+    title: AccountDescriptor Entity
+    description: 'Account information When Resultype is lightweight '
+    properties:
+      accountId:
+        allOf:
+        - $ref: '#/definitions/UniqueIdentifier'
+        description: Unique accountid of customer
+      nickname:
+        type: string
+        maxLength: 256
+        description: nickName is related to account holder name.
+      accountType:
+        $ref: '#/definitions/AccountType'
+      status:
+        $ref: '#/definitions/AccountStatus'
+      accountNumberDisplay:
+        type: string
+        description: Account identity is a masked value number.
+  AccountDescriptorList:
+    title: AccountDescriptorList Entity
+    description: Account information When Resultype is lightweight in array
+    properties:
+      accountDescriptor:
+        type: array
+        items:
+          $ref: '#/definitions/AccountDescriptor'
+  Accounts:
+    title: Accounts entity
+    description: Account information in Array.
+    allOf:
+    - $ref: '#/definitions/PaginatedArray'
+    - type: object
+    properties:
+      accounts:
+        type: array
+        items:
+          $ref: '#/definitions/DepositAccount'
+  DepositAccount:
+    title: DepositAccount Entity
+    allOf:
+    - $ref: '#/definitions/Account'
+    - type: object
+      properties:
+        balanceAsOf:
+          description: Balance as of date in ISO 8601 Date format - YYYY-MM-DD
+          allOf:
+          - $ref: '#/definitions/Timestamp'
+        currentBalance:
+          allOf:
+          - $ref: '#/definitions/Number'
+          description: Actual balance in the accounts
+        interestRate:
+          allOf:
+          - $ref: '#/definitions/Number'
+          description: Intereset rate for accounts
+        lastActivityDate:
+          description: Last activity in ISO 8601 Date format - YYYY-MM-DD
+          allOf:
+          - $ref: '#/definitions/Timestamp'
+        availableBalance:
+          $ref: '#/definitions/Number'
+          description: Funds available for use
+          type: number
+          format: double
+  Currency:
+    title: Currency Entity
+    properties:
+      currencyCode:
+        description: Only USD (US Dollars) currency is supported.
+        type: string
+        maxLength: 3
+        $ref: '#/definitions/CurrencyCode'
+  CurrencyCode:
+    title: Currency Code
+    type: string
+    enum:
+    - USD
+  Error:
+    title: Error Entity
+    description: "Valid Error Codes ERROR CODE  ERROR MESSAGE                               HTTPS STATUS\
+      \ CODE ***************************************************************************\n   `401` - \
+      \ Input invalid                               - `400`            \n   `704` -  Account type not\
+      \ supported                  - `422`            \n   `403` -  x-fapi-interaction-id not found  \
+      \           - `400`            \n   `500` -  Internal server error                       - `500`\
+      \            \n   `601` -  Customer not found                          - `404`            \n   `602`\
+      \ -  Customer not authorized                     - `401`            \n   `701` -  Account not found\
+      \                           - '404`"
+    properties:
+      code:
+        type: string
+        maxLength: 4
+        description: Used for tracing the error in the log.
+      message:
+        type: string
+        maxLength: 256
+        description: To display error description to customer
+    type: object
+  UniqueIdentifier:
+    title: UniqueIdentifier
+    type: string
+    maxLength: 256
+  Number:
+    title: Number
+    type: number
+  Timestamp:
+    title: Timestamp
+    type: string
+    format: date-time
+    description: 'UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD</br> <br>
+      Timestamp fields are in ISO 8601 date time format - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z
+      or 2022-12-13'
+  AccountStatus:
+    title: AccountStatus
+    type: string
+    enum:
+    - OPEN
+    - CLOSED
+    - OTHER
+  AccountType:
+    title: Account Type
+    type: string
+    enum:
+    - CHECKING
+    - SAVINGS
+  PageMetadata:
+    title: Page Metadata
+    description: Offset IDs for paginated result sets
+    type: object
+    properties:
+      nextOffset:
+        type: string
+        example: '2'
+        description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation
+          specific
+      prevOffset:
+        type: string
+        example: '1'
+        description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation
+          specific
+      totalElements:
+        type: integer
+        example: 3
+        description: Total number of elements
+  PageMetadataLinks:
+    title: Page Metadata Links
+    description: Resource URLs for retrieving next or previous datasets
+    type: object
+    properties:
+      next:
+        $ref: '#/definitions/HateoasLink'
+        description: Resource URL for retrieving next dataset
+      prev:
+        $ref: '#/definitions/HateoasLink'
+        description: Resource URL for retrieving previous dataset
+  PaginatedArray:
+    title: Paginated Array
+    description: Base class for results that may be paginated
+    type: object
+    properties:
+      page:
+        $ref: '#/definitions/PageMetadata'
+        description: Offset IDs for navigating result sets
+      links:
+        $ref: '#/definitions/PageMetadataLinks'
+        description: Resource URLs for navigating result sets
+  HateoasLink:
+    title: HATEOAS Link
+    description: REST application constraint (Hypermedia As The Engine Of Application State)
+    required:
+    - href
+    type: object
+    properties:
+      href:
+        type: string
+        format: uri-reference
+        description: URL to invoke the action on the resource
+        example: https://api.citizensbank.com/fdx/v4/accounts/12345
+      action:
+        type: string
+        enum:
+        - GET
+        - POST
+        - PATCH
+        - DELETE
+        - PUT
+        description: HTTP Method to use for the request
+      rel:
+        description: Relation of this link to its containing entity, as defined by and with many example
+          relation values at [IETF RFC5988](https://datatracker.ietf.org/doc/html/rfc5988)
+        type: string
+      types:
+        type: array
+        items:
+          $ref: '#/definitions/ContentTypes'
+        description: Content-types that can be used in the Accept header
+  ContentTypes:
+    title: Content Types
+    description: Supported documented formats
+    type: string
+    enum:
+    - image/gif
+    - image/jpeg
+    - image/tiff
+    - image/png
+    - application/json
+    example: application/json
+  Transactions:
+    title: Transactions Entity
+    description: Array of transactions
+    allOf:
+    - $ref: '#/definitions/PaginatedArray'
+    - type: object
+      properties:
+        transactions:
+          description: Transaction info for account type deposit
+          type: array
+          items:
+            $ref: '#/definitions/DepositTransaction'
+  Transaction:
+    title: Transaction Entity
+    properties:
+      accountId:
+        description: Account ID associated with the transaction.
+        allOf:
+        - $ref: '#/definitions/UniqueIdentifier'
+      transactionId:
+        description: Unique transactions id for account
+        allOf:
+        - $ref: '#/definitions/UniqueIdentifier'
+      referenceTransactionId:
+        description: Unique reference trasaction id
+        allOf:
+        - $ref: '#/definitions/UniqueIdentifier'
+      postedTimestamp:
+        description: Transaction posted date and time
+        allOf:
+        - $ref: '#/definitions/Timestamp'
+      transactionTimestamp:
+        description: Transaction entered in the backend system
+        allOf:
+        - $ref: '#/definitions/Timestamp'
+      description:
+        type: string
+        description: The description of the transaction
+      memo:
+        description: Secondary transaction description
+        allOf:
+        - $ref: '#/definitions/String255'
+      debitCreditMemo:
+        $ref: '#/definitions/String255'
+      category:
+        type: string
+        maxLength: 4
+        description: Transaction category
+      status:
+        $ref: '#/definitions/String255'
+      amount:
+        description: Transaction amount in currency
+        allOf:
+        - $ref: '#/definitions/Number'
+    type: object
+  String255:
+    title: String255
+    type: string
+    maxLength: 255
+  String64:
+    title: String64
+    description: string 64
+    type: string
+    maxLength: 64
+  DepositTransactionType:
+    title: Deposit Transaction Type
+    type: string
+    enum:
+    - ADJUSTMENT
+    - ATMDEPOSIT
+    - ATMWITHDRAWAL
+    - BILLPAYMENT
+    - CHECK
+    - DEPOSIT
+    - DIRECTDEPOSIT
+    - FEE
+    - OTHER
+    - POSCREDIT
+    - POSDEBIT
+    - TRANSFER
+  DepositTransaction:
+    title: DepositTransaction Entity
+    allOf:
+    - $ref: '#/definitions/Transaction'
+    - properties:
+        transactionType:
+          allOf:
+          - $ref: '#/definitions/DepositTransactionType'
+          description: Deposit transaction type
+        checkNumber:
+          type: integer
+          format: int64
+          description: Check identification info
+      type: object
+  AccountContact:
+    title: Account Contact entity
+    description: Contact information for the account
+    type: object
+    properties:
+      holders:
+        type: string
+        description: Owners of the account
+      emails:
+        type: array
+        description: Email addresses associated with the account
+      addresses:
+        type: array
+        description: Physical mail addresses associated with the account
+      telephones:
+        type: array
+        description: Telephone numbers associated with the account
+  AccountPaymentNetwork:
+    title: Account Payment Network entity
+    description: Payment networks for the account
+    type: object
+    properties:
+      bankId:
+        type: string
+        description: bankid
+      identifier:
+        type: string
+        description: identifier
+      identifierType:
+        type: string
+        description: identifier Type
+      type:
+        type: string
+        description: type
+      transferIn:
+        type: string
+        description: transferIn
+      transferOut:
+        type: string
+        description: transferOut
+paths:
+  /accounts/{accountId}/contact:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems.
+        Unique GUID used as correlation ID.
+      type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data
+        service.
+      type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 -
+        section 7.1.1.2
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/AccountContact'
+          description: success
+  /accounts/{accountId}/payment-networks:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems.
+        Unique GUID used as correlation ID.
+      type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data
+        service.
+      type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 -
+        section 7.1.1.2
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/AccountPaymentNetwork'
+          description: success
+  /accounts/{accountId}/transactions:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: account id for specific account
+      type: string
+    - name: offset
+      in: query
+      required: false
+      description: Opaque cursor used by the provider to send the next set of records
+      type: integer
+      format: int32
+    - name: limit
+      in: query
+      required: false
+      description: Number of elements that the consumer wishes to receive.
+      type: integer
+      format: int32
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems.
+        Unique GUID used as correlation ID.
+      type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data
+        service.
+      type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 -
+        section 7.1.1.2
+      type: string
+    - name: x-fapi-financial-Id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    - name: startTime
+      in: query
+      required: false
+      description: Start time for use in retrieval of elements (ISO 8601)
+      type: string
+    - name: endTime
+      in: query
+      required: false
+      description: End time for use in retrieval of elements (ISO 8601)
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Transactions'
+          description: success
+  /accounts/{accountId}:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems.
+        Unique GUID used as correlation ID.
+      type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data
+        service.
+      type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 -
+        section 7.1.1.2
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Accounts'
+          description: success
+  /accounts:
+    parameters:
+    - name: offSet
+      in: query
+      required: false
+      description: Opaque cursor used by the provider to send the next set of records
+      type: integer
+      format: int32
+    - name: limit
+      in: query
+      required: false
+      description: Number of elements that the consumer wishes to receive.
+      type: integer
+      format: int32
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems.
+        Unique GUID used as correlation ID.
+      type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data
+        service.
+      type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 -
+        section 7.1.1.2
+      type: string
+    - name: resultType
+      in: query
+      required: false
+      description: lightweight or details
+      type: string
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Accounts'
+          description: success
+host: api.citizensbank.com

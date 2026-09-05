@@ -26,10 +26,10 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/citizens-f
 name: Citizens Financial Group
 url: https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/refs/heads/main/apis.yml
 created: '2026-03-23'
-modified: '2026-04-23'
+modified: '2026-09-05'
 type: Index
 access: 3rd-Party
-position: Consuming
+position: Producing
 specificationVersion: '0.23'
 tags:
   - Banking
@@ -49,17 +49,19 @@ tags_raw:
   - Payments
 description: >-
   Citizens Financial Group is one of the oldest and largest financial
-  institutions in the United States, providing retail and commercial
-  banking products and services to individuals, small businesses,
-  middle-market companies, and large corporations through Citizens Bank
-  and its subsidiaries. Citizens exposes a public developer portal at
-  developer.citizensbank.com with REST APIs for accounts, statements,
-  branch and ATM lookup, and a sandbox powered by the Open Bank Project.
-  In 2025 Citizens launched a new FDX-aligned Open Banking API providing
-  business, commercial, wealth, and private-banking customers with a
-  single endpoint for sharing account, balance, and transaction data
-  with authorized third parties. A separate Citizens Pay developer
-  portal exposes Buy-Now-Pay-Later integration APIs.
+  institutions in the United States, serving individuals, small
+  businesses, middle-market companies and large corporations through
+  Citizens Bank and its subsidiaries. Citizens runs a public IBM API
+  Connect developer portal at developer.citizensbank.com, with a matching
+  sandbox at sandboxdeveloper.citizensbank.com, publishing twelve
+  machine-readable contracts across four surfaces: an FDX-aligned account
+  and statement surface, a commercial-banking surface (RTP and ACH
+  payments, account validation, information reporting, internal
+  transfer), an identity/authorize surface, and ATM and branch locators.
+  The FDX Open Banking API launched in Q1 2025 gives business,
+  commercial, wealth and private-banking customers one endpoint for
+  sharing account and transaction data with authorized third parties.
+  Access is partner-gated throughout, and sandbox testing is mandatory.
 apis:
   - aid: citizens-financial-group:citizens-open-banking-api
     name: Citizens Open Banking API
@@ -77,54 +79,295 @@ apis:
       - Transactions
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developer.citizensbank.com/
+    baseURL: https://api.citizensbank.com/fdx/v1.0
     properties:
       - url: https://developer.citizensbank.com/
+        type: Portal
+      - url: https://developer.citizensbank.com/api
         type: Documentation
       - url: https://investor.citizensbank.com/about-us/newsroom/latest-news/2025/2025-03-27.aspx
-        type: Announcement
+        type: PressReleases
+      - url: conformance/citizens-financial-group-conformance.yml
+        type: Conformance
     description: >-
       Citizens Open Banking API is the FDX-aligned API surface launched
       in Q1 2025 that gives business, commercial, wealth, and private-
       banking customers a single endpoint to share account balances,
       transactions, and other financial data with authorized
-      third-party platforms.
+      third-party platforms. It is the program name for the /fdx/
+      surface; its machine-readable contracts are registered under the
+      Citizens Accounts API and Citizens Statements API entries below,
+      which is where the harvested FDX v1.0 and v2.1 specs live.
   - aid: citizens-financial-group:citizens-accounts-api
     name: Citizens Accounts API
     tags:
       - Account
       - Balances
       - Banking
+      - FDX
       - Transaction
     tags_raw:
       - Accounts
       - Balances
       - Banking
+      - FDX
       - Transactions
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://developer.citizensbank.com/api
+    humanURL: https://developer.citizensbank.com/product/accounts/api/70
+    baseURL: https://api.citizensbank.com/fdx/v1.0
     properties:
-      - url: https://developer.citizensbank.com/api
+      - url: openapi/citizens-financial-group-accounts-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-accounts-fdx-v1.json
+        type: OpenAPISource
+      - url: openapi/citizens-financial-group-accounts-v2-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-accounts-overlay.yaml
+        type: Overlay
+      - url: overlays/citizens-financial-group-accounts-v2-overlay.yaml
+        type: Overlay
+      - url: https://developer.citizensbank.com/product/accounts/api/70
         type: Documentation
     description: >-
-      The Citizens Accounts API enables authorized retrieval of
-      Citizens Bank customer account and transaction information for
-      use in third-party financial applications and aggregation
-      platforms.
+      The Citizens Accounts API is the FDX-aligned account surface -
+      account list, account detail, transactions, contact and payment
+      networks - for authorized retrieval of Citizens Bank customer
+      account information by third-party financial applications and
+      aggregation platforms. FDX v1.0 is live in production; FDX v2.1
+      is published on the sandbox portal.
   - aid: citizens-financial-group:citizens-statements-api
     name: Citizens Statements API
     tags:
       - Banking
       - Documents
+      - FDX
+      - Statements
+    tags_raw:
+      - Banking
+      - Documents
+      - FDX
       - Statements
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://developer.citizensbank.com/api
+    humanURL: https://developer.citizensbank.com/product/statements/api/statements-v1
+    baseURL: https://api.citizensbank.com/fdx/v1.0
     properties:
-      - url: https://developer.citizensbank.com/api
+      - url: openapi/citizens-financial-group-statements-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-statements-fdx-v1.json
+        type: OpenAPISource
+      - url: openapi/citizens-financial-group-statements-v2-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-statements-fdx-v2-sandbox.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-statements-overlay.yaml
+        type: Overlay
+      - url: overlays/citizens-financial-group-statements-v2-overlay.yaml
+        type: Overlay
+      - url: https://developer.citizensbank.com/product/statements/api/statements-v1
         type: Documentation
     description: >-
       The Citizens Statements API enables authorized retrieval of
       Citizens Bank customer monthly statements for personal financial
-      management and document workflows.
+      management and document workflows. Two operations - list an
+      account's statements and retrieve one statement - published on
+      the FDX base path in both production (v1.0) and sandbox (v2.1).
+  - aid: citizens-financial-group:citizens-payments-api
+    name: Citizens Payments API
+    tags:
+      - ACH
+      - Banking
+      - ISO 20022
+      - Payments
+      - Real Time Payments
+    tags_raw:
+      - ACH
+      - Banking
+      - ISO 20022
+      - Payments
+      - Real Time Payments
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+    humanURL: https://developer.citizensbank.com/product/commercial-banking/api/payments-v3
+    baseURL: https://apis.citizensbank.com/v3/payments
+    properties:
+      - url: openapi/citizens-financial-group-payments-openapi.yml
+        type: OpenAPI
+      - url: openapi/_original/citizens-payments-v3.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-payments-overlay.yaml
+        type: Overlay
+      - url: errors/citizens-financial-group-decline-codes.yml
+        type: DeclineCodes
+      - url: skills/citizens-financial-group-initiate-payment.md
+        type: AgentSkill
+      - url: https://developer.citizensbank.com/product/commercial-banking/api/payments-v3
+        type: Documentation
+      - url: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+        type: APIReference
+    description: >-
+      The Citizens Payments API initiates RTP and ACH payment
+      instructions, retrieves payment status, and checks whether a
+      counterparty routing number is reachable on The Clearing House RTP
+      network before a payment is sent. Reject codes are ISO 20022
+      external status reason codes; ACH details carry Nacha standard
+      entry class codes. No cancel, void or reversal operation is
+      published on this surface.
+  - aid: citizens-financial-group:citizens-account-validation-api
+    name: Citizens Account Validation API
+    tags:
+      - Account
+      - Banking
+      - Payments
+      - Validation
+      - Verification
+    tags_raw:
+      - Accounts
+      - Banking
+      - Payments
+      - Validation
+      - Verification
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+    humanURL: https://developer.citizensbank.com/product/commercial-banking/api/accountvalidation-v1
+    baseURL: https://apis.citizensbank.com/v1/account-validation
+    properties:
+      - url: openapi/citizens-financial-group-account-validation-openapi.yml
+        type: OpenAPI
+      - url: openapi/_original/citizens-account-validation-v1.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-account-validation-overlay.yaml
+        type: Overlay
+      - url: skills/citizens-financial-group-validate-payee-account.md
+        type: AgentSkill
+      - url: https://developer.citizensbank.com/product/commercial-banking/api/accountvalidation-v1
+        type: Documentation
+      - url: https://developer.citizensbank.com/content/qut/CitizensAccountValidationAPIUserGuide.pdf
+        type: APIReference
+    description: >-
+      The Citizens Account Validation API verifies a payee's account
+      number, routing number and beneficiary name before an irrevocable
+      payment is sent, returning an account status (open, closed,
+      unverified, incorrect, rejected, open-credits-only) and a name
+      match status (full, partial, none). It is the one Citizens
+      operation with a published unit price - $1.25 per successful
+      validation - and the result may be read at most three times.
+  - aid: citizens-financial-group:citizens-account-transfer-api
+    name: Citizens Account Transfer API
+    tags:
+      - Account
+      - Banking
+      - Cash Management
+      - Payments
+      - Transfer
+    tags_raw:
+      - Accounts
+      - Banking
+      - Cash Management
+      - Payments
+      - Transfers
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+    humanURL: https://developer.citizensbank.com/product/commercial-banking/api/accounttransfer-v1
+    baseURL: https://apis.citizensbank.com/v1/account-transfer
+    properties:
+      - url: openapi/citizens-financial-group-account-transfer-openapi.yml
+        type: OpenAPI
+      - url: openapi/_original/citizens-account-transfer-v1.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-account-transfer-overlay.yaml
+        type: Overlay
+      - url: skills/citizens-financial-group-transfer-between-own-accounts.md
+        type: AgentSkill
+      - url: https://developer.citizensbank.com/product/commercial-banking/api/accounttransfer-v1
+        type: Documentation
+      - url: https://developer.citizensbank.com/content/qut/CitizensAccountTransferAPIUserGuide.pdf
+        type: APIReference
+    description: >-
+      The Citizens Account Transfer API moves funds near real-time
+      between accounts a client already holds at Citizens. Single
+      same-day transfers only - batch and future-dated transfers are
+      not supported in this version - with a minimum amount of $0.01.
+      No duplicate-key protection, status lookup or reversal operation
+      is published on this surface.
+  - aid: citizens-financial-group:citizens-information-reporting-api
+    name: Citizens Information Reporting API
+    tags:
+      - Account
+      - Balances
+      - Banking
+      - Reporting
+      - Transaction
+    tags_raw:
+      - Accounts
+      - Balances
+      - Banking
+      - Reporting
+      - Transactions
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+    humanURL: https://developer.citizensbank.com/product/commercial-banking/api/informationreporting-v1
+    baseURL: https://apis.citizensbank.com/v1/information-reporting
+    properties:
+      - url: openapi/citizens-financial-group-information-reporting-openapi.yml
+        type: OpenAPI
+      - url: openapi/_original/citizens-information-reporting-v1.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-information-reporting-overlay.yaml
+        type: Overlay
+      - url: skills/citizens-financial-group-report-balances-and-transactions.md
+        type: AgentSkill
+      - url: https://developer.citizensbank.com/product/commercial-banking/api/informationreporting-v1
+        type: Documentation
+      - url: https://developer.citizensbank.com/content/qut/CitizensInformationReportingAPIUserGuide.pdf
+        type: APIReference
+    description: >-
+      The Citizens Information Reporting API lets an authenticated
+      consumer retrieve the authorized account list, deposit account
+      balances and transaction history for Citizens Bank checking and
+      savings accounts. It is the only paginated surface Citizens
+      publishes - required pageOffset and pageLimit on the account
+      list, and a nextKey cursor with a 100-record default and a
+      2000-record maximum on transactions.
+  - aid: citizens-financial-group:citizens-authorize-api
+    name: Citizens Authorize API
+    tags:
+      - Authentication
+      - Banking
+      - Identity
+      - OAuth
+      - Security
+    tags_raw:
+      - Authentication
+      - Banking
+      - Identity
+      - OAuth
+      - Security
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+    humanURL: https://developer.citizensbank.com/product/88/api/73
+    baseURL: https://api.citizensbank.com/authorize/v1.0
+    properties:
+      - url: openapi/citizens-financial-group-authorize-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-authorize-v1.json
+        type: OpenAPISource
+      - url: openapi/citizens-financial-group-authorize-v2-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-authorize-v2-sandbox.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-authorize-overlay.yaml
+        type: Overlay
+      - url: overlays/citizens-financial-group-authorize-v2-overlay.yaml
+        type: Overlay
+      - url: authentication/citizens-financial-group-authentication.yml
+        type: Authentication
+      - url: https://developer.citizensbank.com/product/88/api/73
+        type: Documentation
+    description: >-
+      The Citizens Authorize API is the Citizens identity provider that
+      authenticates a partner and grants access to bank resources such
+      as accounts and transactions. The published contract declares
+      only the token revocation endpoint; the token endpoint that
+      issues the credential is documented in the PDF user guides, and
+      no OAuth or OpenID Connect discovery document is served on any
+      Citizens host. Version 1.0 is production, 2.0 is sandbox.
   - aid: citizens-financial-group:citizens-atm-locator-api
     name: Citizens ATM Locator API
     tags:
@@ -132,14 +375,26 @@ apis:
       - Geo Search
       - Locator
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://developer.citizensbank.com/
+    humanURL: https://sandboxdeveloper.citizensbank.com/product/127/api/103
+    baseURL: https://sandboxapi.citizensbank.com/v1/atm-locator
     properties:
-      - url: https://developer.citizensbank.com/
+      - url: openapi/citizens-financial-group-atm-locator-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-atm-locator-v1-sandbox.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-atm-locator-overlay.yaml
+        type: Overlay
+      - url: skills/citizens-financial-group-find-atm-or-branch.md
+        type: AgentSkill
+      - url: https://sandboxdeveloper.citizensbank.com/product/127/api/103
         type: Documentation
     description: >-
       The Citizens ATM Locator API enables searching for Citizens Bank
       ATMs throughout the USA using zip code, street address, or
-      geographical coordinates.
+      geographical coordinates, returning location, hours of operation
+      and whether the ATM is standalone or inside another entity. It is
+      published only on the sandbox portal and is gated by a Partner-ID
+      header rather than the OAuth flow the rest of the estate uses.
   - aid: citizens-financial-group:citizens-branch-locator-api
     name: Citizens Branch Locator API
     tags:
@@ -147,14 +402,23 @@ apis:
       - Geo Search
       - Locator
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://developer.citizensbank.com/
+    humanURL: https://sandboxdeveloper.citizensbank.com/product/127/api/106
+    baseURL: https://sandboxapi.citizensbank.com/v1/branch-locator
     properties:
-      - url: https://developer.citizensbank.com/
+      - url: openapi/citizens-financial-group-branch-locator-openapi.yml
+        type: Swagger
+      - url: openapi/_original/citizens-branch-locator-v1-sandbox.json
+        type: OpenAPISource
+      - url: overlays/citizens-financial-group-branch-locator-overlay.yaml
+        type: Overlay
+      - url: https://sandboxdeveloper.citizensbank.com/product/127/api/106
         type: Documentation
     description: >-
       The Citizens Branch Locator API enables searching for Citizens
       Bank branches throughout the USA using zip code, street address,
-      or geographical coordinates.
+      geographical coordinates or routing number. Like the ATM Locator
+      it is published only on the sandbox portal and gated by a
+      Partner-ID header.
   - aid: citizens-financial-group:citizens-pay-api
     name: Citizens Pay API
     tags:
@@ -164,40 +428,88 @@ apis:
       - Embedded Finance
       - Lending
     image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://developer-citizenspay.citizensbank.com/
+    humanURL: https://pay.citizensbank.com/
     properties:
-      - url: https://developer-citizenspay.citizensbank.com/
-        type: Documentation
+      - url: https://pay.citizensbank.com/
+        type: Website
     description: >-
       Citizens Pay is the buy-now-pay-later embedded financing platform
-      offered by Citizens Bank. The Citizens Pay developer portal
-      exposes APIs for merchant integration, underwriting, and
-      installment-loan lifecycle management.
+      offered by Citizens Bank. The Citizens Pay developer portal that
+      previously exposed merchant integration, underwriting and
+      installment-loan lifecycle APIs at
+      developer-citizenspay.citizensbank.com no longer resolves (checked
+      2026-09-05, NXDOMAIN), and no replacement developer surface was
+      found. No baseURL is recorded because Citizens publishes none;
+      the only live Citizens Pay surface is the consumer site.
 common:
-  - type: DomainSecurity
-    url: security/citizens-financial-group-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/rbs-citizens-financial-group
   - type: Website
     url: https://www.citizensbank.com
   - type: Portal
     url: https://developer.citizensbank.com/
+  - type: DeveloperPortal
+    url: https://developer.citizensbank.com/
+  - type: Documentation
+    url: https://developer.citizensbank.com/api
+  - type: APIReference
+    url: https://developer.citizensbank.com/product
   - type: Sandbox
     url: https://sandboxdeveloper.citizensbank.com/
-  - type: Open Bank Project Sandbox
-    url: https://citizensbank.openbankproject.com/
-  - type: Citizens Pay Portal
-    url: https://developer-citizenspay.citizensbank.com/
-  - type: Investor Relations
+  - type: Support
+    url: https://developer.citizensbank.com/support
+  - type: HelpCenter
+    url: https://www.citizensbank.com/customer-service/contact-us.aspx
+  - type: Login
+    url: https://developer.citizensbank.com/user/login
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/rbs-citizens-financial-group
+  - type: InvestorRelations
     url: https://investor.citizensbank.com/
-  - type: Open Banking Announcement
+  - type: PressReleases
     url: https://investor.citizensbank.com/about-us/newsroom/latest-news/2025/2025-03-27.aspx
   - type: PrivacyPolicy
     url: https://www.citizensbank.com/account-safeguards/privacy.aspx
   - type: TermsOfService
-    url: https://www.citizensbank.com/customer-service/online-banking-service-agreement.aspx
-  - type: Support
-    url: https://www.citizensbank.com/customer-service/overview.aspx
+    url: https://www.citizensbank.com/account-safeguards/terms-of-use.aspx
+  - type: Authentication
+    url: authentication/citizens-financial-group-authentication.yml
+  - type: OAuthScopes
+    url: scopes/citizens-financial-group-scopes.yml
+  - type: Conventions
+    url: conventions/citizens-financial-group-conventions.yml
+  - type: Idempotency
+    url: conventions/citizens-financial-group-conventions.yml
+  - type: Conformance
+    url: conformance/citizens-financial-group-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/citizens-financial-group-lifecycle.yml
+  - type: DataModel
+    url: data-model/citizens-financial-group-data-model.yml
+  - type: ErrorCatalog
+    url: errors/citizens-financial-group-error-codes.yml
+  - type: ErrorCatalog
+    url: errors/citizens-financial-group-problem-types.yml
+  - type: DeclineCodes
+    url: errors/citizens-financial-group-decline-codes.yml
+  - type: Plans
+    url: plans/citizens-financial-group-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/citizens-financial-group-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/citizens-financial-group-sandbox.yml
+  - type: DomainSecurity
+    url: security/citizens-financial-group-domain-security.yml
+  - type: VulnerabilityDisclosure
+    url: security/citizens-financial-group-vulnerability-disclosure.yml
+  - type: Security
+    url: security/citizens-financial-group-vulnerability-disclosure.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/citizens-financial-group-llms.txt
+  - type: X-MCPServerCandidate
+    url: mcp/citizens-financial-group-mcp.yml
+  - type: FinOps
+    url: finops/citizens-financial-group-finops.yml
   - type: JSONLD
     url: json-ld/citizens-financial-group-context.jsonld
   - type: Spectral
@@ -205,3 +517,66 @@ common:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-pointer-verification:
+  checked: '2026-09-05'
+  method: probed
+  note: >-
+    Every http(s) pointer above was fetched on 2026-09-05 with a browser User-Agent, following
+    redirects, and the body was read rather than trusting the status line. Four pointers carried in
+    earlier rounds were confirmed dead and removed rather than left to rot.
+  removed:
+    - url: https://citizensbank.openbankproject.com/
+      was: Open Bank Project Sandbox
+      status: 0
+      reason: DNS does not resolve (NXDOMAIN). The live sandbox is Citizens' own portal at sandboxdeveloper.citizensbank.com.
+    - url: https://developer-citizenspay.citizensbank.com/
+      was: Citizens Pay Portal
+      status: 0
+      reason: DNS does not resolve (NXDOMAIN). No replacement Citizens Pay developer surface was found.
+    - url: https://www.citizensbank.com/customer-service/online-banking-service-agreement.aspx
+      was: TermsOfService
+      status: 404
+      reason: Returns the Citizens 404 page. Replaced with the live Terms of Use page.
+    - url: https://www.citizensbank.com/customer-service/overview.aspx
+      was: Support
+      status: 404
+      reason: Returns the Citizens 404 page. Replaced with the developer-portal support page and the live Contact Us page.
+  not_emitted:
+    - surface: Blog
+      url: https://developer.citizensbank.com/blog
+      status: 200
+      reason: 'Serves the portal shell reading "No blog entries have been created." A 200 with no content is not a blog.'
+    - surface: GitHubOrganization
+      url: https://github.com/citizensbank
+      status: 200
+      reason: >-
+        The org exists but carries no name, no description, no website and zero public repositories,
+        so it cannot be attributed to Citizens Financial Group from anything it publishes.
+    - surface: Postman
+      status: 0
+      reason: A Postman public search for "citizens bank" returned zero collections, workspaces and APIs.
+    - surface: WellKnown / SecurityTxt
+      reason: >-
+        Every /.well-known/ path 404s or returns the portal search shell on every Citizens host.
+        The probe is recorded in well-known/ and no pointer is emitted. See that file.
+    - surface: AgentCard
+      reason: >-
+        /.well-known/agent-card.json and /.well-known/agent.json probed on all eight Citizens hosts
+        on 2026-09-05 - 404, 403 or connection timeout. No card is served, so nothing was written.
+    - surface: SDKs / Packages
+      reason: >-
+        No first-party client library exists in any registry. packages/ records the zero and no
+        SDKs pointer is emitted.
+    - surface: StatusPage / Deprecation / ChangeLog
+      reason: >-
+        Citizens publishes no status page, deprecation policy or changelog. lifecycle/ records the
+        probes and no pointer is emitted for any of them.
+    - surface: Compliance
+      reason: >-
+        No trust center or named certification (SOC 2 / ISO 27001 / PCI) is published. FDIC
+        membership and Federal Reserve / OCC supervision are not an API compliance program.
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 14
+  pass: local-v3
