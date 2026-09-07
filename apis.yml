@@ -442,6 +442,8 @@ apis:
       found. No baseURL is recorded because Citizens publishes none;
       the only live Citizens Pay surface is the consumer site.
 common:
+  - type: AgenticAccess
+    url: agentic-access/citizens-financial-group-agentic-access.yml
   - type: Website
     url: https://www.citizensbank.com
   - type: Portal
@@ -580,5 +582,3 @@ x-enrichment:
   status: enriched
   artifacts_added: 14
   pass: local-v3
-x-parent: citizens-financial
-x-relationship: product
