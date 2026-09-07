@@ -580,3 +580,5 @@ x-enrichment:
   status: enriched
   artifacts_added: 14
   pass: local-v3
+x-parent: citizens-financial
+x-relationship: product
