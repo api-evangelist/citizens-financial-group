@@ -1,17 +1,85 @@
-generated: '2026-07-15'
+generated: '2026-09-16'
 method: generated
-source: openapi/citizens-bank-accounts-api-openapi.yml, openapi/citizens-bank-atm-locator-api-openapi.yml
+source: openapi/citizens-financial-group-account-transfer-api-openapi.yml, openapi/citizens-financial-group-accounts-api-openapi.yml,
+  openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml, openapi/citizens-financial-group-information-reporting-api-openapi.yml,
+  openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml, openapi/citizens-financial-group-initiate-payment-api-openapi.yml,
+  openapi/citizens-financial-group-latitude-api-openapi.yml, openapi/citizens-financial-group-participant-status-api-openapi.yml,
+  openapi/citizens-financial-group-payment-status-api-openapi.yml, openapi/citizens-financial-group-postalcode-api-openapi.yml,
+  openapi/citizens-financial-group-revoke-api-openapi.yml, openapi/citizens-financial-group-routingnumber-api-openapi.yml,
+  openapi/citizens-financial-group-state-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 4
+  operations: 21
   by_action_class:
-    connected: 4
+    acting: 8
+    connected: 13
   by_consequence:
-    read: 4
-  human_in_the_loop_required: 0
+    physical: 3
+    read: 13
+    write: 4
+    safety-critical: 1
+  human_in_the_loop_required: 1
 operations:
+- path: /initiate
+  method: post
+  operationId: initiateTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /accounts/{accountId}/contact
+  method: get
+  operationId: getAccountsByAccountIdContact
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /accounts/{accountId}/payment-networks
+  method: get
+  operationId: getAccountsByAccountIdPaymentNetworks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /accounts/{accountId}/transactions
+  method: get
+  operationId: getAccountsByAccountIdTransactions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /accounts/{accountId}
+  method: get
+  operationId: getAccountsByAccountId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /accounts
   method: get
   operationId: getAccounts
@@ -22,9 +90,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /accounts/{accountId}
+- path: /accounts/{accountId}/statements
   method: get
-  operationId: getAccountById
+  operationId: getAccountsByAccountIdStatements
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -32,19 +100,185 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /accounts/{accountId}/transactions
+- path: /accounts/{accountId}/statements/{statementId}
   method: get
+  operationId: getAccountsByAccountIdStatementsByStatementId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /status
+  method: get
+  operationId: getAccountInquiryByRefId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /balance/query
+  method: post
+  operationId: getAccountDetails
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /list
+  method: get
+  operationId: getAccountList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /transactions/query
+  method: post
   operationId: getTransactions
   x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /initiation
+  method: post
+  operationId: getAccountInquiry
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /initiate-payment
+  method: post
+  operationId: initiatePayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /latitude/\{latitude}/longitude/{longitude}
+  method: get
+  operationId: getLatitude\{latitude}LongitudeByLongitude
+  x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     token:
       max-ttl: 3600
     audit: none
-- path: /atms
+- path: /participant-status/query
+  method: post
+  operationId: checkParticipantStatus
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /payment-status/query
+  method: post
+  operationId: retrievePaymentStatus
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /postalcode/{postalCode}
   method: get
-  operationId: searchATMs
+  operationId: findBranchesByPostalCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /revoke
+  method: post
+  operationId: postRevoke
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /routingnumber/{routingnumber}
+  method: get
+  operationId: getRoutingnumberByRoutingnumber
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /state/{state}/city/{city}
+  method: get
+  operationId: getStateByStateCityByCity
   x-agentic-access:
     action-class: connected
     consequence: read
