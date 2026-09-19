@@ -113,11 +113,11 @@ apis:
   humanURL: https://developer.citizensbank.com/product/accounts/api/70
   baseURL: https://api.citizensbank.com/fdx/v1.0
   properties:
-  - url: openapi/citizens-financial-group-accounts-openapi.yml
+  - url: openapi/_original/citizens-financial-group-accounts-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-accounts-fdx-v1.json
     type: OpenAPISource
-  - url: openapi/citizens-financial-group-accounts-v2-openapi.yml
+  - url: openapi/_original/citizens-financial-group-accounts-v2-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-accounts-fdx-v2-sandbox.json
     type: OpenAPISource
@@ -148,11 +148,11 @@ apis:
   humanURL: https://developer.citizensbank.com/product/statements/api/statements-v1
   baseURL: https://api.citizensbank.com/fdx/v1.0
   properties:
-  - url: openapi/citizens-financial-group-statements-openapi.yml
+  - url: openapi/_original/citizens-financial-group-statements-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-statements-fdx-v1.json
     type: OpenAPISource
-  - url: openapi/citizens-financial-group-statements-v2-openapi.yml
+  - url: openapi/_original/citizens-financial-group-statements-v2-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-statements-fdx-v2-sandbox.json
     type: OpenAPISource
@@ -184,11 +184,11 @@ apis:
   humanURL: https://developer.citizensbank.com/product/88/api/73
   baseURL: https://api.citizensbank.com/authorize/v1.0
   properties:
-  - url: openapi/citizens-financial-group-authorize-openapi.yml
+  - url: openapi/_original/citizens-financial-group-authorize-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-authorize-v1.json
     type: OpenAPISource
-  - url: openapi/citizens-financial-group-authorize-v2-openapi.yml
+  - url: openapi/_original/citizens-financial-group-authorize-v2-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-authorize-v2-sandbox.json
     type: OpenAPISource
@@ -216,7 +216,7 @@ apis:
   humanURL: https://sandboxdeveloper.citizensbank.com/product/127/api/103
   baseURL: https://sandboxapi.citizensbank.com/v1/atm-locator
   properties:
-  - url: openapi/citizens-financial-group-atm-locator-openapi.yml
+  - url: openapi/_original/citizens-financial-group-atm-locator-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-atm-locator-v1-sandbox.json
     type: OpenAPISource
@@ -241,7 +241,7 @@ apis:
   humanURL: https://sandboxdeveloper.citizensbank.com/product/127/api/106
   baseURL: https://sandboxapi.citizensbank.com/v1/branch-locator
   properties:
-  - url: openapi/citizens-financial-group-branch-locator-openapi.yml
+  - url: openapi/_original/citizens-financial-group-branch-locator-openapi.yml
     type: Swagger
   - url: openapi/_original/citizens-branch-locator-v1-sandbox.json
     type: OpenAPISource
@@ -322,6 +322,8 @@ apis:
   humanURL: https://developer.citizensbank.com/
   baseURL: https://api.citizensbank.com/fdx/v1.0
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -749,6 +751,8 @@ apis:
   humanURL: https://developer.citizensbank.com/
   baseURL: https://api.citizensbank.com/fdx/v1.0
   tags:
+  - States
+  tags_raw:
   - State
   properties:
   - type: OpenAPI
