@@ -1,0 +1,870 @@
+openapi: 3.2.0
+info:
+  title: Citizens Financial Group Accounts API
+  x-refined-note:
+  - x-environment differs across the merged source definitions and was not carried
+  - x-harvest-method differs across the merged source definitions and was not carried
+  - x-harvested differs across the merged source definitions and was not carried
+  - x-ibm-name differs across the merged source definitions and was not carried
+  - x-pathalias differs across the merged source definitions and was not carried
+  - x-source-url differs across the merged source definitions and was not carried
+  x-ibm-summary: ''
+  version: '1.0'
+  description: 'Operations tagged Accounts across 2 of this provider''s published API definitions: citizens-accounts-fdx-v1.json, citizens-financial-group-statements-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.citizensbank.com/fdx/v1.0
+tags:
+- name: Accounts
+paths:
+  /accounts/{accountId}/contact:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      schema:
+        type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      schema:
+        type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+      schema:
+        type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      schema:
+        type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data service.
+      schema:
+        type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountContact'
+      tags:
+      - Accounts
+      security:
+      - x-fapi-financial-id: []
+      summary: Get accounts by account id contact
+      x-summary-source: derived
+      operationId: getAccountsByAccountIdContact
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts/{accountId}/payment-networks:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      schema:
+        type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      schema:
+        type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+      schema:
+        type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      schema:
+        type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data service.
+      schema:
+        type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountPaymentNetwork'
+      tags:
+      - Accounts
+      security:
+      - x-fapi-financial-id: []
+      summary: Get accounts by account id payment networks
+      x-summary-source: derived
+      operationId: getAccountsByAccountIdPaymentNetworks
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts/{accountId}/transactions:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: account id for specific account
+      schema:
+        type: string
+    - name: offset
+      in: query
+      required: false
+      description: Opaque cursor used by the provider to send the next set of records
+      schema:
+        type: integer
+        format: int32
+    - name: limit
+      in: query
+      required: false
+      description: Number of elements that the consumer wishes to receive.
+      schema:
+        type: integer
+        format: int32
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      schema:
+        type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+      schema:
+        type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data service.
+      schema:
+        type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+      schema:
+        type: string
+    - name: x-fapi-financial-Id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      schema:
+        type: string
+    - name: startTime
+      in: query
+      required: false
+      description: Start time for use in retrieval of elements (ISO 8601)
+      schema:
+        type: string
+    - name: endTime
+      in: query
+      required: false
+      description: End time for use in retrieval of elements (ISO 8601)
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transactions'
+      tags:
+      - Accounts
+      security:
+      - x-fapi-financial-id: []
+      summary: Get accounts by account id transactions
+      x-summary-source: derived
+      operationId: getAccountsByAccountIdTransactions
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts/{accountId}:
+    parameters:
+    - name: accountId
+      in: path
+      required: true
+      description: Account Identifier
+      schema:
+        type: string
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      schema:
+        type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+      schema:
+        type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      schema:
+        type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data service.
+      schema:
+        type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accounts'
+      tags:
+      - Accounts
+      security:
+      - x-fapi-financial-id: []
+      summary: Get accounts by account id
+      x-summary-source: derived
+      operationId: getAccountsByAccountId
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts:
+    parameters:
+    - name: offSet
+      in: query
+      required: false
+      description: Opaque cursor used by the provider to send the next set of records
+      schema:
+        type: integer
+        format: int32
+    - name: limit
+      in: query
+      required: false
+      description: Number of elements that the consumer wishes to receive.
+      schema:
+        type: integer
+        format: int32
+    - name: authorization
+      in: header
+      required: true
+      description: oAuth Access token received using consent flow
+      schema:
+        type: string
+    - name: x-fapi-interaction-id
+      in: header
+      required: false
+      description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+      schema:
+        type: string
+    - name: x-fapi-financial-id
+      in: header
+      required: true
+      description: Identifies the desired financial institution or partners.
+      schema:
+        type: string
+    - name: x-customer-user-agent
+      in: header
+      required: false
+      description: Header is designed to only collect statistics on the products using the FDX API data service.
+      schema:
+        type: string
+    - name: x-customer-last-logged-time
+      in: header
+      required: false
+      description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+      schema:
+        type: string
+    - name: resultType
+      in: query
+      required: false
+      description: lightweight or details
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accounts'
+      tags:
+      - Accounts
+      security:
+      - x-fapi-financial-id: []
+      summary: Get accounts
+      x-summary-source: derived
+      operationId: getAccounts
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts/{accountId}/statements:
+    get:
+      parameters:
+      - name: accountId
+        in: path
+        description: Account Identifier
+        required: true
+        schema:
+          type: string
+      - name: authorization
+        in: header
+        description: oAuth Access token received using consent flow
+        required: true
+        schema:
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+        required: false
+        schema:
+          type: string
+      - name: x-fapi-financial-id
+        in: header
+        description: Identifies the desired financial institution or partners.
+        required: true
+        schema:
+          type: string
+      - name: x-customer-user-agent
+        in: header
+        description: Header is designed to only collect statistics on the products using the FDX API data service.
+        required: false
+        schema:
+          type: string
+      - name: x-customer-last-logged-time
+        in: header
+        description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statements'
+      security: []
+      tags:
+      - Accounts
+      summary: Get accounts by account id statements
+      x-summary-source: derived
+      operationId: getAccountsByAccountIdStatements
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+  /accounts/{accountId}/statements/{statementId}:
+    get:
+      parameters:
+      - name: accountId
+        in: path
+        description: Account Identifier
+        required: true
+        schema:
+          type: string
+      - name: statementId
+        in: path
+        description: Statement Identifier
+        required: true
+        schema:
+          type: string
+      - name: authorization
+        in: header
+        description: oAuth Access token received using consent flow
+        required: true
+        schema:
+          type: string
+      - name: x-fapi-interaction-id
+        in: header
+        description: Allows support people to trace a full path of interactions through multiple sub-systems. Unique GUID used as correlation ID.
+        required: false
+        schema:
+          type: string
+      - name: x-fapi-financial-id
+        in: header
+        description: Identifies the desired financial institution or partners.
+        required: true
+        schema:
+          type: string
+      - name: x-customer-user-agent
+        in: header
+        description: Header is designed to only collect statistics on the products using the FDX API data service.
+        required: false
+        schema:
+          type: string
+      - name: x-customer-last-logged-time
+        in: header
+        description: Consumer logged in details with full date and time in UTC format. Refer RFC 7231 - section 7.1.1.2
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/String255'
+      tags:
+      - Accounts
+      summary: Get accounts by account id statements by statement id
+      x-summary-source: derived
+      operationId: getAccountsByAccountIdStatementsByStatementId
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.citizensbank.com/fdx/v1.0
+components:
+  schemas:
+    PageMetadata:
+      title: Page Metadata
+      description: Offset IDs for paginated result sets
+      type: object
+      properties:
+        nextOffset:
+          type: string
+          example: '2'
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
+        prevOffset:
+          type: string
+          example: '1'
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
+        totalElements:
+          type: integer
+          example: 3
+          description: Total number of elements
+    AccountType:
+      title: Account Type
+      type: string
+      enum:
+      - CHECKING
+      - SAVINGS
+    DepositAccount:
+      title: DepositAccount Entity
+      allOf:
+      - $ref: '#/components/schemas/Account'
+      - type: object
+        properties:
+          balanceAsOf:
+            description: Balance as of date in ISO 8601 Date format - YYYY-MM-DD
+            allOf:
+            - $ref: '#/components/schemas/Timestamp'
+          currentBalance:
+            allOf:
+            - $ref: '#/components/schemas/Number'
+            description: Actual balance in the accounts
+          interestRate:
+            allOf:
+            - $ref: '#/components/schemas/Number'
+            description: Intereset rate for accounts
+          lastActivityDate:
+            description: Last activity in ISO 8601 Date format - YYYY-MM-DD
+            allOf:
+            - $ref: '#/components/schemas/Timestamp'
+          availableBalance:
+            $ref: '#/components/schemas/Number'
+            description: Funds available for use
+            type: number
+            format: double
+    CurrencyCode:
+      title: Currency Code
+      type: string
+      enum:
+      - USD
+    Transaction:
+      title: Transaction Entity
+      properties:
+        accountId:
+          description: Account ID associated with the transaction.
+          allOf:
+          - $ref: '#/components/schemas/UniqueIdentifier'
+        transactionId:
+          description: Unique transactions id for account
+          allOf:
+          - $ref: '#/components/schemas/UniqueIdentifier'
+        referenceTransactionId:
+          description: Unique reference trasaction id
+          allOf:
+          - $ref: '#/components/schemas/UniqueIdentifier'
+        postedTimestamp:
+          description: Transaction posted date and time
+          allOf:
+          - $ref: '#/components/schemas/Timestamp'
+        transactionTimestamp:
+          description: Transaction entered in the backend system
+          allOf:
+          - $ref: '#/components/schemas/Timestamp'
+        description:
+          type: string
+          description: The description of the transaction
+        memo:
+          description: Secondary transaction description
+          allOf:
+          - $ref: '#/components/schemas/String255'
+        debitCreditMemo:
+          $ref: '#/components/schemas/String255'
+        category:
+          type: string
+          maxLength: 4
+          description: Transaction category
+        status:
+          $ref: '#/components/schemas/String255'
+        amount:
+          description: Transaction amount in currency
+          allOf:
+          - $ref: '#/components/schemas/Number'
+      type: object
+    ContentTypes:
+      title: Content Types
+      description: Supported documented formats
+      type: string
+      enum:
+      - image/gif
+      - image/jpeg
+      - image/tiff
+      - image/png
+      - application/json
+      example: application/json
+    String255:
+      title: String255
+      type: string
+      maxLength: 255
+    AccountStatus:
+      title: AccountStatus
+      type: string
+      enum:
+      - OPEN
+      - CLOSED
+      - OTHER
+    DepositTransactionType:
+      title: Deposit Transaction Type
+      type: string
+      enum:
+      - ADJUSTMENT
+      - ATMDEPOSIT
+      - ATMWITHDRAWAL
+      - BILLPAYMENT
+      - CHECK
+      - DEPOSIT
+      - DIRECTDEPOSIT
+      - FEE
+      - OTHER
+      - POSCREDIT
+      - POSDEBIT
+      - TRANSFER
+    UniqueIdentifier:
+      title: UniqueIdentifier
+      type: string
+      maxLength: 256
+    DepositTransaction:
+      title: DepositTransaction Entity
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - properties:
+          transactionType:
+            allOf:
+            - $ref: '#/components/schemas/DepositTransactionType'
+            description: Deposit transaction type
+          checkNumber:
+            type: integer
+            format: int64
+            description: Check identification info
+        type: object
+    Timestamp:
+      title: Timestamp
+      type: string
+      format: date-time
+      description: 'UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD</br> <br> Timestamp fields are in ISO 8601 date time format - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z or 2022-12-13'
+    Currency:
+      title: Currency Entity
+      properties:
+        currencyCode:
+          description: Only USD (US Dollars) currency is supported.
+          type: string
+          maxLength: 3
+          $ref: '#/components/schemas/CurrencyCode'
+    AccountContact:
+      title: Account Contact entity
+      description: Contact information for the account
+      type: object
+      properties:
+        holders:
+          type: string
+          description: Owners of the account
+        emails:
+          type: array
+          description: Email addresses associated with the account
+        addresses:
+          type: array
+          description: Physical mail addresses associated with the account
+        telephones:
+          type: array
+          description: Telephone numbers associated with the account
+    Transactions:
+      title: Transactions Entity
+      description: Array of transactions
+      allOf:
+      - $ref: '#/components/schemas/PaginatedArray'
+      - type: object
+        properties:
+          transactions:
+            description: Transaction info for account type deposit
+            type: array
+            items:
+              $ref: '#/components/schemas/DepositTransaction'
+    PageMetadataLinks:
+      title: Page Metadata Links
+      description: Resource URLs for retrieving next or previous datasets
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving next dataset
+        prev:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving previous dataset
+    Account:
+      title: Account Entity
+      description: Have Account information with header and details
+      allOf:
+      - $ref: '#/components/schemas/AccountDescriptor'
+      - type: object
+        properties:
+          parentAccountId:
+            description: Account header information
+            allOf:
+            - $ref: '#/components/schemas/UniqueIdentifier'
+          currency:
+            allOf:
+            - $ref: '#/components/schemas/Currency'
+            description: Account currency code. Supports only the USD currency code
+            type: object
+          interestRate:
+            allOf:
+            - $ref: '#/components/schemas/Number'
+            description: Interest rate of the account.
+          lastActivityDate:
+            allOf:
+            - $ref: '#/components/schemas/Timestamp'
+            description: Last activity occured in Accounts.
+    Accounts:
+      title: Accounts entity
+      description: Account information in Array.
+      allOf:
+      - $ref: '#/components/schemas/PaginatedArray'
+      - type: object
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepositAccount'
+    AccountPaymentNetwork:
+      title: Account Payment Network entity
+      description: Payment networks for the account
+      type: object
+      properties:
+        bankId:
+          type: string
+          description: bankid
+        identifier:
+          type: string
+          description: identifier
+        identifierType:
+          type: string
+          description: identifier Type
+        type:
+          type: string
+          description: type
+        transferIn:
+          type: string
+          description: transferIn
+        transferOut:
+          type: string
+          description: transferOut
+    HateoasLink:
+      title: HATEOAS Link
+      description: REST application constraint (Hypermedia As The Engine Of Application State)
+      required:
+      - href
+      type: object
+      properties:
+        href:
+          type: string
+          format: uri-reference
+          description: URL to invoke the action on the resource
+          example: https://api.citizensbank.com/fdx/v4/accounts/12345
+        action:
+          type: string
+          enum:
+          - GET
+          - POST
+          - PATCH
+          - DELETE
+          - PUT
+          description: HTTP Method to use for the request
+        rel:
+          description: Relation of this link to its containing entity, as defined by and with many example relation values at [IETF RFC5988](https://datatracker.ietf.org/doc/html/rfc5988)
+          type: string
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentTypes'
+          description: Content-types that can be used in the Accept header
+    PaginatedArray:
+      title: Paginated Array
+      description: Base class for results that may be paginated
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+          description: Offset IDs for navigating result sets
+        links:
+          $ref: '#/components/schemas/PageMetadataLinks'
+          description: Resource URLs for navigating result sets
+    AccountDescriptor:
+      title: AccountDescriptor Entity
+      description: 'Account information When Resultype is lightweight '
+      properties:
+        accountId:
+          allOf:
+          - $ref: '#/components/schemas/UniqueIdentifier'
+          description: Unique accountid of customer
+        nickname:
+          type: string
+          maxLength: 256
+          description: nickName is related to account holder name.
+        accountType:
+          $ref: '#/components/schemas/AccountType'
+        status:
+          $ref: '#/components/schemas/AccountStatus'
+        accountNumberDisplay:
+          type: string
+          description: Account identity is a masked value number.
+    Number:
+      title: Number
+      type: number
+    Statement:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: accountId
+        statementId:
+          type: string
+          description: statementId
+        description:
+          type: string
+          description: description
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+      title: Statement entity
+      description: Statement info for the account
+    Statements:
+      title: An array of statements
+      description: A paginated array of account statements
+      allOf:
+      - $ref: '#/components/schemas/PaginatedArray_2'
+      - type: object
+        properties:
+          statements:
+            type: array
+            description: An array of Statement, each with its HATEOAS link to retrieve the account statement
+            items:
+              $ref: '#/components/schemas/Statement'
+    DocumentStatus:
+      title: Document Status
+      description: Defines the status of a document
+      type: string
+      enum:
+      - AVAILABLE
+      - PROCESSING
+      - FAILED
+    HateoasLink_2:
+      type: object
+      required:
+      - href
+      properties:
+        href:
+          type: string
+          format: uri-reference
+          example: https://api.citizensbank.com/fdx/v4/accounts/12345
+          description: URL to invoke the action on the resource
+      title: HATEOAS Link
+      description: REST application constraint (Hypermedia As The Engine Of Application State)
+    PaginatedArray_2:
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+        links:
+          $ref: '#/components/schemas/PageMetadataLinks_2'
+      title: Paginated Array
+      description: Base class for results that may be paginated
+    PageMetadataLinks_2:
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/HateoasLink_2'
+        prev:
+          $ref: '#/components/schemas/HateoasLink_2'
+      title: Page Metadata Links
+      description: Resource URLs for retrieving next or previous datasets
+  securitySchemes:
+    x-fapi-financial-id:
+      type: apiKey
+      description: Identifies the desired financial institution or partners.
+      name: x-fapi-financial-id
+      in: header
+      x-key-type: client_id
+x-refined-from:
+- citizens-accounts-fdx-v1.json
+- citizens-financial-group-statements-openapi.yml
+x-ibm-configuration:
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  application-authentication:
+    certificate: false
+  application-authentication-source: []
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v1/account-transfer

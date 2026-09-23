@@ -1,0 +1,261 @@
+openapi: 3.2.0
+info:
+  title: Payments Payment Status API
+  x-ibm-name: Payments
+  version: 3.1.11
+  description: The Payment API provides authenticated clients with a secure and streamlined way to initiate payments and retrieve transaction status programmatically.
+  x-pathalias: payments-v3
+  contact:
+    url: https://www.citizensbank.com/corporate-finance/overview.aspx?cmclmkt#next-step
+    name: Commercial Sales team
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/commercial-banking/api/payments-v3
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+servers:
+- url: https://apis.citizensbank.com/v3/payments
+security:
+- client-id: []
+tags:
+- name: Payment Status
+paths:
+  /payment-status/query:
+    post:
+      summary: The Payment Status resource retrieves the status of a transaction initiated by…
+      description: Retrieves the status of a transaction initiated by the payer by sending the payment id in the request.
+      operationId: retrievePaymentStatus
+      parameters:
+      - $ref: '#/components/parameters/x-fapi-trace-id'
+      - $ref: '#/components/parameters/x-fapi-channel-id'
+      - $ref: '#/components/parameters/authorization'
+      requestBody:
+        required: true
+        description: The request body must include account identifiers and bank identifiers  to initiate account inquiry process.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentStatusRequest'
+      responses:
+        '200':
+          description: The operation was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatusResponse'
+        '204':
+          description: No content available.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized Access or app-token is not valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Payment Status
+components:
+  parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+    x-fapi-channel-id:
+      schema:
+        maxLength: 20
+        type: string
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams within a client system.
+      style: simple
+      required: false
+      explode: false
+  schemas:
+    PaymentStatusResponse:
+      type: object
+      required:
+      - paymentId
+      - paymentStatus
+      - paymentType
+      - receivedDateTime
+      - statusDateTime
+      properties:
+        paymentId:
+          type: string
+          example: M20190404OR
+          description: Unique identifier for the payment submission request.
+          maxLength: 15
+        paymentType:
+          type: string
+          example: RTP
+          description: The type of transaction that was initiated.
+          enum:
+          - RTP
+          - ACH_CREDIT
+          - ACH_DEBIT
+        paymentStatus:
+          type: string
+          example: REJECTED
+          description: 'The status of the transaction. Possible values for RTP are RECEIVED - The payment has been received for processing. IN_PROGRESS - The payment processing is in progress. COMPLETED - The payment has been completed. REJECTED - The payment has been rejected.
+
+            Possible values for ACH are RECEIVED - API payment request received and staged for exported. EXPORTED - API payment request exported for backend processing system. ACKNOWLEDGED - Backend processing system acknowledged receipt of payment.'
+          maxLength: 30
+          enum:
+          - RECEIVED
+          - IN_PROGRESS
+          - COMPLETED
+          - REJECTED
+          - EXPORTED
+          - ACKNOWLEDGED
+        rejectCode:
+          type: string
+          example: PMT2005
+          description: The rejection code in case the transaction was rejected
+        rejectDescription:
+          type: string
+          example: Debtor account type invalid
+          description: The description for the rejection code
+        receivedDateTime:
+          format: date
+          example: '2024-09-30'
+          description: The date and time when the payment transaction was received.
+        statusDateTime:
+          format: date
+          example: '2024-09-30'
+          description: The date and time when the status was updated.
+        bankReferenceNumber:
+          type: string
+          example: US24100482608794
+          description: The bank assigned transaction id.
+        networkInstructionId:
+          type: string
+          example: 20241004011500120T1BUSRT61960896581
+          description: The network assigned payment reference number.
+      description: Response fields of the Payments Response.
+    PaymentStatusRequest:
+      type: object
+      required:
+      - paymentId
+      - paymentType
+      properties:
+        paymentId:
+          type: string
+          example: M20190404OR
+          description: Unique identifier for the payment submission request.
+          maxLength: 15
+        paymentType:
+          type: string
+          example: RTP
+          description: The type of transaction that was initiated.
+          enum:
+          - RTP
+          - ACH_CREDIT
+          - ACH_DEBIT
+      description: Request fields of the Payments Response.
+    Error_errorDetails:
+      type: object
+      required:
+      - code
+      - description
+      properties:
+        code:
+          type: string
+          example: REQ1001
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          maxLength: 7
+        description:
+          type: string
+          example: Request Id should not be more than 36 characters long.
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          maxLength: 250
+        messageDetail:
+          type: string
+          example: Invalid requestId
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          maxLength: 250
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
+  securitySchemes:
+    client-id:
+      type: apiKey
+      in: header
+      name: X-IBM-Client-Id
+      x-key-type: client_id
+    OAuth2:
+      type: oauth2
+      x-ibm-oauth-provider: externalpingfederate
+      flows:
+        clientCredentials:
+          tokenUrl: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+          scopes:
+            ir:read: Access to read IR data
+externalDocs:
+  description: API Documentation
+  url: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+x-ibm-configuration:
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  application-authentication:
+    certificate: false
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v3/payments

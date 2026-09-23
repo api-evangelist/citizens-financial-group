@@ -1,0 +1,261 @@
+openapi: 3.2.0
+info:
+  title: Payments Participant Status API
+  x-ibm-name: Payments
+  version: 3.1.11
+  description: The Payment API provides authenticated clients with a secure and streamlined way to initiate payments and retrieve transaction status programmatically.
+  x-pathalias: payments-v3
+  contact:
+    url: https://www.citizensbank.com/corporate-finance/overview.aspx?cmclmkt#next-step
+    name: Commercial Sales team
+  x-ibm-summary: ''
+  x-source-url: https://developer.citizensbank.com/product/commercial-banking/api/payments-v3
+  x-harvested: '2026-09-05'
+  x-harvest-method: searched
+  x-environment: production
+servers:
+- url: https://apis.citizensbank.com/v3/payments
+security:
+- client-id: []
+tags:
+- name: Participant Status
+paths:
+  /participant-status/query:
+    post:
+      summary: Allows you to retrieve status and basic information of the financial…
+      description: Retrieves the payment type (WIRE and RTP) supported status of financial institution for the routing number and payment type provided. Additionally, returns the bank name, address and availability of participant to do a payment.
+      operationId: checkParticipantStatus
+      parameters:
+      - $ref: '#/components/parameters/x-fapi-trace-id'
+      - $ref: '#/components/parameters/x-fapi-channel-id'
+      - $ref: '#/components/parameters/authorization'
+      requestBody:
+        required: true
+        description: The request body must include account identifiers and bank identifiers  to initiate account inquiry process.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantStatusQuery'
+      responses:
+        '200':
+          description: Successfully retrieved the list of accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantStatusSummary'
+        '204':
+          description: No content available.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized Access or app-token is not valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Record not found or Resource not available .
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error or any other provider system error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Participant Status
+components:
+  parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+    x-fapi-channel-id:
+      schema:
+        maxLength: 20
+        type: string
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams within a client system.
+      style: simple
+      required: false
+      explode: false
+  schemas:
+    ParticipantStatusSummary:
+      type: object
+      required:
+      - available
+      - inNetwork
+      - paymentType
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 21000089
+          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
+          minLength: 9
+          maxLength: 9
+        paymentType:
+          type: string
+          example: RTP
+          description: Describes the type of payment for which the routing number is searched for.Possible values WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
+          maxLength: 4
+          enum:
+          - WIRE
+          - RTP
+        inNetwork:
+          type: string
+          example: 'YES'
+          description: Describes the presence of a Financial Institution in clearing network(The Clearing House/Fed Wire/Automate Clearing House).
+          maxLength: 3
+          enum:
+          - 'YES'
+          - 'NO'
+        available:
+          type: string
+          example: 'YES'
+          description: Describes the availability of a Financial Institution to receive payments.
+          maxLength: 3
+          enum:
+          - 'YES'
+          - 'NO'
+        additionalInformation:
+          type: string
+          example: The Financial Institution is suspended or signedOff by clearing network
+          description: This field is populated only when the value of 'available' field is 'NO'. It contains the reason for unavailability of the Financial Institution/participant.
+          maxLength: 140
+        participantName:
+          type: string
+          example: Citizens Bank
+          description: Name of the participant/Financial Institution registered in the payment clearing scheme.
+          maxLength: 36
+        eligibleServices:
+          type: array
+          example:
+          - CREDIT_TRANSFER
+          - REQUEST_FOR_PAYMENT
+          - REQUEST_FOR_INFORMATION
+          - REMITANCE
+          - ACKNOWLEDGMENT
+          description: These are the list of eligible services provided/supported by the financial Institution for RTP payment type. Possible values are CREDIT_TRANSFER - These are push payments supported by the clearing network. REQUEST_FOR_PAYMENT - These are pull payments supported by the clearing network. ACKNOWLEDGMENT - Bank is capable of sending a confirmation that the payment has been received and settled REMITTANCE - Bank is capable of receiving remittance information like the payment has been received and settled REQUEST_FOR_INFORMATION - Bank has capability to receive request for information messages. REQUEST_FOR_RETURN_OF_FUND - Bank has capability to receive request for return of funds messages.
+          uniqueItems: true
+          items:
+            type: string
+          maxItems: 6
+          minItems: 1
+    Error_errorDetails:
+      type: object
+      required:
+      - code
+      - description
+      properties:
+        code:
+          type: string
+          example: REQ1001
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          maxLength: 7
+        description:
+          type: string
+          example: Request Id should not be more than 36 characters long.
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          maxLength: 250
+        messageDetail:
+          type: string
+          example: Invalid requestId
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          maxLength: 250
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
+    ParticipantStatusQuery:
+      type: object
+      required:
+      - paymentType
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 21000089
+          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
+          minLength: 9
+          maxLength: 9
+        paymentType:
+          type: string
+          example: RTP
+          description: Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
+          enum:
+          - WIRE
+          - RTP
+  securitySchemes:
+    client-id:
+      type: apiKey
+      in: header
+      name: X-IBM-Client-Id
+      x-key-type: client_id
+    OAuth2:
+      type: oauth2
+      x-ibm-oauth-provider: externalpingfederate
+      flows:
+        clientCredentials:
+          tokenUrl: https://pf-fam.internal.citizensbank.com/as/token.oauth2
+          scopes:
+            ir:read: Access to read IR data
+externalDocs:
+  description: API Documentation
+  url: https://developer.citizensbank.com/content/qut/CitizensPaymentAPIUserGuide.pdf
+x-ibm-configuration:
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  application-authentication:
+    certificate: false
+x-ibm-endpoints:
+- url: https://apis.citizensbank.com/v3/payments

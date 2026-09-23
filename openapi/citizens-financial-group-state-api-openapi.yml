@@ -1,0 +1,64 @@
+openapi: 3.2.0
+info:
+  title: Branch Locator State API
+  x-ibm-name: branch-locator
+  version: 1.0.10
+  description: The Citizens Bank Branch Locator API enables users to locate all Citizens Bank branches throughout the USA. Using Zip Code, Street Address or longitudinal and latitudinal data, users can find the location of the branch, the hours of operation and the whether the location is a standalone branch or part of another entity (e.g. Supermarket).
+  x-ibm-summary: ''
+servers:
+- url: https://sandboxapi.citizensbank.com/v1/branch-locator
+security:
+- Partner Id: []
+tags:
+- name: State
+paths:
+  /state/{state}/city/{city}:
+    parameters:
+    - name: state
+      in: path
+      required: true
+      description: Input state code
+      schema:
+        type: string
+    - name: city
+      in: path
+      required: true
+      description: Input city code
+      schema:
+        type: string
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+      - State
+      summary: Get state by state city by city
+      x-summary-source: derived
+      operationId: getStateByStateCityByCity
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    Partner_Id:
+      type: apiKey
+      description: Used for differentiating the registered vendors/partners
+      name: Partner-ID
+      in: header
+      x-key-type: client_id
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  type: rest
+  application-authentication:
+    certificate: false
+  servers:
+  - url: https://sandboxapi.citizensbank.com/v1/branch-locator
+    type:
+    - production
+    - development

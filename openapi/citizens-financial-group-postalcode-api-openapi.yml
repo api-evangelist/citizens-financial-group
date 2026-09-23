@@ -1,0 +1,115 @@
+openapi: 3.2.0
+info:
+  title: Branch Locator Postalcode API
+  x-ibm-name: branch-locator
+  version: 1.0.10
+  description: The Citizens Bank Branch Locator API enables users to locate all Citizens Bank branches throughout the USA. Using Zip Code, Street Address or longitudinal and latitudinal data, users can find the location of the branch, the hours of operation and the whether the location is a standalone branch or part of another entity (e.g. Supermarket).
+  x-ibm-summary: ''
+servers:
+- url: https://sandboxapi.citizensbank.com/v1/branch-locator
+security:
+- Partner Id: []
+tags:
+- name: Postalcode
+paths:
+  /postalcode/{postalCode}:
+    get:
+      summary: findBranchesByPostalCode
+      x-swagger-router-controller: branch-controller
+      description: ''
+      operationId: findBranchesByPostalCode
+      parameters:
+      - in: path
+        name: postalCode
+        description: To get atm information
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchByPostalResponse'
+      tags:
+      - Postalcode
+components:
+  schemas:
+    Brand:
+      type: object
+      properties:
+        BrandName:
+          type: string
+        Branch:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+    Branch:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            type: string
+        operatingHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperatingHour'
+        driveupWindowHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveupWindowHour'
+    DriveupWindowHour:
+      type: object
+      properties:
+        dayOfWeek:
+          type: string
+        openingTime:
+          type: string
+        closingTime:
+          type: string
+    OperatingHour:
+      type: object
+      properties:
+        dayOfWeek:
+          type: string
+        openingTime:
+          type: string
+        closingTime:
+          type: string
+    SearchByPostalResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchByPostalResponseData'
+    SearchByPostalResponseData:
+      type: object
+      properties:
+        brand:
+          type: array
+          items:
+            $ref: '#/components/schemas/Brand'
+  securitySchemes:
+    Partner_Id:
+      type: apiKey
+      description: Used for differentiating the registered vendors/partners
+      name: Partner-ID
+      in: header
+      x-key-type: client_id
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  type: rest
+  application-authentication:
+    certificate: false
+  servers:
+  - url: https://sandboxapi.citizensbank.com/v1/branch-locator
+    type:
+    - production
+    - development

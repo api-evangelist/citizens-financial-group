@@ -1,18 +1,20 @@
+# x-archived-from: citizens-financial-group-accounts-openapi.yml
+# x-archived-on: 2026-09-16
 swagger: '2.0'
 info:
   title: Accounts
   x-ibm-name: accounts
-  version: 2.1.5
-  description: The  Accounts API sandbox enables users to retrieve Citizens Bank customer account and
-    transactions information.
+  version: 1.0.5
+  description: The  Accounts API v1.0 enables users to retrieve Citizens Bank customer account and transactions
+    information.
   x-ibm-summary: ''
-  x-source-url: https://sandboxdeveloper.citizensbank.com/product/124/api/100
+  x-source-url: https://developer.citizensbank.com/product/accounts/api/70
   x-harvested: '2026-09-05'
   x-harvest-method: searched
-  x-environment: sandbox
+  x-environment: production
 schemes:
 - https
-basePath: /fdx/v2.1
+basePath: /fdx/v1.0
 produces:
 - application/json
 consumes:
@@ -36,7 +38,7 @@ x-ibm-configuration:
   application-authentication:
     certificate: false
   servers:
-  - url: https://sandboxapi.citizensbank.com/fdx/v2.1
+  - url: https://api.citizensbank.com/fdx/v1.0
     type:
     - production
     - development
@@ -243,7 +245,7 @@ definitions:
         type: string
         format: uri-reference
         description: URL to invoke the action on the resource
-        example: https://api.fi.com/fdx/v4/accounts/12345
+        example: https://api.citizensbank.com/fdx/v4/accounts/12345
       action:
         type: string
         enum:
@@ -647,4 +649,4 @@ paths:
           schema:
             $ref: '#/definitions/Accounts'
           description: success
-host: sandboxapi.citizensbank.com
+host: api.citizensbank.com
