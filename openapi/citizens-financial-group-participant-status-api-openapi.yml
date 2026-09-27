@@ -73,15 +73,6 @@ paths:
       - Participant Status
 components:
   parameters:
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
     authorization:
       schema:
         $ref: '#/components/schemas/AuthorizationHeader'
@@ -101,7 +92,40 @@ components:
       style: simple
       required: false
       explode: false
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
   schemas:
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
     ParticipantStatusSummary:
       type: object
       required:
@@ -164,6 +188,25 @@ components:
             type: string
           maxItems: 6
           minItems: 1
+    ParticipantStatusQuery:
+      type: object
+      required:
+      - paymentType
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 21000089
+          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
+          minLength: 9
+          maxLength: 9
+        paymentType:
+          type: string
+          example: RTP
+          description: Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
+          enum:
+          - WIRE
+          - RTP
     Error_errorDetails:
       type: object
       required:
@@ -188,49 +231,6 @@ components:
     AuthorizationHeader:
       type: string
       title: JWT Access Token
-    Error:
-      type: object
-      required:
-      - errorDetails
-      - result
-      - source
-      properties:
-        result:
-          type: string
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          type: string
-          example: Payments System
-          description: Source system or provider system which causes error.
-          maxLength: 100
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error_errorDetails'
-    ParticipantStatusQuery:
-      type: object
-      required:
-      - paymentType
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: 21000089
-          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
-          minLength: 9
-          maxLength: 9
-        paymentType:
-          type: string
-          example: RTP
-          description: Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
-          enum:
-          - WIRE
-          - RTP
   securitySchemes:
     client-id:
       type: apiKey

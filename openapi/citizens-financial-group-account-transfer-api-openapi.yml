@@ -60,35 +60,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
-  parameters:
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
-    authorization:
-      schema:
-        $ref: '#/components/schemas/AuthorizationHeader'
-      name: Authorization
-      in: header
-      description: OAuth 2.0 Authorization Bearer Token
-      style: simple
-      required: true
-      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
-    x-fapi-channel-id:
-      schema:
-        maxLength: 20
-        type: string
-      name: x-fapi-channel-id
-      in: header
-      description: Identifier used to distinguish between different communication channels or data streams within a client system.
-      style: simple
-      required: false
-      explode: false
   schemas:
     AccountTransferRequest:
       required:
@@ -122,6 +93,54 @@ components:
           description: Document that helps account holders understand deductions from their accounts, ensuring clarity and accuracy in their financial records.
           example: Maximum 50 Character
       description: Represents the request for account transfer.
+    ErrorResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+        source:
+          type: string
+          maxLength: 100
+          example: Account Transfer API
+          description: Source system or provider system which causes error.
+        requestId:
+          type: string
+          maxLength: 36
+          example: 685af2c80f9b1a93ca106902937c2e01
+          description: traceid to track the error in the APM logs.
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                maxLength: 10
+                example: IR-500
+                description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+              description:
+                type: string
+                maxLength: 250
+                example: Internal server error.
+                description: Description of the operation's status. It will have detailed error description in case of any error.
+              messageDetail:
+                type: string
+                maxLength: 250
+                example: Due to technical error, your request cannot be processed. Please try later again!
+                description: Details about error including stack traces. This will not be populated for any handled error.
+            required:
+            - code
+            - description
+      required:
+      - result
+      - source
+      - errorDetails
     ErrorResponse400:
       type: object
       properties:
@@ -172,54 +191,6 @@ components:
                 - AT-1008
                 - AT-1009
                 description: Capture all the error codes occured due t0 invalid client request
-            required:
-            - code
-            - description
-      required:
-      - result
-      - source
-      - errorDetails
-    ErrorResponse:
-      type: object
-      properties:
-        result:
-          type: string
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-        source:
-          type: string
-          maxLength: 100
-          example: Account Transfer API
-          description: Source system or provider system which causes error.
-        requestId:
-          type: string
-          maxLength: 36
-          example: 685af2c80f9b1a93ca106902937c2e01
-          description: traceid to track the error in the APM logs.
-        errorDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-                maxLength: 10
-                example: IR-500
-                description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-              description:
-                type: string
-                maxLength: 250
-                example: Internal server error.
-                description: Description of the operation's status. It will have detailed error description in case of any error.
-              messageDetail:
-                type: string
-                maxLength: 250
-                example: Due to technical error, your request cannot be processed. Please try later again!
-                description: Details about error including stack traces. This will not be populated for any handled error.
             required:
             - code
             - description
@@ -328,6 +299,35 @@ components:
       - result
       - source
       - errorDetails
+  parameters:
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
+    x-fapi-channel-id:
+      schema:
+        maxLength: 20
+        type: string
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams within a client system.
+      style: simple
+      required: false
+      explode: false
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
   securitySchemes:
     client-id:
       type: apiKey

@@ -34,7 +34,7 @@ specificationVersion: '0.23'
 tags:
   - Banking
   - Buy Now Pay Later
-  - Financial-Services
+  - Financial Services
   - FDX
   - Locator
   - Open Banking
@@ -47,6 +47,7 @@ tags_raw:
   - Locator
   - Open Banking
   - Payments
+  - Financial-Services
 description: >-
   Citizens Financial Group is one of the oldest and largest financial
   institutions in the United States, serving individuals, small

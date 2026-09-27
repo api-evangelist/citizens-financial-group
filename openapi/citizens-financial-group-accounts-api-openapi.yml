@@ -453,29 +453,17 @@ paths:
     - url: https://api.citizensbank.com/fdx/v1.0
 components:
   schemas:
-    PageMetadata:
-      title: Page Metadata
-      description: Offset IDs for paginated result sets
+    PaginatedArray:
+      title: Paginated Array
+      description: Base class for results that may be paginated
       type: object
       properties:
-        nextOffset:
-          type: string
-          example: '2'
-          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
-        prevOffset:
-          type: string
-          example: '1'
-          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
-        totalElements:
-          type: integer
-          example: 3
-          description: Total number of elements
-    AccountType:
-      title: Account Type
-      type: string
-      enum:
-      - CHECKING
-      - SAVINGS
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+          description: Offset IDs for navigating result sets
+        links:
+          $ref: '#/components/schemas/PageMetadataLinks'
+          description: Resource URLs for navigating result sets
     DepositAccount:
       title: DepositAccount Entity
       allOf:
@@ -503,11 +491,53 @@ components:
             description: Funds available for use
             type: number
             format: double
-    CurrencyCode:
-      title: Currency Code
+    AccountStatus:
+      title: AccountStatus
       type: string
       enum:
-      - USD
+      - OPEN
+      - CLOSED
+      - OTHER
+    AccountType:
+      title: Account Type
+      type: string
+      enum:
+      - CHECKING
+      - SAVINGS
+    PageMetadata:
+      title: Page Metadata
+      description: Offset IDs for paginated result sets
+      type: object
+      properties:
+        nextOffset:
+          type: string
+          example: '2'
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
+        prevOffset:
+          type: string
+          example: '1'
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
+        totalElements:
+          type: integer
+          example: 3
+          description: Total number of elements
+    AccountContact:
+      title: Account Contact entity
+      description: Contact information for the account
+      type: object
+      properties:
+        holders:
+          type: string
+          description: Owners of the account
+        emails:
+          type: array
+          description: Email addresses associated with the account
+        addresses:
+          type: array
+          description: Physical mail addresses associated with the account
+        telephones:
+          type: array
+          description: Telephone numbers associated with the account
     Transaction:
       title: Transaction Entity
       properties:
@@ -551,28 +581,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/Number'
       type: object
-    ContentTypes:
-      title: Content Types
-      description: Supported documented formats
-      type: string
-      enum:
-      - image/gif
-      - image/jpeg
-      - image/tiff
-      - image/png
-      - application/json
-      example: application/json
-    String255:
-      title: String255
-      type: string
-      maxLength: 255
-    AccountStatus:
-      title: AccountStatus
-      type: string
-      enum:
-      - OPEN
-      - CLOSED
-      - OTHER
     DepositTransactionType:
       title: Deposit Transaction Type
       type: string
@@ -589,77 +597,11 @@ components:
       - POSCREDIT
       - POSDEBIT
       - TRANSFER
-    UniqueIdentifier:
-      title: UniqueIdentifier
-      type: string
-      maxLength: 256
-    DepositTransaction:
-      title: DepositTransaction Entity
-      allOf:
-      - $ref: '#/components/schemas/Transaction'
-      - properties:
-          transactionType:
-            allOf:
-            - $ref: '#/components/schemas/DepositTransactionType'
-            description: Deposit transaction type
-          checkNumber:
-            type: integer
-            format: int64
-            description: Check identification info
-        type: object
     Timestamp:
       title: Timestamp
       type: string
       format: date-time
       description: 'UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD</br> <br> Timestamp fields are in ISO 8601 date time format - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z or 2022-12-13'
-    Currency:
-      title: Currency Entity
-      properties:
-        currencyCode:
-          description: Only USD (US Dollars) currency is supported.
-          type: string
-          maxLength: 3
-          $ref: '#/components/schemas/CurrencyCode'
-    AccountContact:
-      title: Account Contact entity
-      description: Contact information for the account
-      type: object
-      properties:
-        holders:
-          type: string
-          description: Owners of the account
-        emails:
-          type: array
-          description: Email addresses associated with the account
-        addresses:
-          type: array
-          description: Physical mail addresses associated with the account
-        telephones:
-          type: array
-          description: Telephone numbers associated with the account
-    Transactions:
-      title: Transactions Entity
-      description: Array of transactions
-      allOf:
-      - $ref: '#/components/schemas/PaginatedArray'
-      - type: object
-        properties:
-          transactions:
-            description: Transaction info for account type deposit
-            type: array
-            items:
-              $ref: '#/components/schemas/DepositTransaction'
-    PageMetadataLinks:
-      title: Page Metadata Links
-      description: Resource URLs for retrieving next or previous datasets
-      type: object
-      properties:
-        next:
-          $ref: '#/components/schemas/HateoasLink'
-          description: Resource URL for retrieving next dataset
-        prev:
-          $ref: '#/components/schemas/HateoasLink'
-          description: Resource URL for retrieving previous dataset
     Account:
       title: Account Entity
       description: Have Account information with header and details
@@ -695,29 +637,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DepositAccount'
-    AccountPaymentNetwork:
-      title: Account Payment Network entity
-      description: Payment networks for the account
-      type: object
-      properties:
-        bankId:
-          type: string
-          description: bankid
-        identifier:
-          type: string
-          description: identifier
-        identifierType:
-          type: string
-          description: identifier Type
-        type:
-          type: string
-          description: type
-        transferIn:
-          type: string
-          description: transferIn
-        transferOut:
-          type: string
-          description: transferOut
+    CurrencyCode:
+      title: Currency Code
+      type: string
+      enum:
+      - USD
     HateoasLink:
       title: HATEOAS Link
       description: REST application constraint (Hypermedia As The Engine Of Application State)
@@ -747,17 +671,96 @@ components:
           items:
             $ref: '#/components/schemas/ContentTypes'
           description: Content-types that can be used in the Accept header
-    PaginatedArray:
-      title: Paginated Array
-      description: Base class for results that may be paginated
+    ContentTypes:
+      title: Content Types
+      description: Supported documented formats
+      type: string
+      enum:
+      - image/gif
+      - image/jpeg
+      - image/tiff
+      - image/png
+      - application/json
+      example: application/json
+    DepositTransaction:
+      title: DepositTransaction Entity
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - properties:
+          transactionType:
+            allOf:
+            - $ref: '#/components/schemas/DepositTransactionType'
+            description: Deposit transaction type
+          checkNumber:
+            type: integer
+            format: int64
+            description: Check identification info
+        type: object
+    AccountPaymentNetwork:
+      title: Account Payment Network entity
+      description: Payment networks for the account
       type: object
       properties:
-        page:
-          $ref: '#/components/schemas/PageMetadata'
-          description: Offset IDs for navigating result sets
-        links:
-          $ref: '#/components/schemas/PageMetadataLinks'
-          description: Resource URLs for navigating result sets
+        bankId:
+          type: string
+          description: bankid
+        identifier:
+          type: string
+          description: identifier
+        identifierType:
+          type: string
+          description: identifier Type
+        type:
+          type: string
+          description: type
+        transferIn:
+          type: string
+          description: transferIn
+        transferOut:
+          type: string
+          description: transferOut
+    Number:
+      title: Number
+      type: number
+    PageMetadataLinks:
+      title: Page Metadata Links
+      description: Resource URLs for retrieving next or previous datasets
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving next dataset
+        prev:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving previous dataset
+    UniqueIdentifier:
+      title: UniqueIdentifier
+      type: string
+      maxLength: 256
+    String255:
+      title: String255
+      type: string
+      maxLength: 255
+    Transactions:
+      title: Transactions Entity
+      description: Array of transactions
+      allOf:
+      - $ref: '#/components/schemas/PaginatedArray'
+      - type: object
+        properties:
+          transactions:
+            description: Transaction info for account type deposit
+            type: array
+            items:
+              $ref: '#/components/schemas/DepositTransaction'
+    Currency:
+      title: Currency Entity
+      properties:
+        currencyCode:
+          description: Only USD (US Dollars) currency is supported.
+          type: string
+          maxLength: 3
+          $ref: '#/components/schemas/CurrencyCode'
     AccountDescriptor:
       title: AccountDescriptor Entity
       description: 'Account information When Resultype is lightweight '
@@ -777,9 +780,6 @@ components:
         accountNumberDisplay:
           type: string
           description: Account identity is a masked value number.
-    Number:
-      title: Number
-      type: number
     Statement:
       type: object
       properties:
@@ -796,6 +796,27 @@ components:
           $ref: '#/components/schemas/DocumentStatus'
       title: Statement entity
       description: Statement info for the account
+    PaginatedArray_2:
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+        links:
+          $ref: '#/components/schemas/PageMetadataLinks_2'
+      title: Paginated Array
+      description: Base class for results that may be paginated
+    HateoasLink_2:
+      type: object
+      required:
+      - href
+      properties:
+        href:
+          type: string
+          format: uri-reference
+          example: https://api.citizensbank.com/fdx/v4/accounts/12345
+          description: URL to invoke the action on the resource
+      title: HATEOAS Link
+      description: REST application constraint (Hypermedia As The Engine Of Application State)
     Statements:
       title: An array of statements
       description: A paginated array of account statements
@@ -816,27 +837,6 @@ components:
       - AVAILABLE
       - PROCESSING
       - FAILED
-    HateoasLink_2:
-      type: object
-      required:
-      - href
-      properties:
-        href:
-          type: string
-          format: uri-reference
-          example: https://api.citizensbank.com/fdx/v4/accounts/12345
-          description: URL to invoke the action on the resource
-      title: HATEOAS Link
-      description: REST application constraint (Hypermedia As The Engine Of Application State)
-    PaginatedArray_2:
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/PageMetadata'
-        links:
-          $ref: '#/components/schemas/PageMetadataLinks_2'
-      title: Paginated Array
-      description: Base class for results that may be paginated
     PageMetadataLinks_2:
       type: object
       properties:
