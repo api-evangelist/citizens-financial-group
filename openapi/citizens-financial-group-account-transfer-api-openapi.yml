@@ -61,6 +61,39 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    AccountTransferResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 696888e9c7efa981ebd718089c71dxxae
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: object
+          description: The actual data returned in the response. Can be of any type.
+          example:
+            transactionId: 69657e9c7efa981ebd718089c71dd5f1
+            confirmationNumber: '12345'
+          items:
+            $ref: '#/components/schemas/AccountTransferData'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
     AccountTransferRequest:
       required:
       - fromAccountNumber
@@ -93,54 +126,24 @@ components:
           description: Document that helps account holders understand deductions from their accounts, ensuring clarity and accuracy in their financial records.
           example: Maximum 50 Character
       description: Represents the request for account transfer.
-    ErrorResponse:
+    AccountTransferData:
       type: object
       properties:
-        result:
+        transactionId:
+          maxLength: 10
           type: string
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-        source:
+          title: Unique Transaction Id to track the transaction details
+        confirmationNumber:
+          maxLength: 10
           type: string
-          maxLength: 100
-          example: Account Transfer API
-          description: Source system or provider system which causes error.
-        requestId:
-          type: string
-          maxLength: 36
-          example: 685af2c80f9b1a93ca106902937c2e01
-          description: traceid to track the error in the APM logs.
-        errorDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-                maxLength: 10
-                example: IR-500
-                description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-              description:
-                type: string
-                maxLength: 250
-                example: Internal server error.
-                description: Description of the operation's status. It will have detailed error description in case of any error.
-              messageDetail:
-                type: string
-                maxLength: 250
-                example: Due to technical error, your request cannot be processed. Please try later again!
-                description: Details about error including stack traces. This will not be populated for any handled error.
-            required:
-            - code
-            - description
+          title: Ensure the transaction is successfull and generate a unique id in the system
       required:
-      - result
-      - source
-      - errorDetails
+      - transactionId
+      - confirmationNumber
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+      description: Bearer Token required for Client authorization validated against Ping Federate
     ErrorResponse400:
       type: object
       properties:
@@ -198,57 +201,6 @@ components:
       - result
       - source
       - errorDetails
-    AccountTransferResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message associated with the API response.
-          example: Success
-        description:
-          type: string
-          description: A detailed description of the API response.
-          example: Request processed successfully.
-        requestId:
-          type: string
-          description: The unique identifier for the API request.
-          example: 696888e9c7efa981ebd718089c71dxxae
-        requestTime:
-          type: string
-          description: The timestamp of the API request in US/Eastern timezone.
-          format: date-time
-        data:
-          type: object
-          description: The actual data returned in the response. Can be of any type.
-          example:
-            transactionId: 69657e9c7efa981ebd718089c71dd5f1
-            confirmationNumber: '12345'
-          items:
-            $ref: '#/components/schemas/AccountTransferData'
-        status:
-          type: integer
-          description: The HTTP status code of the API response.
-          format: int32
-          example: 200
-      description: Represents the response data containing the API status and additional data.
-    AccountTransferData:
-      type: object
-      properties:
-        transactionId:
-          maxLength: 10
-          type: string
-          title: Unique Transaction Id to track the transaction details
-        confirmationNumber:
-          maxLength: 10
-          type: string
-          title: Ensure the transaction is successfull and generate a unique id in the system
-      required:
-      - transactionId
-      - confirmationNumber
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
-      description: Bearer Token required for Client authorization validated against Ping Federate
     ErrorResponse401:
       type: object
       properties:
@@ -299,16 +251,55 @@ components:
       - result
       - source
       - errorDetails
+    ErrorResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+        source:
+          type: string
+          maxLength: 100
+          example: Account Transfer API
+          description: Source system or provider system which causes error.
+        requestId:
+          type: string
+          maxLength: 36
+          example: 685af2c80f9b1a93ca106902937c2e01
+          description: traceid to track the error in the APM logs.
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                maxLength: 10
+                example: IR-500
+                description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+              description:
+                type: string
+                maxLength: 250
+                example: Internal server error.
+                description: Description of the operation's status. It will have detailed error description in case of any error.
+              messageDetail:
+                type: string
+                maxLength: 250
+                example: Due to technical error, your request cannot be processed. Please try later again!
+                description: Details about error including stack traces. This will not be populated for any handled error.
+            required:
+            - code
+            - description
+      required:
+      - result
+      - source
+      - errorDetails
   parameters:
-    authorization:
-      schema:
-        $ref: '#/components/schemas/AuthorizationHeader'
-      name: Authorization
-      in: header
-      description: OAuth 2.0 Authorization Bearer Token
-      style: simple
-      required: true
-      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
     x-fapi-channel-id:
       schema:
         maxLength: 20
@@ -328,6 +319,15 @@ components:
       description: Unique request id for each request to make it traceable if needed.
       style: simple
       required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
   securitySchemes:
     client-id:
       type: apiKey

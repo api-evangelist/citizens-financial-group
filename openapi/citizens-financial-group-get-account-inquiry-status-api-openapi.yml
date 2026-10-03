@@ -78,40 +78,6 @@ paths:
                 $ref: '#/components/schemas/InternalServerErrorResponse'
 components:
   schemas:
-    AccountInquiryResponse_data:
-      type: object
-      properties:
-        referenceIdentifier:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
-        inquiryStatus:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
-    AccountInquiryResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A brief message about the response.
-          example: Successfully processed
-        description:
-          type: string
-          description: Detailed description of the response.
-          example: Successfully retrieved inquiry status.
-        requestId:
-          type: string
-          description: Unique identifier for the request.
-          example: 6823527217cf82e16df9244b569cf1d2
-        requestTime:
-          type: string
-          description: Timestamp of the request.
-          format: date-time
-        data:
-          $ref: '#/components/schemas/AccountInquiryResponse_data'
-        status:
-          type: integer
-          description: HTTP status code of the response.
-          format: int32
-          example: 200
-      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
     AccountInquiryResponse_data_referenceIdentifier:
       type: object
       properties:
@@ -119,56 +85,6 @@ components:
           type: string
           description: Unique reference ID for the inquiry.
           example: c9820cbb-ee63-443d-859c-45556514fd3c
-    InternalServerErrorResponse_errorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          maxLength: 10
-          type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: AV-500
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed. Please refer to the user guide for more information.
-    AuthorizationHeader:
-      title: JWT Access Token
-      type: string
-    AccountInquiryResponse_data_inquiryStatus:
-      type: object
-      properties:
-        accountNumber:
-          type: string
-          description: The account number being validated.
-          example: '112234000'
-        routingNumber:
-          type: string
-          description: The routing number associated with the account.
-          example: '311079474'
-        accountName:
-          type: string
-          description: Name associated with the account.
-          example: ABC CORP
-        accountStatus:
-          type: string
-          description: Status of the account (e.g., OPEN, CLOSED).
-          example: OPEN
-        accountStatusMessage:
-          type: string
-          description: Detailed message about the account status.
-          example: Open
-        accountStatusCode:
-          type: string
-          description: Code representing the account status.
-          example: AC00
-        nameMatchStatus:
-          type: string
-          description: Status of the name match (e.g., FULL, PARTIAL).
-          example: FULL
     UnauthorizedRequestErrorResponse:
       required:
       - errorDetails
@@ -227,6 +143,32 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
+    AuthorizationHeader:
+      title: JWT Access Token
+      type: string
+    AccountInquiryResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+        inquiryStatus:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
+    InternalServerErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: AV-500
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
     UnauthorizedRequestErrorResponse_errorDetails:
       required:
       - code
@@ -243,6 +185,64 @@ components:
           type: string
           description: Details about error including stack traces. This will not be populated for any handled error.
           example: Your request cannot be processed. Please refer to the user guide for more information.
+    AccountInquiryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message about the response.
+          example: Successfully processed
+        description:
+          type: string
+          description: Detailed description of the response.
+          example: Successfully retrieved inquiry status.
+        requestId:
+          type: string
+          description: Unique identifier for the request.
+          example: 6823527217cf82e16df9244b569cf1d2
+        requestTime:
+          type: string
+          description: Timestamp of the request.
+          format: date-time
+        data:
+          $ref: '#/components/schemas/AccountInquiryResponse_data'
+        status:
+          type: integer
+          description: HTTP status code of the response.
+          format: int32
+          example: 200
+      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
+    AccountInquiryResponse_data_inquiryStatus:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: The account number being validated.
+          example: '112234000'
+        routingNumber:
+          type: string
+          description: The routing number associated with the account.
+          example: '311079474'
+        accountName:
+          type: string
+          description: Name associated with the account.
+          example: ABC CORP
+        accountStatus:
+          type: string
+          description: Status of the account (e.g., OPEN, CLOSED).
+          example: OPEN
+        accountStatusMessage:
+          type: string
+          description: Detailed message about the account status.
+          example: Open
+        accountStatusCode:
+          type: string
+          description: Code representing the account status.
+          example: AC00
+        nameMatchStatus:
+          type: string
+          description: Status of the name match (e.g., FULL, PARTIAL).
+          example: FULL
   securitySchemes:
     client-id:
       type: apiKey

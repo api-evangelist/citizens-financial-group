@@ -259,120 +259,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    TransactionDetail_memoDetails:
-      type: object
-      properties:
-        MEMO DETAIL:
-          type: string
-          example: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
-    BalanceInquiryResponseData2:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message associated with the API response.
-          example: Success
-        description:
-          type: string
-          description: A detailed description of the API response.
-          example: Partially processed successfully.
-        requestId:
-          type: string
-          description: The unique identifier for the API request.
-          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
-        requestTime:
-          type: string
-          description: The timestamp of the API request in US/Eastern timezone.
-          format: date-time
-        data:
-          type: array
-          description: The actual data returned in the response. Can be of any type.
-          example:
-          - accountNumber: '123456789'
-            routingNumber: '987654321'
-            accountType: CHECKING
-            currentDayAvailableBalance: 1010.5
-            currentDayLedgerBalance: 2000.5
-            previousDayAvailableBalance: 1000.05
-            previousDayLedgerBalance: 1010.05
-          items:
-            $ref: '#/components/schemas/AccountDetail'
-        status:
-          type: integer
-          description: The HTTP status code of the API response.
-          format: int32
-          example: 206
-      description: 'Represents the response data containing the API status and additional data. '
-    AccountListQueryResponse:
-      type: object
-      properties:
-        accountList:
-          type: array
-          description: The list of accounts returned by the query.
-          items:
-            $ref: '#/components/schemas/Account'
-        totalRows:
-          type: integer
-          description: The total number of rows available.
-          example: 100
-        totalPages:
-          type: integer
-          description: The total number of pages available.
-          example: 5
-        rowsPerPage:
-          type: integer
-          description: The number of rows per page.
-          example: 20
-    ErrorResponse:
-      required:
-      - errorDetails
-      - result
-      - source
-      type: object
-      properties:
-        result:
-          maxLength: 7
-          type: string
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-          example: FATAL
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          maxLength: 100
-          type: string
-          description: Source system or provider system which causes error.
-          example: Information Reporting API
-        requestId:
-          maxLength: 36
-          type: string
-          description: traceid to track the error in the APM logs.
-          example: 685af2c80f9b1a93ca106902937c2e01
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errorDetails'
-    ErrorResponse_errorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          maxLength: 10
-          type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: IR-500
-        description:
-          maxLength: 250
-          type: string
-          description: Description of the operation's status. It will have detailed error description in case of any error.
-          example: Internal server error.
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed.
     TransactionDetail:
       type: object
       properties:
@@ -414,6 +300,166 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TransactionDetail_memoDetails'
+    AccountTransactionResponse_data:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: account number
+          example: '6011282679'
+        transactions:
+          type: array
+          description: 'The actual data returned in the response (Schema : TransactionDetail).'
+          example:
+          - type: DEBIT
+            description: 'RealTime Debit SENDER REF: NOREF'
+            transactionId: '610028267902062025101290000005'
+            transactionStatus: POSTED
+            postedDate: '2025-02-06T00:00:00.000Z'
+            transactionDate: '2025-02-06T00:00:00.000Z'
+            amount: 101
+            availableBalance: '97548631517.07'
+            paymentReferenceNumber: '25071783860405'
+            commercialCode: '165'
+            memoDetails:
+            - memoDetail: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
+          - type: CREDIT
+            description: WIRE XFER
+            transactionId: '610028267901232025101690000007'
+            transactionStatus: POSTED
+            postedDate: '2025-01-23T00:00:00.000Z'
+            transactionDate: '2025-01-23T00:00:00.000Z'
+            amount: 7.66
+            availableBalance: '97546086101.17'
+            wireNumber: '250627000220'
+            commercialCode: '165'
+            memoDetails:
+            - memoDetail: 'BENEFICIARY NAME : TEST ORIG TO BNF INFO'
+          items:
+            $ref: '#/components/schemas/TransactionDetail'
+    ErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: IR-500
+        description:
+          maxLength: 250
+          type: string
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          example: Internal server error.
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed.
+    AccountListQueryResponse:
+      type: object
+      properties:
+        accountList:
+          type: array
+          description: The list of accounts returned by the query.
+          items:
+            $ref: '#/components/schemas/Account'
+        totalRows:
+          type: integer
+          description: The total number of rows available.
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages available.
+          example: 5
+        rowsPerPage:
+          type: integer
+          description: The number of rows per page.
+          example: 20
+    AccountTransactionRequest:
+      required:
+      - accountNumber
+      type: object
+      properties:
+        accountNumber:
+          maxLength: 14
+          minLength: 10
+          type: string
+          description: The account number associated with the account. Must be between 10 and 14 characters.
+          example: '123456789'
+        routingNumber:
+          maxLength: 9
+          minLength: 9
+          type: string
+          description: The routing number associated with the account. Must be exactly 9 characters.
+          example: '010023232'
+        startRangeOfDate:
+          type: string
+          description: Start range of transaction posted date. It would be in yyyy-MM-dd format.
+          format: date
+          example: '2025-01-01'
+        endRangeOfDate:
+          type: string
+          description: End range of transaction posted date. It would be in yyyy-MM-dd format.
+          format: date
+          example: '2025-06-01'
+        limit:
+          maximum: 2000
+          minimum: 100
+          type: integer
+          description: Total number of transaction(s) records to return (should be in multiple of 100).
+          example: 1000
+        nextKey:
+          maxLength: 45
+          type: string
+          description: This field can be used by the consumers to fetch the records from a specific page.  This value is returned as part of the response indicating the key for the next page.
+          example: ODC-CIS0100100000000001014625202501500000123
+      description: Represents the request for account details.
+    BalanceInquiryResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: array
+          description: The actual data returned in the response. Can be of any type.
+          example:
+          - accountNumber: '1234567890'
+            routingNumber: '987654321'
+            accountType: SAVINGS
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+          - accountNumber: '1234567101'
+            routingNumber: '987652221'
+            accountType: CHECKING
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+            previousDayAvailableBalance: 1000.05
+            previousDayLedgerBalance: 1010.05
+          items:
+            $ref: '#/components/schemas/AccountDetail'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
     AccountTransactionResponse:
       type: object
       properties:
@@ -441,35 +487,6 @@ components:
           format: int32
           example: 200
       description: Represents the response data containing the API status and additional data.
-    AccountDetail:
-      allOf:
-      - $ref: '#/components/schemas/Account'
-      - type: object
-        properties:
-          currentDayLedgerBalance:
-            type: number
-            description: The current day ledger balance of the account.
-            format: double
-            example: 1000.5
-          currentDayAvailableBalance:
-            type: number
-            description: The current day available balance of the account.
-            format: double
-            example: 950.75
-          previousDayLedgerBalance:
-            type: number
-            description: The previous day ledger balance of the account.
-            format: double
-            example: 900
-          previousDayAvailableBalance:
-            type: number
-            description: The previous day available balance of the account.
-            format: double
-            example: 900
-          accountStatus:
-            type: string
-            description: The status of the account.
-            example: HOLD
     AccountListResponseData:
       type: object
       properties:
@@ -515,6 +532,41 @@ components:
     AuthorizationHeader:
       title: JWT Access Token
       type: string
+    ErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+          example: FATAL
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Information Reporting API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errorDetails'
+    TransactionDetail_memoDetails:
+      type: object
+      properties:
+        MEMO DETAIL:
+          type: string
+          example: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
     Account:
       type: object
       properties:
@@ -542,43 +594,73 @@ components:
           type: boolean
           description: Indicates if the account is a real-time account.
           example: true
-    AccountTransactionResponse_data:
+    AccountDetail:
+      allOf:
+      - $ref: '#/components/schemas/Account'
+      - type: object
+        properties:
+          currentDayLedgerBalance:
+            type: number
+            description: The current day ledger balance of the account.
+            format: double
+            example: 1000.5
+          currentDayAvailableBalance:
+            type: number
+            description: The current day available balance of the account.
+            format: double
+            example: 950.75
+          previousDayLedgerBalance:
+            type: number
+            description: The previous day ledger balance of the account.
+            format: double
+            example: 900
+          previousDayAvailableBalance:
+            type: number
+            description: The previous day available balance of the account.
+            format: double
+            example: 900
+          accountStatus:
+            type: string
+            description: The status of the account.
+            example: HOLD
+    BalanceInquiryResponseData2:
       type: object
       properties:
-        accountNumber:
+        message:
           type: string
-          description: account number
-          example: '6011282679'
-        transactions:
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Partially processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
           type: array
-          description: 'The actual data returned in the response (Schema : TransactionDetail).'
+          description: The actual data returned in the response. Can be of any type.
           example:
-          - type: DEBIT
-            description: 'RealTime Debit SENDER REF: NOREF'
-            transactionId: '610028267902062025101290000005'
-            transactionStatus: POSTED
-            postedDate: '2025-02-06T00:00:00.000Z'
-            transactionDate: '2025-02-06T00:00:00.000Z'
-            amount: 101
-            availableBalance: '97548631517.07'
-            paymentReferenceNumber: '25071783860405'
-            commercialCode: '165'
-            memoDetails:
-            - memoDetail: DIRECT DEPOSIT-SSA TREAS 310 XXSOC SEC
-          - type: CREDIT
-            description: WIRE XFER
-            transactionId: '610028267901232025101690000007'
-            transactionStatus: POSTED
-            postedDate: '2025-01-23T00:00:00.000Z'
-            transactionDate: '2025-01-23T00:00:00.000Z'
-            amount: 7.66
-            availableBalance: '97546086101.17'
-            wireNumber: '250627000220'
-            commercialCode: '165'
-            memoDetails:
-            - memoDetail: 'BENEFICIARY NAME : TEST ORIG TO BNF INFO'
+          - accountNumber: '123456789'
+            routingNumber: '987654321'
+            accountType: CHECKING
+            currentDayAvailableBalance: 1010.5
+            currentDayLedgerBalance: 2000.5
+            previousDayAvailableBalance: 1000.05
+            previousDayLedgerBalance: 1010.05
           items:
-            $ref: '#/components/schemas/TransactionDetail'
+            $ref: '#/components/schemas/AccountDetail'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 206
+      description: 'Represents the response data containing the API status and additional data. '
     AccountDetailRequest:
       required:
       - accountNumber
@@ -596,88 +678,6 @@ components:
           type: string
           description: The routing number associated with the account. Must be exactly 9 characters.
           example: '010023232'
-      description: Represents the request for account details.
-    BalanceInquiryResponseData:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message associated with the API response.
-          example: Success
-        description:
-          type: string
-          description: A detailed description of the API response.
-          example: Request processed successfully.
-        requestId:
-          type: string
-          description: The unique identifier for the API request.
-          example: 848AF13B-7CE7-4F85-80C0-AC2934E9E6E2
-        requestTime:
-          type: string
-          description: The timestamp of the API request in US/Eastern timezone.
-          format: date-time
-        data:
-          type: array
-          description: The actual data returned in the response. Can be of any type.
-          example:
-          - accountNumber: '1234567890'
-            routingNumber: '987654321'
-            accountType: SAVINGS
-            currentDayAvailableBalance: 1010.5
-            currentDayLedgerBalance: 2000.5
-          - accountNumber: '1234567101'
-            routingNumber: '987652221'
-            accountType: CHECKING
-            currentDayAvailableBalance: 1010.5
-            currentDayLedgerBalance: 2000.5
-            previousDayAvailableBalance: 1000.05
-            previousDayLedgerBalance: 1010.05
-          items:
-            $ref: '#/components/schemas/AccountDetail'
-        status:
-          type: integer
-          description: The HTTP status code of the API response.
-          format: int32
-          example: 200
-      description: Represents the response data containing the API status and additional data.
-    AccountTransactionRequest:
-      required:
-      - accountNumber
-      type: object
-      properties:
-        accountNumber:
-          maxLength: 14
-          minLength: 10
-          type: string
-          description: The account number associated with the account. Must be between 10 and 14 characters.
-          example: '123456789'
-        routingNumber:
-          maxLength: 9
-          minLength: 9
-          type: string
-          description: The routing number associated with the account. Must be exactly 9 characters.
-          example: '010023232'
-        startRangeOfDate:
-          type: string
-          description: Start range of transaction posted date. It would be in yyyy-MM-dd format.
-          format: date
-          example: '2025-01-01'
-        endRangeOfDate:
-          type: string
-          description: End range of transaction posted date. It would be in yyyy-MM-dd format.
-          format: date
-          example: '2025-06-01'
-        limit:
-          maximum: 2000
-          minimum: 100
-          type: integer
-          description: Total number of transaction(s) records to return (should be in multiple of 100).
-          example: 1000
-        nextKey:
-          maxLength: 45
-          type: string
-          description: This field can be used by the consumers to fetch the records from a specific page.  This value is returned as part of the response indicating the key for the next page.
-          example: ODC-CIS0100100000000001014625202501500000123
       description: Represents the request for account details.
   securitySchemes:
     client-id:

@@ -83,50 +83,10 @@ paths:
                 $ref: '#/components/schemas/InternalServerErrorResponse'
 components:
   schemas:
-    AccountInquiryResponse_data:
-      type: object
-      properties:
-        referenceIdentifier:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
-        inquiryStatus:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
-    ErrorResponse:
-      required:
-      - errorDetails
-      - result
-      - source
-      type: object
-      properties:
-        result:
-          maxLength: 7
-          type: string
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-          example: WARNING
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          maxLength: 100
-          type: string
-          description: Source system or provider system which causes error.
-          example: Account Validation API
-        requestId:
-          maxLength: 36
-          type: string
-          description: traceid to track the error in the APM logs.
-          example: 685af2c80f9b1a93ca106902937c2e01
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errorDetails'
-    AccountStatusInquiryRequest:
-      type: object
-      properties:
-        accountIdentifier:
-          $ref: '#/components/schemas/AccountIdentifier'
-        bankIdentifier:
-          $ref: '#/components/schemas/BankIdentifier'
-      description: Schema for the request body to initiate an account inquiry. Includes account and bank identifiers.
+    inline_response_200:
+      oneOf:
+      - $ref: '#/components/schemas/AccountInquiryInitiateResponse'
+      - $ref: '#/components/schemas/AccountInquiryResponse'
     ErrorResponse_errorDetails:
       required:
       - code
@@ -143,72 +103,6 @@ components:
           type: string
           description: Details about error including stack traces. This will not be populated for any handled error.
           example: Your request cannot be processed. Please refer to the user guide for more information.
-    AccountInquiryResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A brief message about the response.
-          example: Successfully processed
-        description:
-          type: string
-          description: Detailed description of the response.
-          example: Successfully retrieved inquiry status.
-        requestId:
-          type: string
-          description: Unique identifier for the request.
-          example: 6823527217cf82e16df9244b569cf1d2
-        requestTime:
-          type: string
-          description: Timestamp of the request.
-          format: date-time
-        data:
-          $ref: '#/components/schemas/AccountInquiryResponse_data'
-        status:
-          type: integer
-          description: HTTP status code of the response.
-          format: int32
-          example: 200
-      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
-    AccountInquiryInitiateResponse_data:
-      type: object
-      properties:
-        referenceIdentifier:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
-    AccountInquiryResponse_data_referenceIdentifier:
-      type: object
-      properties:
-        referenceId:
-          type: string
-          description: Unique reference ID for the inquiry.
-          example: c9820cbb-ee63-443d-859c-45556514fd3c
-    BankIdentifier:
-      type: object
-      properties:
-        idType:
-          type: string
-          description: Type of bank identifier (e.g., SWIFT, ABA).
-          example: USABA
-          enum:
-          - SWIFT_ID
-          - IBAN
-          - IFSC
-          - CLABE
-          - USABA
-          - BRAZIL_BANK_CODE
-          - CBU
-          - CVU
-          - CACPA
-          - CNAPS
-          - ACCOUNT_NUMBER
-          - SHID
-          - MBNO
-          - ZANCC
-        idValue:
-          type: string
-          description: Value of the bank identifier.
-          example: '101000019'
-      description: Schema for bank identifiers, includes bank id type and bank id value.
     AccountInquiryInitiateResponse:
       type: object
       properties:
@@ -236,23 +130,14 @@ components:
           format: int32
           example: 200
       description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
-    InternalServerErrorResponse_errorDetails:
-      required:
-      - code
-      - description
+    AccountInquiryResponse_data_referenceIdentifier:
       type: object
       properties:
-        code:
-          maxLength: 10
+        referenceId:
           type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: AV-500
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed. Please refer to the user guide for more information.
-    UnauthorizedErrorResponse:
+          description: Unique reference ID for the inquiry.
+          example: c9820cbb-ee63-443d-859c-45556514fd3c
+    InternalServerErrorResponse:
       required:
       - errorDetails
       - result
@@ -280,14 +165,7 @@ components:
         errorDetails:
           type: array
           items:
-            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
-    inline_response_200:
-      oneOf:
-      - $ref: '#/components/schemas/AccountInquiryInitiateResponse'
-      - $ref: '#/components/schemas/AccountInquiryResponse'
-    AuthorizationHeader:
-      title: JWT Access Token
-      type: string
+            $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
     AccountIdentifier:
       type: object
       properties:
@@ -343,6 +221,173 @@ components:
           - UY
           - VN
       description: Schema for account identifiers, including personal and account details.
+    BankIdentifier:
+      type: object
+      properties:
+        idType:
+          type: string
+          description: Type of bank identifier (e.g., SWIFT, ABA).
+          example: USABA
+          enum:
+          - SWIFT_ID
+          - IBAN
+          - IFSC
+          - CLABE
+          - USABA
+          - BRAZIL_BANK_CODE
+          - CBU
+          - CVU
+          - CACPA
+          - CNAPS
+          - ACCOUNT_NUMBER
+          - SHID
+          - MBNO
+          - ZANCC
+        idValue:
+          type: string
+          description: Value of the bank identifier.
+          example: '101000019'
+      description: Schema for bank identifiers, includes bank id type and bank id value.
+    AuthorizationHeader:
+      title: JWT Access Token
+      type: string
+    UnauthorizedErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
+    AccountInquiryResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+        inquiryStatus:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
+    ErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errorDetails'
+    InternalServerErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: AV-500
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    AccountInquiryInitiateResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+    UnauthorizedRequestErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: AV-401
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    AccountInquiryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message about the response.
+          example: Successfully processed
+        description:
+          type: string
+          description: Detailed description of the response.
+          example: Successfully retrieved inquiry status.
+        requestId:
+          type: string
+          description: Unique identifier for the request.
+          example: 6823527217cf82e16df9244b569cf1d2
+        requestTime:
+          type: string
+          description: Timestamp of the request.
+          format: date-time
+        data:
+          $ref: '#/components/schemas/AccountInquiryResponse_data'
+        status:
+          type: integer
+          description: HTTP status code of the response.
+          format: int32
+          example: 200
+      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
+    AccountStatusInquiryRequest:
+      type: object
+      properties:
+        accountIdentifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        bankIdentifier:
+          $ref: '#/components/schemas/BankIdentifier'
+      description: Schema for the request body to initiate an account inquiry. Includes account and bank identifiers.
     AccountInquiryResponse_data_inquiryStatus:
       type: object
       properties:
@@ -374,51 +419,6 @@ components:
           type: string
           description: Status of the name match (e.g., FULL, PARTIAL).
           example: FULL
-    InternalServerErrorResponse:
-      required:
-      - errorDetails
-      - result
-      - source
-      type: object
-      properties:
-        result:
-          maxLength: 7
-          type: string
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-          example: WARNING
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          maxLength: 100
-          type: string
-          description: Source system or provider system which causes error.
-          example: Account Validation API
-        requestId:
-          maxLength: 36
-          type: string
-          description: traceid to track the error in the APM logs.
-          example: 685af2c80f9b1a93ca106902937c2e01
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
-    UnauthorizedRequestErrorResponse_errorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          maxLength: 10
-          type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: AV-401
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed. Please refer to the user guide for more information.
   securitySchemes:
     client-id:
       type: apiKey

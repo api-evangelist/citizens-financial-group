@@ -73,15 +73,6 @@ paths:
       - Payment Status
 components:
   parameters:
-    authorization:
-      schema:
-        $ref: '#/components/schemas/AuthorizationHeader'
-      name: Authorization
-      in: header
-      description: OAuth 2.0 Authorization Bearer Token
-      style: simple
-      required: true
-      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
     x-fapi-channel-id:
       schema:
         maxLength: 20
@@ -101,52 +92,19 @@ components:
       description: Unique request id for each request to make it traceable if needed.
       style: simple
       required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
   schemas:
-    Error:
-      type: object
-      required:
-      - errorDetails
-      - result
-      - source
-      properties:
-        result:
-          type: string
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          type: string
-          example: Payments System
-          description: Source system or provider system which causes error.
-          maxLength: 100
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error_errorDetails'
-    Error_errorDetails:
-      type: object
-      required:
-      - code
-      - description
-      properties:
-        code:
-          type: string
-          example: REQ1001
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          maxLength: 7
-        description:
-          type: string
-          example: Request Id should not be more than 36 characters long.
-          description: Description of the operation's status. It will have detailed error description in case of any error.
-          maxLength: 250
-        messageDetail:
-          type: string
-          example: Invalid requestId
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          maxLength: 250
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
     PaymentStatusResponse:
       type: object
       required:
@@ -208,9 +166,6 @@ components:
           example: 20241004011500120T1BUSRT61960896581
           description: The network assigned payment reference number.
       description: Response fields of the Payments Response.
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
     PaymentStatusRequest:
       type: object
       required:
@@ -231,6 +186,51 @@ components:
           - ACH_CREDIT
           - ACH_DEBIT
       description: Request fields of the Payments Response.
+    Error_errorDetails:
+      type: object
+      required:
+      - code
+      - description
+      properties:
+        code:
+          type: string
+          example: REQ1001
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          maxLength: 7
+        description:
+          type: string
+          example: Request Id should not be more than 36 characters long.
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          maxLength: 250
+        messageDetail:
+          type: string
+          example: Invalid requestId
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          maxLength: 250
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
   securitySchemes:
     client-id:
       type: apiKey
