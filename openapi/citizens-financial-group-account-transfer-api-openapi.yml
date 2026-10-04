@@ -61,89 +61,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    AccountTransferResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message associated with the API response.
-          example: Success
-        description:
-          type: string
-          description: A detailed description of the API response.
-          example: Request processed successfully.
-        requestId:
-          type: string
-          description: The unique identifier for the API request.
-          example: 696888e9c7efa981ebd718089c71dxxae
-        requestTime:
-          type: string
-          description: The timestamp of the API request in US/Eastern timezone.
-          format: date-time
-        data:
-          type: object
-          description: The actual data returned in the response. Can be of any type.
-          example:
-            transactionId: 69657e9c7efa981ebd718089c71dd5f1
-            confirmationNumber: '12345'
-          items:
-            $ref: '#/components/schemas/AccountTransferData'
-        status:
-          type: integer
-          description: The HTTP status code of the API response.
-          format: int32
-          example: 200
-      description: Represents the response data containing the API status and additional data.
-    AccountTransferRequest:
-      required:
-      - fromAccountNumber
-      - toAccountNumber
-      - amount
-      type: object
-      properties:
-        fromAccountNumber:
-          maxLength: 10
-          minLength: 10
-          type: string
-          description: The from account number is the number that identifies the account from which funds are being transferred.. Must be 10 characters.
-          example: '1123456789'
-        toAccountNumber:
-          maxLength: 10
-          minLength: 10
-          type: string
-          title: To Account Number of Max size 10 digit char
-          description: The to account number is the number that identifies the account to which funds are being transferred.
-          example: '1234567890'
-        amount:
-          type: number
-          title: 'Amount with minimum of $0.01 '
-          description: The amount is ensure being transferred between the From/To accounts
-          example: 0.01
-        memo:
-          maxLength: 50
-          type: string
-          title: Instruction of A debit memo on a company’s bank statement
-          description: Document that helps account holders understand deductions from their accounts, ensuring clarity and accuracy in their financial records.
-          example: Maximum 50 Character
-      description: Represents the request for account transfer.
-    AccountTransferData:
-      type: object
-      properties:
-        transactionId:
-          maxLength: 10
-          type: string
-          title: Unique Transaction Id to track the transaction details
-        confirmationNumber:
-          maxLength: 10
-          type: string
-          title: Ensure the transaction is successfull and generate a unique id in the system
-      required:
-      - transactionId
-      - confirmationNumber
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
-      description: Bearer Token required for Client authorization validated against Ping Federate
     ErrorResponse400:
       type: object
       properties:
@@ -201,6 +118,20 @@ components:
       - result
       - source
       - errorDetails
+    AccountTransferData:
+      type: object
+      properties:
+        transactionId:
+          maxLength: 10
+          type: string
+          title: Unique Transaction Id to track the transaction details
+        confirmationNumber:
+          maxLength: 10
+          type: string
+          title: Ensure the transaction is successfull and generate a unique id in the system
+      required:
+      - transactionId
+      - confirmationNumber
     ErrorResponse401:
       type: object
       properties:
@@ -299,6 +230,75 @@ components:
       - result
       - source
       - errorDetails
+    AccountTransferResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message associated with the API response.
+          example: Success
+        description:
+          type: string
+          description: A detailed description of the API response.
+          example: Request processed successfully.
+        requestId:
+          type: string
+          description: The unique identifier for the API request.
+          example: 696888e9c7efa981ebd718089c71dxxae
+        requestTime:
+          type: string
+          description: The timestamp of the API request in US/Eastern timezone.
+          format: date-time
+        data:
+          type: object
+          description: The actual data returned in the response. Can be of any type.
+          example:
+            transactionId: 69657e9c7efa981ebd718089c71dd5f1
+            confirmationNumber: '12345'
+          items:
+            $ref: '#/components/schemas/AccountTransferData'
+        status:
+          type: integer
+          description: The HTTP status code of the API response.
+          format: int32
+          example: 200
+      description: Represents the response data containing the API status and additional data.
+    AccountTransferRequest:
+      required:
+      - fromAccountNumber
+      - toAccountNumber
+      - amount
+      type: object
+      properties:
+        fromAccountNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+          description: The from account number is the number that identifies the account from which funds are being transferred.. Must be 10 characters.
+          example: '1123456789'
+        toAccountNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+          title: To Account Number of Max size 10 digit char
+          description: The to account number is the number that identifies the account to which funds are being transferred.
+          example: '1234567890'
+        amount:
+          type: number
+          title: 'Amount with minimum of $0.01 '
+          description: The amount is ensure being transferred between the From/To accounts
+          example: 0.01
+        memo:
+          maxLength: 50
+          type: string
+          title: Instruction of A debit memo on a company’s bank statement
+          description: Document that helps account holders understand deductions from their accounts, ensuring clarity and accuracy in their financial records.
+          example: Maximum 50 Character
+      description: Represents the request for account transfer.
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+      description: Bearer Token required for Client authorization validated against Ping Federate
   parameters:
     x-fapi-channel-id:
       schema:

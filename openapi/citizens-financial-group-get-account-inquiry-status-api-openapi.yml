@@ -85,133 +85,6 @@ components:
           type: string
           description: Unique reference ID for the inquiry.
           example: c9820cbb-ee63-443d-859c-45556514fd3c
-    UnauthorizedRequestErrorResponse:
-      required:
-      - errorDetails
-      - result
-      - source
-      type: object
-      properties:
-        result:
-          maxLength: 7
-          type: string
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-          example: WARNING
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          maxLength: 100
-          type: string
-          description: Source system or provider system which causes error.
-          example: Account Validation API
-        requestId:
-          maxLength: 36
-          type: string
-          description: traceid to track the error in the APM logs.
-          example: 685af2c80f9b1a93ca106902937c2e01
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
-    InternalServerErrorResponse:
-      required:
-      - errorDetails
-      - result
-      - source
-      type: object
-      properties:
-        result:
-          maxLength: 7
-          type: string
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
-          example: WARNING
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          maxLength: 100
-          type: string
-          description: Source system or provider system which causes error.
-          example: Account Validation API
-        requestId:
-          maxLength: 36
-          type: string
-          description: traceid to track the error in the APM logs.
-          example: 685af2c80f9b1a93ca106902937c2e01
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
-    AuthorizationHeader:
-      title: JWT Access Token
-      type: string
-    AccountInquiryResponse_data:
-      type: object
-      properties:
-        referenceIdentifier:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
-        inquiryStatus:
-          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
-    InternalServerErrorResponse_errorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          maxLength: 10
-          type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: AV-500
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed. Please refer to the user guide for more information.
-    UnauthorizedRequestErrorResponse_errorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          maxLength: 10
-          type: string
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          example: AV-401
-        messageDetail:
-          maxLength: 250
-          type: string
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          example: Your request cannot be processed. Please refer to the user guide for more information.
-    AccountInquiryResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A brief message about the response.
-          example: Successfully processed
-        description:
-          type: string
-          description: Detailed description of the response.
-          example: Successfully retrieved inquiry status.
-        requestId:
-          type: string
-          description: Unique identifier for the request.
-          example: 6823527217cf82e16df9244b569cf1d2
-        requestTime:
-          type: string
-          description: Timestamp of the request.
-          format: date-time
-        data:
-          $ref: '#/components/schemas/AccountInquiryResponse_data'
-        status:
-          type: integer
-          description: HTTP status code of the response.
-          format: int32
-          example: 200
-      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
     AccountInquiryResponse_data_inquiryStatus:
       type: object
       properties:
@@ -243,6 +116,133 @@ components:
           type: string
           description: Status of the name match (e.g., FULL, PARTIAL).
           example: FULL
+    AccountInquiryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message about the response.
+          example: Successfully processed
+        description:
+          type: string
+          description: Detailed description of the response.
+          example: Successfully retrieved inquiry status.
+        requestId:
+          type: string
+          description: Unique identifier for the request.
+          example: 6823527217cf82e16df9244b569cf1d2
+        requestTime:
+          type: string
+          description: Timestamp of the request.
+          format: date-time
+        data:
+          $ref: '#/components/schemas/AccountInquiryResponse_data'
+        status:
+          type: integer
+          description: HTTP status code of the response.
+          format: int32
+          example: 200
+      description: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
+    UnauthorizedRequestErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: AV-401
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    InternalServerErrorResponse_errorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          maxLength: 10
+          type: string
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          example: AV-500
+        messageDetail:
+          maxLength: 250
+          type: string
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          example: Your request cannot be processed. Please refer to the user guide for more information.
+    InternalServerErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalServerErrorResponse_errorDetails'
+    UnauthorizedRequestErrorResponse:
+      required:
+      - errorDetails
+      - result
+      - source
+      type: object
+      properties:
+        result:
+          maxLength: 7
+          type: string
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request, it could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some info which means it is not absolute successful transaction, however response will have information about what is needed in order to have absolute successful transaction.
+          example: WARNING
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          maxLength: 100
+          type: string
+          description: Source system or provider system which causes error.
+          example: Account Validation API
+        requestId:
+          maxLength: 36
+          type: string
+          description: traceid to track the error in the APM logs.
+          example: 685af2c80f9b1a93ca106902937c2e01
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails'
+    AuthorizationHeader:
+      title: JWT Access Token
+      type: string
+    AccountInquiryResponse_data:
+      type: object
+      properties:
+        referenceIdentifier:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_referenceIdentifier'
+        inquiryStatus:
+          $ref: '#/components/schemas/AccountInquiryResponse_data_inquiryStatus'
   securitySchemes:
     client-id:
       type: apiKey

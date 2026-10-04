@@ -71,108 +71,6 @@ paths:
       - Initiate Payment
 components:
   schemas:
-    CounterpartyInformation:
-      type: object
-      required:
-      - counterpartyAccountType
-      - counterpartyName
-      properties:
-        counterpartyAccountType:
-          type: string
-          example: SAVINGS
-          description: 'Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.
-
-            CHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.'
-          enum:
-          - CHECKING
-          - SAVINGS
-        counterpartyName:
-          type: string
-          example: JOHN SMITH
-          description: Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.
-          maxLength: 22
-      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
-    Debtor:
-      type: object
-      properties:
-        name:
-          type: string
-          example: JOHN SMITH
-          description: Originator or Debtor Account Holder's Name.
-          maxLength: 140
-        postalAddress:
-          $ref: '#/components/schemas/Address'
-    RtpDetails:
-      type: object
-      required:
-      - counterpartyAddressInformation
-      properties:
-        debtor:
-          $ref: '#/components/schemas/Debtor'
-        ultimateDebtor:
-          $ref: '#/components/schemas/UltimateDebtor'
-        ultimateCreditor:
-          $ref: '#/components/schemas/UltimateCreditor'
-        counterpartyAddressInformation:
-          $ref: '#/components/schemas/CounterpartyAddressInformation'
-      description: This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP.
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
-    CounterpartyAddressInformation:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          example: JOHN SMITH
-          description: Counteryparty account holder's name.
-          maxLength: 140
-        id:
-          type: string
-          example: '187658'
-          description: Id assigned to the creditor/counterparty.
-          maxLength: 35
-        postalAddress:
-          $ref: '#/components/schemas/Address'
-      description: Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal to $3000.
-    UltimateCreditor:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          example: JOHN SMITH
-          description: Name of the ultimate creditor party.
-          maxLength: 140
-        id:
-          type: string
-          example: '210356'
-          description: Id of the ultimate creditor party.
-          maxLength: 35
-        postalAddress:
-          $ref: '#/components/schemas/Address'
-      description: Ultimate debtor (3rd party) details
-    PaymentAccountInformation:
-      type: object
-      required:
-      - accountNumber
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: '2523216'
-          description: Client account holder's ABA(routing) number.
-          minLength: 9
-          maxLength: 9
-        accountNumber:
-          type: string
-          example: '766060252'
-          description: Client account holder's account number.
-          maxLength: 17
-      description: The client party's account details
     UltimateDebtor:
       type: object
       required:
@@ -191,6 +89,138 @@ components:
         postalAddress:
           $ref: '#/components/schemas/Address'
       description: Ultimate debtor (3rd party) details
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
+    PaymentInitiationRequest:
+      type: object
+      required:
+      - amount
+      - counterpartyAccountInformation
+      - paymentAccountInformation
+      - paymentId
+      - paymentType
+      properties:
+        paymentId:
+          type: string
+          example: MCCSAP20190404A
+          description: Unique identifier assigned by the consumer for the payment submission request
+          maxLength: 15
+        paymentAccountInformation:
+          $ref: '#/components/schemas/PaymentAccountInformation'
+        counterpartyAccountInformation:
+          $ref: '#/components/schemas/CounterpartyAccountInformation'
+        amount:
+          type: number
+          format: double
+          example: 100.23
+          description: Initiated payment amount for the transaction. Decimal point has to be added in the amount sent and it can have maximum 11 digits before the decimal and maximum 2 digits after the decimal for RTP transactions. ACH transactions can have maximum 8 digits before the decimal and maximum 2 digits after the decimal. The amount for an ACH prenote should be sent as zero.
+        memo:
+          type: string
+          example: DIGITAL WALLET PAYMENT- text will be visible to the receiver
+          description: Free-form information to be conveyed to the receiver.
+          minLength: 1
+          maxLength: 140
+        paymentType:
+          type: string
+          example: RTP
+          description: The type of transaction being initiated. Possible values are RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included. ACH_CREDIT - Credit transfers done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions. ACH_DEBIT - Direct debits done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions.
+          maxLength: 10
+          enum:
+          - RTP
+          - ACH_CREDIT
+          - ACH_DEBIT
+        rtpDetails:
+          $ref: '#/components/schemas/RtpDetails'
+        achDetails:
+          $ref: '#/components/schemas/AchDetails'
+    RtpDetails:
+      type: object
+      required:
+      - counterpartyAddressInformation
+      properties:
+        debtor:
+          $ref: '#/components/schemas/Debtor'
+        ultimateDebtor:
+          $ref: '#/components/schemas/UltimateDebtor'
+        ultimateCreditor:
+          $ref: '#/components/schemas/UltimateCreditor'
+        counterpartyAddressInformation:
+          $ref: '#/components/schemas/CounterpartyAddressInformation'
+      description: This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP.
+    Debtor:
+      type: object
+      properties:
+        name:
+          type: string
+          example: JOHN SMITH
+          description: Originator or Debtor Account Holder's Name.
+          maxLength: 140
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+    CounterpartyAddressInformation:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          example: JOHN SMITH
+          description: Counteryparty account holder's name.
+          maxLength: 140
+        id:
+          type: string
+          example: '187658'
+          description: Id assigned to the creditor/counterparty.
+          maxLength: 35
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+      description: Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal to $3000.
+    PaymentInitiationResponse:
+      type: object
+      required:
+      - paymentId
+      - paymentStatus
+      - receivedDateTime
+      properties:
+        paymentId:
+          type: string
+          example: M20190404OR
+          description: Unique identifier for the payment submission request
+          maxLength: 15
+        paymentStatus:
+          type: string
+          example: RECEIVED
+          description: Status of the payment instruction.
+          maxLength: 30
+          enum:
+          - RECEIVED
+        receivedDateTime:
+          format: date
+          example: '2024-09-30'
+          description: The date and time when the request was received.
+      description: Response fields of the ACH Credit transfer initiated.
     AchDetails:
       type: object
       required:
@@ -265,90 +295,6 @@ components:
           - SINGLE
           - STANDING_AUTHORIZATION
       description: This object provides the list of request fields needed to originate an ACH credit/debit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType ACH.
-    CounterpartyAccountInformation:
-      type: object
-      required:
-      - accountNumber
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: 53000196
-          description: Counteryparty account holder's ABA(routing) number.
-          minLength: 9
-          maxLength: 9
-        accountNumber:
-          type: string
-          example: 123456789
-          description: Counteryparty account holder's account number.
-          maxLength: 17
-      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
-    PaymentInitiationResponse:
-      type: object
-      required:
-      - paymentId
-      - paymentStatus
-      - receivedDateTime
-      properties:
-        paymentId:
-          type: string
-          example: M20190404OR
-          description: Unique identifier for the payment submission request
-          maxLength: 15
-        paymentStatus:
-          type: string
-          example: RECEIVED
-          description: Status of the payment instruction.
-          maxLength: 30
-          enum:
-          - RECEIVED
-        receivedDateTime:
-          format: date
-          example: '2024-09-30'
-          description: The date and time when the request was received.
-      description: Response fields of the ACH Credit transfer initiated.
-    PaymentInitiationRequest:
-      type: object
-      required:
-      - amount
-      - counterpartyAccountInformation
-      - paymentAccountInformation
-      - paymentId
-      - paymentType
-      properties:
-        paymentId:
-          type: string
-          example: MCCSAP20190404A
-          description: Unique identifier assigned by the consumer for the payment submission request
-          maxLength: 15
-        paymentAccountInformation:
-          $ref: '#/components/schemas/PaymentAccountInformation'
-        counterpartyAccountInformation:
-          $ref: '#/components/schemas/CounterpartyAccountInformation'
-        amount:
-          type: number
-          format: double
-          example: 100.23
-          description: Initiated payment amount for the transaction. Decimal point has to be added in the amount sent and it can have maximum 11 digits before the decimal and maximum 2 digits after the decimal for RTP transactions. ACH transactions can have maximum 8 digits before the decimal and maximum 2 digits after the decimal. The amount for an ACH prenote should be sent as zero.
-        memo:
-          type: string
-          example: DIGITAL WALLET PAYMENT- text will be visible to the receiver
-          description: Free-form information to be conveyed to the receiver.
-          minLength: 1
-          maxLength: 140
-        paymentType:
-          type: string
-          example: RTP
-          description: The type of transaction being initiated. Possible values are RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included. ACH_CREDIT - Credit transfers done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions. ACH_DEBIT - Direct debits done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions.
-          maxLength: 10
-          enum:
-          - RTP
-          - ACH_CREDIT
-          - ACH_DEBIT
-        rtpDetails:
-          $ref: '#/components/schemas/RtpDetails'
-        achDetails:
-          $ref: '#/components/schemas/AchDetails'
     Error_errorDetails:
       type: object
       required:
@@ -370,6 +316,60 @@ components:
           example: Invalid requestId
           description: Details about error including stack traces. This will not be populated for any handled error.
           maxLength: 250
+    UltimateCreditor:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          example: JOHN SMITH
+          description: Name of the ultimate creditor party.
+          maxLength: 140
+        id:
+          type: string
+          example: '210356'
+          description: Id of the ultimate creditor party.
+          maxLength: 35
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+      description: Ultimate debtor (3rd party) details
+    CounterpartyAccountInformation:
+      type: object
+      required:
+      - accountNumber
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 53000196
+          description: Counteryparty account holder's ABA(routing) number.
+          minLength: 9
+          maxLength: 9
+        accountNumber:
+          type: string
+          example: 123456789
+          description: Counteryparty account holder's account number.
+          maxLength: 17
+      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+    PaymentAccountInformation:
+      type: object
+      required:
+      - accountNumber
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: '2523216'
+          description: Client account holder's ABA(routing) number.
+          minLength: 9
+          maxLength: 9
+        accountNumber:
+          type: string
+          example: '766060252'
+          description: Client account holder's account number.
+          maxLength: 17
+      description: The client party's account details
     Address:
       type: object
       required:
@@ -410,30 +410,30 @@ components:
           minLength: 2
           maxLength: 2
           pattern: ^[a-zA-Z]+$
-    Error:
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+    CounterpartyInformation:
       type: object
       required:
-      - errorDetails
-      - result
-      - source
+      - counterpartyAccountType
+      - counterpartyName
       properties:
-        result:
+        counterpartyAccountType:
           type: string
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
-          maxLength: 7
+          example: SAVINGS
+          description: 'Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.
+
+            CHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.'
           enum:
-          - FATAL
-          - WARNING
-        source:
+          - CHECKING
+          - SAVINGS
+        counterpartyName:
           type: string
-          example: Payments System
-          description: Source system or provider system which causes error.
-          maxLength: 100
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error_errorDetails'
+          example: JOHN SMITH
+          description: Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.
+          maxLength: 22
+      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
   parameters:
     x-fapi-channel-id:
       schema:
@@ -445,15 +445,6 @@ components:
       style: simple
       required: false
       explode: false
-    authorization:
-      schema:
-        $ref: '#/components/schemas/AuthorizationHeader'
-      name: Authorization
-      in: header
-      description: OAuth 2.0 Authorization Bearer Token
-      style: simple
-      required: true
-      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
     x-fapi-trace-id:
       schema:
         maxLength: 36
@@ -463,6 +454,15 @@ components:
       description: Unique request id for each request to make it traceable if needed.
       style: simple
       required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
   securitySchemes:
     client-id:
       type: apiKey

@@ -72,79 +72,7 @@ paths:
       tags:
       - Participant Status
 components:
-  parameters:
-    x-fapi-channel-id:
-      schema:
-        maxLength: 20
-        type: string
-      name: x-fapi-channel-id
-      in: header
-      description: Identifier used to distinguish between different communication channels or data streams within a client system.
-      style: simple
-      required: false
-      explode: false
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
-    authorization:
-      schema:
-        $ref: '#/components/schemas/AuthorizationHeader'
-      name: Authorization
-      in: header
-      description: OAuth 2.0 Authorization Bearer Token
-      style: simple
-      required: true
-      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
   schemas:
-    ParticipantStatusQuery:
-      type: object
-      required:
-      - paymentType
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: 21000089
-          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
-          minLength: 9
-          maxLength: 9
-        paymentType:
-          type: string
-          example: RTP
-          description: Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
-          enum:
-          - WIRE
-          - RTP
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
-    Error_errorDetails:
-      type: object
-      required:
-      - code
-      - description
-      properties:
-        code:
-          type: string
-          example: REQ1001
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          maxLength: 7
-        description:
-          type: string
-          example: Request Id should not be more than 36 characters long.
-          description: Description of the operation's status. It will have detailed error description in case of any error.
-          maxLength: 250
-        messageDetail:
-          type: string
-          example: Invalid requestId
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          maxLength: 250
     ParticipantStatusSummary:
       type: object
       required:
@@ -231,6 +159,78 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Error_errorDetails'
+    ParticipantStatusQuery:
+      type: object
+      required:
+      - paymentType
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 21000089
+          description: A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.
+          minLength: 9
+          maxLength: 9
+        paymentType:
+          type: string
+          example: RTP
+          description: Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.
+          enum:
+          - WIRE
+          - RTP
+    Error_errorDetails:
+      type: object
+      required:
+      - code
+      - description
+      properties:
+        code:
+          type: string
+          example: REQ1001
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          maxLength: 7
+        description:
+          type: string
+          example: Request Id should not be more than 36 characters long.
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          maxLength: 250
+        messageDetail:
+          type: string
+          example: Invalid requestId
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          maxLength: 250
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+  parameters:
+    x-fapi-channel-id:
+      schema:
+        maxLength: 20
+        type: string
+      name: x-fapi-channel-id
+      in: header
+      description: Identifier used to distinguish between different communication channels or data streams within a client system.
+      style: simple
+      required: false
+      explode: false
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
+    authorization:
+      schema:
+        $ref: '#/components/schemas/AuthorizationHeader'
+      name: Authorization
+      in: header
+      description: OAuth 2.0 Authorization Bearer Token
+      style: simple
+      required: true
+      example: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkhMMkQtYVdmaUxVS1BpUHQ5b2lweWNiYXo4WV9SUzI1NiIsInBpLmF0bSI6InphYXciLCJ0eXAiOiJKV1QifQ.eyJzY29wZSI6ImlyOnJlYWQiLCJjaWQiOiIyNzFmYTdkZDI3MDExMTA5Mzc4ZWE5MTU1YzA2ZTcxMSIsImlzcyI6Imh0dHBzOi8vcGYtZmFtLWRldi5pbnRlcm5hbC5jaXRpemVuc2JhbmsuY29tIiwiYXVkIjoiaW5mb3JtYXRpb25fcmVwb3J0aW5nIiwianRpIjoiOHpRMUJVSnlTT0xkWHZmQXJtb1pQSXVpZXBmdkF5WnJwdnc4NVlGY2dDVk1FbyIsInN1YmplY3QiOiJBQ01FLUFQSV9VQVRBTExfTU1HUFMiLCJjbmYiOnsieDV0IjoiOTlmN2Q3ZDQzOGMxZjViMWFiNzc4MDA1YmU3OGNkODY0NDU1YmYyYSJ9LCJleHAiOjE3NTczNTE2NzR9.c6y4ZcVxP8c8dZK8IwMPhVnKkrk7Kyf4h4cUo8GOPxrrR_AYq-59tcO9lzTkr4Kfa5-7q_HbxCV14wUnwz_N1JuehZ5N3wyuJ3wjc2jEfOnto8YwSEhY4qWbFm1TTdU8jqRZMp2KpvBpwa5BKNfjo3t0xAMqQ2til5-1JQHEZyint56OglKq13OzG265jW_RKOhmmmGuTlqDjiC4Mz2AQU-1VZY2i6LZTqKKTr7dvQVy5TKm9-akEkie8s-cXymaQ9Km54-PARdH8orezez8NuJc4LN550m46ulWJ2mNMDs4D9NnKQMr-stla2mQtovU__vNg3WDCvQ8Nrw1db5icA
   securitySchemes:
     client-id:
       type: apiKey
