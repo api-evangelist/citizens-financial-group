@@ -1,4 +1,4 @@
-generated: '2026-09-16'
+generated: '2026-09-23'
 method: generated
 source: openapi/citizens-financial-group-account-transfer-api-openapi.yml, openapi/citizens-financial-group-accounts-api-openapi.yml,
   openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml, openapi/citizens-financial-group-information-reporting-api-openapi.yml,
@@ -13,12 +13,12 @@ description: Recommended x-agentic-access execution contracts, classified heuris
 summary:
   operations: 21
   by_action_class:
-    acting: 8
-    connected: 13
+    acting: 4
+    connected: 17
   by_consequence:
-    physical: 3
-    read: 13
-    write: 4
+    physical: 2
+    read: 17
+    write: 1
     safety-critical: 1
   human_in_the_loop_required: 1
 operations:
@@ -124,18 +124,12 @@ operations:
   method: post
   operationId: getAccountDetails
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /list
   method: get
   operationId: getAccountList
@@ -150,34 +144,22 @@ operations:
   method: post
   operationId: getTransactions
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /initiation
   method: post
   operationId: getAccountInquiry
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /initiate-payment
   method: post
   operationId: initiatePayment
@@ -226,20 +208,12 @@ operations:
   method: post
   operationId: retrievePaymentStatus
   x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /postalcode/{postalCode}
   method: get
   operationId: findBranchesByPostalCode

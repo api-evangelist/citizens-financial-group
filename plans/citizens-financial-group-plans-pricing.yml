@@ -160,3 +160,76 @@ commercial_model:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  units: []
+  plans:
+  - name: Default Plan
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Limited
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Bronze
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Silver
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Gold
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Platinum
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: GOLD
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Sandbox
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: DEFAULT
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: DEFAULT
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: GOLD
+    access: negotiated
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
