@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-payment-status-request-schema.json",
+  "title": "PaymentStatusRequest",
+  "description": "Request fields of the Payments Response.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-payment-status-api-openapi.yml#/components/schemas/PaymentStatusRequest",
+  "type": "object",
+  "required": [
+    "paymentId",
+    "paymentType"
+  ],
+  "properties": {
+    "paymentId": {
+      "type": "string",
+      "description": "Unique identifier for the payment submission request.",
+      "maxLength": 15
+    },
+    "paymentType": {
+      "type": "string",
+      "description": "The type of transaction that was initiated.",
+      "enum": [
+        "RTP",
+        "ACH_CREDIT",
+        "ACH_DEBIT"
+      ]
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-inquiry-response-schema.json",
+  "title": "AccountInquiryResponse",
+  "description": "Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/AccountInquiryResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "A brief message about the response."
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the response."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "Unique identifier for the request."
+    },
+    "requestTime": {
+      "type": "string",
+      "description": "Timestamp of the request.",
+      "format": "date-time"
+    },
+    "data": {
+      "$ref": "#/$defs/AccountInquiryResponse_data"
+    },
+    "status": {
+      "type": "integer",
+      "description": "HTTP status code of the response.",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "AccountInquiryResponse_data": {
+      "type": "object",
+      "properties": {
+        "referenceIdentifier": {
+          "$ref": "#/$defs/AccountInquiryResponse_data_referenceIdentifier"
+        },
+        "inquiryStatus": {
+          "$ref": "#/$defs/AccountInquiryResponse_data_inquiryStatus"
+        }
+      }
+    },
+    "AccountInquiryResponse_data_inquiryStatus": {
+      "type": "object",
+      "properties": {
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number being validated."
+        },
+        "routingNumber": {
+          "type": "string",
+          "description": "The routing number associated with the account."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "Name associated with the account."
+        },
+        "accountStatus": {
+          "type": "string",
+          "description": "Status of the account (e.g., OPEN, CLOSED)."
+        },
+        "accountStatusMessage": {
+          "type": "string",
+          "description": "Detailed message about the account status."
+        },
+        "accountStatusCode": {
+          "type": "string",
+          "description": "Code representing the account status."
+        },
+        "nameMatchStatus": {
+          "type": "string",
+          "description": "Status of the name match (e.g., FULL, PARTIAL)."
+        }
+      }
+    },
+    "AccountInquiryResponse_data_referenceIdentifier": {
+      "type": "object",
+      "properties": {
+        "referenceId": {
+          "type": "string",
+          "description": "Unique reference ID for the inquiry."
+        }
+      }
+    }
+  }
+}

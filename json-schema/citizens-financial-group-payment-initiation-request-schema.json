@@ -1,0 +1,346 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-payment-initiation-request-schema.json",
+  "title": "PaymentInitiationRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/PaymentInitiationRequest",
+  "type": "object",
+  "required": [
+    "amount",
+    "counterpartyAccountInformation",
+    "paymentAccountInformation",
+    "paymentId",
+    "paymentType"
+  ],
+  "properties": {
+    "paymentId": {
+      "type": "string",
+      "description": "Unique identifier assigned by the consumer for the payment submission request",
+      "maxLength": 15
+    },
+    "paymentAccountInformation": {
+      "$ref": "#/$defs/PaymentAccountInformation"
+    },
+    "counterpartyAccountInformation": {
+      "$ref": "#/$defs/CounterpartyAccountInformation"
+    },
+    "amount": {
+      "type": "number",
+      "format": "double",
+      "description": "Initiated payment amount for the transaction. Decimal point has to be added in the amount sent and it can have maximum 11 digits before the decimal and maximum 2 digits after the decimal for RTP transactions. ACH transactions can have maximum 8 digits before the decimal and maximum 2 digits after the decimal. The amount for an ACH prenote should be sent as zero."
+    },
+    "memo": {
+      "type": "string",
+      "description": "Free-form information to be conveyed to the receiver.",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "paymentType": {
+      "type": "string",
+      "description": "The type of transaction being initiated. Possible values are RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included. ACH_CREDIT - Credit transfers done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions. ACH_DEBIT - Direct debits done through the Automated Clearing House, a network that allows electronic money transfers between banks and credit unions.",
+      "maxLength": 10,
+      "enum": [
+        "RTP",
+        "ACH_CREDIT",
+        "ACH_DEBIT"
+      ]
+    },
+    "rtpDetails": {
+      "$ref": "#/$defs/RtpDetails"
+    },
+    "achDetails": {
+      "$ref": "#/$defs/AchDetails"
+    }
+  },
+  "$defs": {
+    "AchDetails": {
+      "type": "object",
+      "required": [
+        "companyEntryDescription",
+        "companyIdentification",
+        "companyName",
+        "counterpartyInformation",
+        "effectiveEntryDate",
+        "standardEntryClassCode"
+      ],
+      "properties": {
+        "standardEntryClassCode": {
+          "type": "string",
+          "description": "Three-character code used to identify types  of entries. Values of Standard Entry Class code should be PPD - An entry initiated by an organization to consumer account of the receiver where authorization is obtained in writing. WEB - A single, recurring or standing authorization for by an organization to a consumer for an ACH debit entry when the internet or mobile device is used to initiate the payment. CCD - A single or a recurring ACH credit or debit originated to a corporate account. CTX - A single or a recurring ACH credit or debit originated to a corporate account that supports up to 9,999 addenda records.",
+          "enum": [
+            "PPD",
+            "WEB",
+            "CCD",
+            "CTX"
+          ]
+        },
+        "companyIdentification": {
+          "type": "string",
+          "description": "Used to identify the Originator.  Assigned by the ODFI."
+        },
+        "companyName": {
+          "type": "string",
+          "description": "Name of the Originator known and recognized by the Receiver."
+        },
+        "companyDescriptiveDate": {
+          "type": "string",
+          "description": "Allows originator to establish for descriptive purpose to identify the date. It may or may not be displayed to the receiver."
+        },
+        "effectiveEntryDate": {
+          "type": "string",
+          "format": "date",
+          "description": "This field will enable the originator to specify a banking day controlling the settlement of the entries in the batch."
+        },
+        "prenote": {
+          "type": "string",
+          "description": "A prenote is a zero-dollar payment sent to a bank to verify a recipient's account and routing information before sending a live transaction."
+        },
+        "companyDiscretionaryData": {
+          "type": "string",
+          "description": "Allows the company to include information of significance only to you.",
+          "maxLength": 20
+        },
+        "companyEntryDescription": {
+          "type": "string",
+          "description": "Allows originator to insert a description of the entry's purpose.",
+          "maxLength": 10
+        },
+        "counterpartyInformation": {
+          "$ref": "#/$defs/CounterpartyInformation"
+        },
+        "identificationNumber": {
+          "type": "string",
+          "description": "The number by which the receiver is known to the originator. It is included for further identification. If not provided in the request then the paymentId would be passed in this field.",
+          "maxLength": 15
+        },
+        "addenda": {
+          "type": "array",
+          "description": "A freeform text field that will travel with the payment instruction to the receiving financial institution. Multiple addenda records can be sent only for payments having CTX as the SEC code.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paymentTypeCode": {
+          "type": "string",
+          "description": "Allows the consumer to include codes of significance to enable specialized handling of the entry.",
+          "enum": [
+            "RECURRING",
+            "SINGLE",
+            "STANDING_AUTHORIZATION"
+          ]
+        }
+      },
+      "description": "This object provides the list of request fields needed to originate an ACH credit/debit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType ACH."
+    },
+    "Address": {
+      "type": "object",
+      "required": [
+        "city",
+        "line1",
+        "postalCode"
+      ],
+      "properties": {
+        "line1": {
+          "type": "string",
+          "description": "Address line 1, associated with the address.",
+          "maxLength": 70
+        },
+        "line2": {
+          "type": "string",
+          "description": "Address line 2, associated with the address.",
+          "maxLength": 70
+        },
+        "city": {
+          "type": "string",
+          "description": "City.",
+          "maxLength": 35
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal Code of address.",
+          "maxLength": 16
+        },
+        "state": {
+          "type": "string",
+          "description": "State of address.",
+          "minLength": 1,
+          "maxLength": 35
+        },
+        "country": {
+          "type": "string",
+          "description": "Two digit ISO country code of address.",
+          "minLength": 2,
+          "maxLength": 2,
+          "pattern": "^[a-zA-Z]+$"
+        }
+      }
+    },
+    "CounterpartyAccountInformation": {
+      "type": "object",
+      "required": [
+        "accountNumber",
+        "routingNumber"
+      ],
+      "properties": {
+        "routingNumber": {
+          "type": "string",
+          "description": "Counteryparty account holder's ABA(routing) number.",
+          "minLength": 9,
+          "maxLength": 9
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "Counteryparty account holder's account number.",
+          "maxLength": 17
+        }
+      },
+      "description": "Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit."
+    },
+    "CounterpartyAddressInformation": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Counteryparty account holder's name.",
+          "maxLength": 140
+        },
+        "id": {
+          "type": "string",
+          "description": "Id assigned to the creditor/counterparty.",
+          "maxLength": 35
+        },
+        "postalAddress": {
+          "$ref": "#/$defs/Address"
+        }
+      },
+      "description": "Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal to $3000."
+    },
+    "CounterpartyInformation": {
+      "type": "object",
+      "required": [
+        "counterpartyAccountType",
+        "counterpartyName"
+      ],
+      "properties": {
+        "counterpartyAccountType": {
+          "type": "string",
+          "description": "Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.\nCHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.",
+          "enum": [
+            "CHECKING",
+            "SAVINGS"
+          ]
+        },
+        "counterpartyName": {
+          "type": "string",
+          "description": "Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.",
+          "maxLength": 22
+        }
+      },
+      "description": "Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit."
+    },
+    "Debtor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Originator or Debtor Account Holder's Name.",
+          "maxLength": 140
+        },
+        "postalAddress": {
+          "$ref": "#/$defs/Address"
+        }
+      }
+    },
+    "PaymentAccountInformation": {
+      "type": "object",
+      "required": [
+        "accountNumber",
+        "routingNumber"
+      ],
+      "properties": {
+        "routingNumber": {
+          "type": "string",
+          "description": "Client account holder's ABA(routing) number.",
+          "minLength": 9,
+          "maxLength": 9
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "Client account holder's account number.",
+          "maxLength": 17
+        }
+      },
+      "description": "The client party's account details"
+    },
+    "RtpDetails": {
+      "type": "object",
+      "required": [
+        "counterpartyAddressInformation"
+      ],
+      "properties": {
+        "debtor": {
+          "$ref": "#/$defs/Debtor"
+        },
+        "ultimateDebtor": {
+          "$ref": "#/$defs/UltimateDebtor"
+        },
+        "ultimateCreditor": {
+          "$ref": "#/$defs/UltimateCreditor"
+        },
+        "counterpartyAddressInformation": {
+          "$ref": "#/$defs/CounterpartyAddressInformation"
+        }
+      },
+      "description": "This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP."
+    },
+    "UltimateCreditor": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the ultimate creditor party.",
+          "maxLength": 140
+        },
+        "id": {
+          "type": "string",
+          "description": "Id of the ultimate creditor party.",
+          "maxLength": 35
+        },
+        "postalAddress": {
+          "$ref": "#/$defs/Address"
+        }
+      },
+      "description": "Ultimate debtor (3rd party) details"
+    },
+    "UltimateDebtor": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the ultimate debtor party.",
+          "maxLength": 140
+        },
+        "id": {
+          "type": "string",
+          "description": "Id of the ultimate debtor party.",
+          "maxLength": 35
+        },
+        "postalAddress": {
+          "$ref": "#/$defs/Address"
+        }
+      },
+      "description": "Ultimate debtor (3rd party) details"
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-accounts-schema.json",
+  "title": "Accounts entity",
+  "description": "Account information in Array.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Accounts",
+  "allOf": [
+    {
+      "$ref": "#/$defs/PaginatedArray"
+    },
+    {
+      "type": "object"
+    }
+  ],
+  "properties": {
+    "accounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DepositAccount"
+      }
+    }
+  },
+  "$defs": {
+    "Account": {
+      "title": "Account Entity",
+      "description": "Have Account information with header and details",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AccountDescriptor"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "parentAccountId": {
+              "description": "Account header information",
+              "allOf": [
+                {
+                  "$ref": "#/$defs/UniqueIdentifier"
+                }
+              ]
+            },
+            "currency": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Currency"
+                }
+              ],
+              "description": "Account currency code. Supports only the USD currency code",
+              "type": "object"
+            },
+            "interestRate": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Number"
+                }
+              ],
+              "description": "Interest rate of the account."
+            },
+            "lastActivityDate": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Timestamp"
+                }
+              ],
+              "description": "Last activity occured in Accounts."
+            }
+          }
+        }
+      ]
+    },
+    "AccountDescriptor": {
+      "title": "AccountDescriptor Entity",
+      "description": "Account information When Resultype is lightweight ",
+      "properties": {
+        "accountId": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UniqueIdentifier"
+            }
+          ],
+          "description": "Unique accountid of customer"
+        },
+        "nickname": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "nickName is related to account holder name."
+        },
+        "accountType": {
+          "$ref": "#/$defs/AccountType"
+        },
+        "status": {
+          "$ref": "#/$defs/AccountStatus"
+        },
+        "accountNumberDisplay": {
+          "type": "string",
+          "description": "Account identity is a masked value number."
+        }
+      }
+    },
+    "AccountStatus": {
+      "title": "AccountStatus",
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "CLOSED",
+        "OTHER"
+      ]
+    },
+    "AccountType": {
+      "title": "Account Type",
+      "type": "string",
+      "enum": [
+        "CHECKING",
+        "SAVINGS"
+      ]
+    },
+    "ContentTypes": {
+      "title": "Content Types",
+      "description": "Supported documented formats",
+      "type": "string",
+      "enum": [
+        "image/gif",
+        "image/jpeg",
+        "image/tiff",
+        "image/png",
+        "application/json"
+      ]
+    },
+    "Currency": {
+      "title": "Currency Entity",
+      "properties": {
+        "currencyCode": {
+          "description": "Only USD (US Dollars) currency is supported.",
+          "type": "string",
+          "maxLength": 3,
+          "$ref": "#/$defs/CurrencyCode"
+        }
+      }
+    },
+    "CurrencyCode": {
+      "title": "Currency Code",
+      "type": "string",
+      "enum": [
+        "USD"
+      ]
+    },
+    "DepositAccount": {
+      "title": "DepositAccount Entity",
+      "allOf": [
+        {
+          "$ref": "#/$defs/Account"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "balanceAsOf": {
+              "description": "Balance as of date in ISO 8601 Date format - YYYY-MM-DD",
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Timestamp"
+                }
+              ]
+            },
+            "currentBalance": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Number"
+                }
+              ],
+              "description": "Actual balance in the accounts"
+            },
+            "interestRate": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Number"
+                }
+              ],
+              "description": "Intereset rate for accounts"
+            },
+            "lastActivityDate": {
+              "description": "Last activity in ISO 8601 Date format - YYYY-MM-DD",
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Timestamp"
+                }
+              ]
+            },
+            "availableBalance": {
+              "$ref": "#/$defs/Number",
+              "description": "Funds available for use",
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      ]
+    },
+    "HateoasLink": {
+      "title": "HATEOAS Link",
+      "description": "REST application constraint (Hypermedia As The Engine Of Application State)",
+      "required": [
+        "href"
+      ],
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "URL to invoke the action on the resource"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PATCH",
+            "DELETE",
+            "PUT"
+          ],
+          "description": "HTTP Method to use for the request"
+        },
+        "rel": {
+          "description": "Relation of this link to its containing entity, as defined by and with many example relation values at [IETF RFC5988](https://datatracker.ietf.org/doc/html/rfc5988)",
+          "type": "string"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentTypes"
+          },
+          "description": "Content-types that can be used in the Accept header"
+        }
+      }
+    },
+    "Number": {
+      "title": "Number",
+      "type": "number"
+    },
+    "PageMetadata": {
+      "title": "Page Metadata",
+      "description": "Offset IDs for paginated result sets",
+      "type": "object",
+      "properties": {
+        "nextOffset": {
+          "type": "string",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "prevOffset": {
+          "type": "string",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "totalElements": {
+          "type": "integer",
+          "description": "Total number of elements"
+        }
+      }
+    },
+    "PageMetadataLinks": {
+      "title": "Page Metadata Links",
+      "description": "Resource URLs for retrieving next or previous datasets",
+      "type": "object",
+      "properties": {
+        "next": {
+          "$ref": "#/$defs/HateoasLink",
+          "description": "Resource URL for retrieving next dataset"
+        },
+        "prev": {
+          "$ref": "#/$defs/HateoasLink",
+          "description": "Resource URL for retrieving previous dataset"
+        }
+      }
+    },
+    "PaginatedArray": {
+      "title": "Paginated Array",
+      "description": "Base class for results that may be paginated",
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/PageMetadata",
+          "description": "Offset IDs for navigating result sets"
+        },
+        "links": {
+          "$ref": "#/$defs/PageMetadataLinks",
+          "description": "Resource URLs for navigating result sets"
+        }
+      }
+    },
+    "Timestamp": {
+      "title": "Timestamp",
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD</br> <br> Timestamp fields are in ISO 8601 date time format - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z or 2022-12-13"
+    },
+    "UniqueIdentifier": {
+      "title": "UniqueIdentifier",
+      "type": "string",
+      "maxLength": 256
+    }
+  }
+}

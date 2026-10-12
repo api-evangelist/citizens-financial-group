@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-transaction-response-schema.json",
+  "title": "AccountTransactionResponse",
+  "description": "Represents the response data containing the API status and additional data.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountTransactionResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The message associated with the API response."
+    },
+    "description": {
+      "type": "string",
+      "description": "A detailed description of the API response."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "The unique identifier for the API request."
+    },
+    "requestTime": {
+      "type": "string",
+      "description": "The timestamp of the API request in US/Eastern timezone."
+    },
+    "data": {
+      "$ref": "#/$defs/AccountTransactionResponse_data"
+    },
+    "status": {
+      "type": "integer",
+      "description": "The HTTP status code of the API response.",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "AccountTransactionResponse_data": {
+      "type": "object",
+      "properties": {
+        "accountNumber": {
+          "type": "string",
+          "description": "account number"
+        },
+        "transactions": {
+          "type": "array",
+          "description": "The actual data returned in the response (Schema : TransactionDetail).",
+          "items": {
+            "$ref": "#/$defs/TransactionDetail"
+          }
+        }
+      }
+    },
+    "TransactionDetail": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "transactionId": {
+          "type": "string"
+        },
+        "transactionStatus": {
+          "type": "string"
+        },
+        "postedDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "transactionDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "availableBalance": {
+          "type": "number",
+          "format": "double"
+        },
+        "paymentReferenceNumber": {
+          "type": "string"
+        },
+        "commercialCode": {
+          "type": "string"
+        },
+        "memoDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransactionDetail_memoDetails"
+          }
+        }
+      }
+    },
+    "TransactionDetail_memoDetails": {
+      "type": "object",
+      "properties": {
+        "MEMO DETAIL": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

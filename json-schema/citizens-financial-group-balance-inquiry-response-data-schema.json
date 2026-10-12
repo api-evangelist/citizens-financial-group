@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-balance-inquiry-response-data-schema.json",
+  "title": "BalanceInquiryResponseData",
+  "description": "Represents the response data containing the API status and additional data.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/BalanceInquiryResponseData",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The message associated with the API response."
+    },
+    "description": {
+      "type": "string",
+      "description": "A detailed description of the API response."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "The unique identifier for the API request."
+    },
+    "requestTime": {
+      "type": "string",
+      "description": "The timestamp of the API request in US/Eastern timezone.",
+      "format": "date-time"
+    },
+    "data": {
+      "type": "array",
+      "description": "The actual data returned in the response. Can be of any type.",
+      "items": {
+        "$ref": "#/$defs/AccountDetail"
+      }
+    },
+    "status": {
+      "type": "integer",
+      "description": "The HTTP status code of the API response.",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "Account": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of the account."
+        },
+        "accountType": {
+          "type": "string",
+          "description": "The specific type of the account."
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number."
+        },
+        "routingNumber": {
+          "type": "string",
+          "description": "The routing number associated with the account."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "The name of the account."
+        },
+        "isRealTimeAccount": {
+          "type": "boolean",
+          "description": "Indicates if the account is a real-time account."
+        }
+      }
+    },
+    "AccountDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Account"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "currentDayLedgerBalance": {
+              "type": "number",
+              "description": "The current day ledger balance of the account.",
+              "format": "double"
+            },
+            "currentDayAvailableBalance": {
+              "type": "number",
+              "description": "The current day available balance of the account.",
+              "format": "double"
+            },
+            "previousDayLedgerBalance": {
+              "type": "number",
+              "description": "The previous day ledger balance of the account.",
+              "format": "double"
+            },
+            "previousDayAvailableBalance": {
+              "type": "number",
+              "description": "The previous day available balance of the account.",
+              "format": "double"
+            },
+            "accountStatus": {
+              "type": "string",
+              "description": "The status of the account."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

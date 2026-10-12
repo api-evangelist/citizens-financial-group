@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-status-inquiry-request-schema.json",
+  "title": "AccountStatusInquiryRequest",
+  "description": "Schema for the request body to initiate an account inquiry. Includes account and bank identifiers.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/AccountStatusInquiryRequest",
+  "type": "object",
+  "properties": {
+    "accountIdentifier": {
+      "$ref": "#/$defs/AccountIdentifier"
+    },
+    "bankIdentifier": {
+      "$ref": "#/$defs/BankIdentifier"
+    }
+  },
+  "$defs": {
+    "AccountIdentifier": {
+      "type": "object",
+      "properties": {
+        "businessName": {
+          "type": "string",
+          "description": "Business name, if the account is a business account."
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number being validated."
+        },
+        "accountType": {
+          "type": "string",
+          "description": "The type of account identifer.",
+          "enum": [
+            "IBAN",
+            "CLABE",
+            "BBAN",
+            "ACCOUNT_NUMBER",
+            "CBU",
+            "CVU",
+            "CCI",
+            "SHID",
+            "MBNO"
+          ]
+        },
+        "country": {
+          "type": "string",
+          "description": "Country associated with the account.",
+          "enum": [
+            "US",
+            "AR",
+            "BR",
+            "CA",
+            "CN",
+            "CO",
+            "EU",
+            "HK",
+            "IN",
+            "ID",
+            "MY",
+            "MX",
+            "NP",
+            "NG",
+            "PK",
+            "PE",
+            "SG",
+            "ZA",
+            "KR",
+            "TW",
+            "TH",
+            "AE",
+            "UY",
+            "VN"
+          ]
+        }
+      },
+      "description": "Schema for account identifiers, including personal and account details."
+    },
+    "BankIdentifier": {
+      "type": "object",
+      "properties": {
+        "idType": {
+          "type": "string",
+          "description": "Type of bank identifier (e.g., SWIFT, ABA).",
+          "enum": [
+            "SWIFT_ID",
+            "IBAN",
+            "IFSC",
+            "CLABE",
+            "USABA",
+            "BRAZIL_BANK_CODE",
+            "CBU",
+            "CVU",
+            "CACPA",
+            "CNAPS",
+            "ACCOUNT_NUMBER",
+            "SHID",
+            "MBNO",
+            "ZANCC"
+          ]
+        },
+        "idValue": {
+          "type": "string",
+          "description": "Value of the bank identifier."
+        }
+      },
+      "description": "Schema for bank identifiers, includes bank id type and bank id value."
+    }
+  }
+}

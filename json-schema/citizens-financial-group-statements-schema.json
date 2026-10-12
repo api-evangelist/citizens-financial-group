@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-statements-schema.json",
+  "title": "An array of statements",
+  "description": "A paginated array of account statements",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Statements",
+  "allOf": [
+    {
+      "$ref": "#/$defs/PaginatedArray_2"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "statements": {
+          "type": "array",
+          "description": "An array of Statement, each with its HATEOAS link to retrieve the account statement",
+          "items": {
+            "$ref": "#/$defs/Statement"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "DocumentStatus": {
+      "title": "Document Status",
+      "description": "Defines the status of a document",
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "PROCESSING",
+        "FAILED"
+      ]
+    },
+    "HateoasLink_2": {
+      "type": "object",
+      "required": [
+        "href"
+      ],
+      "properties": {
+        "href": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "URL to invoke the action on the resource"
+        }
+      },
+      "title": "HATEOAS Link",
+      "description": "REST application constraint (Hypermedia As The Engine Of Application State)"
+    },
+    "PageMetadata": {
+      "title": "Page Metadata",
+      "description": "Offset IDs for paginated result sets",
+      "type": "object",
+      "properties": {
+        "nextOffset": {
+          "type": "string",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "prevOffset": {
+          "type": "string",
+          "description": "Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific"
+        },
+        "totalElements": {
+          "type": "integer",
+          "description": "Total number of elements"
+        }
+      }
+    },
+    "PageMetadataLinks_2": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "$ref": "#/$defs/HateoasLink_2"
+        },
+        "prev": {
+          "$ref": "#/$defs/HateoasLink_2"
+        }
+      },
+      "title": "Page Metadata Links",
+      "description": "Resource URLs for retrieving next or previous datasets"
+    },
+    "PaginatedArray_2": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/PageMetadata"
+        },
+        "links": {
+          "$ref": "#/$defs/PageMetadataLinks_2"
+        }
+      },
+      "title": "Paginated Array",
+      "description": "Base class for results that may be paginated"
+    },
+    "Statement": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "accountId"
+        },
+        "statementId": {
+          "type": "string",
+          "description": "statementId"
+        },
+        "description": {
+          "type": "string",
+          "description": "description"
+        },
+        "status": {
+          "$ref": "#/$defs/DocumentStatus"
+        }
+      },
+      "title": "Statement entity",
+      "description": "Statement info for the account"
+    }
+  }
+}

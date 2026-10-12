@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-search-by-postal-response-schema.json",
+  "title": "SearchByPostalResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/SearchByPostalResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SearchByPostalResponseData"
+      }
+    }
+  },
+  "$defs": {
+    "Branch": {
+      "type": "object",
+      "properties": {
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operatingHours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OperatingHour"
+          }
+        },
+        "driveupWindowHours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DriveupWindowHour"
+          }
+        }
+      }
+    },
+    "Brand": {
+      "type": "object",
+      "properties": {
+        "BrandName": {
+          "type": "string"
+        },
+        "Branch": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Branch"
+          }
+        }
+      }
+    },
+    "DriveupWindowHour": {
+      "type": "object",
+      "properties": {
+        "dayOfWeek": {
+          "type": "string"
+        },
+        "openingTime": {
+          "type": "string"
+        },
+        "closingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "OperatingHour": {
+      "type": "object",
+      "properties": {
+        "dayOfWeek": {
+          "type": "string"
+        },
+        "openingTime": {
+          "type": "string"
+        },
+        "closingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "SearchByPostalResponseData": {
+      "type": "object",
+      "properties": {
+        "brand": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Brand"
+          }
+        }
+      }
+    }
+  }
+}

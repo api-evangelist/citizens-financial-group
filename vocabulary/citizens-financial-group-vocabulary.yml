@@ -1,0 +1,425 @@
+generated: '2026-10-12'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/citizens-financial-group-account-transfer-api-openapi.yml
+- openapi/citizens-financial-group-accounts-api-openapi.yml
+- openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml
+- openapi/citizens-financial-group-information-reporting-api-openapi.yml
+- openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml
+vocabulary:
+  name: Citizens Financial Group Domain Vocabulary
+  description: 'Terms declared by Citizens Financial Group''s own API contract: its resource groups, objects and enumerations, with the contract''s
+    definitions. Derived, not authored.'
+  version: '2026-10-12'
+  terms:
+  - term: ErrorResponse400
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/ErrorResponse400
+  - term: AccountTransferData
+    definition: 'Object declared by the contract with fields: transactionId, confirmationNumber.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AccountTransferData
+  - term: ErrorResponse401
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/ErrorResponse401
+  - term: ErrorResponse
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/ErrorResponse
+  - term: AccountTransferResponse
+    definition: Represents the response data containing the API status and additional data.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AccountTransferResponse
+  - term: AccountTransferRequest
+    definition: Represents the request for account transfer.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AccountTransferRequest
+  - term: JWT Access Token
+    definition: Bearer Token required for Client authorization validated against Ping Federate
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AuthorizationHeader
+  - term: Account Contact entity
+    definition: Contact information for the account
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountContact
+  - term: Page Metadata
+    definition: Offset IDs for paginated result sets
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/PageMetadata
+  - term: Currency Entity
+    definition: 'Object declared by the contract with fields: currencyCode.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Currency
+  - term: Transaction Entity
+    definition: 'Object declared by the contract with fields: accountId, transactionId, referenceTransactionId, postedTimestamp, transactionTimestamp,
+      description, memo, debitCreditMemo, category, status, amount.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Transaction
+  - term: Content Types
+    definition: Supported documented formats
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/ContentTypes
+  - term: Paginated Array
+    definition: Base class for results that may be paginated
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/PaginatedArray
+  - term: Currency Code
+    definition: 'Enumeration declared by the contract with values: USD.'
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/CurrencyCode
+  - term: Timestamp
+    definition: 'UTC time zone defined as per ISO 8601 date format. date format - YYYY-MM-DD Timestamp fields are in ISO 8601 date time format
+      - YYYY-MM-DDThh:mm:ss.sssZ example: 2022-12-13T12:00:00.000Z or 2022-12-13'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Timestamp
+  - term: Accounts entity
+    definition: Account information in Array.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Accounts
+  - term: Deposit Transaction Type
+    definition: 'Enumeration declared by the contract with values: ADJUSTMENT, ATMDEPOSIT, ATMWITHDRAWAL, BILLPAYMENT, CHECK, DEPOSIT, DIRECTDEPOSIT,
+      FEE, OTHER, POSCREDIT, POSDEBIT, TRANSFER.'
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/DepositTransactionType
+  - term: Account Type
+    definition: 'Enumeration declared by the contract with values: CHECKING, SAVINGS.'
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountType
+  - term: HATEOAS Link
+    definition: REST application constraint (Hypermedia As The Engine Of Application State)
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/HateoasLink
+  - term: Page Metadata Links
+    definition: Resource URLs for retrieving next or previous datasets
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/PageMetadataLinks
+  - term: Transactions Entity
+    definition: Array of transactions
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Transactions
+  - term: Account Entity
+    definition: Have Account information with header and details
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Account
+  - term: AccountDescriptor Entity
+    definition: Account information When Resultype is lightweight
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountDescriptor
+  - term: Account Payment Network entity
+    definition: Payment networks for the account
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountPaymentNetwork
+  - term: AccountStatus
+    definition: 'Enumeration declared by the contract with values: OPEN, CLOSED, OTHER.'
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountStatus
+  - term: Statement entity
+    definition: Statement info for the account
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Statement
+  - term: HATEOAS Link
+    definition: REST application constraint (Hypermedia As The Engine Of Application State)
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/HateoasLink_2
+  - term: Page Metadata Links
+    definition: Resource URLs for retrieving next or previous datasets
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/PageMetadataLinks_2
+  - term: Document Status
+    definition: Defines the status of a document
+    tags:
+    - Enumeration
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/DocumentStatus
+  - term: An array of statements
+    definition: A paginated array of account statements
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/Statements
+  - term: Paginated Array
+    definition: Base class for results that may be paginated
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/PaginatedArray_2
+  - term: AccountInquiryResponse_data_referenceIdentifier
+    definition: 'Object declared by the contract with fields: referenceId.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/AccountInquiryResponse_data_referenceIdentifier
+  - term: AccountInquiryResponse_data_inquiryStatus
+    definition: 'Object declared by the contract with fields: accountNumber, routingNumber, accountName, accountStatus, accountStatusMessage,
+      accountStatusCode, nameMatchStatus.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/AccountInquiryResponse_data_inquiryStatus
+  - term: AccountInquiryResponse
+    definition: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/AccountInquiryResponse
+  - term: UnauthorizedRequestErrorResponse_errorDetails
+    definition: 'Object declared by the contract with fields: code, messageDetail.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/UnauthorizedRequestErrorResponse_errorDetails
+  - term: InternalServerErrorResponse_errorDetails
+    definition: 'Object declared by the contract with fields: code, messageDetail.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/InternalServerErrorResponse_errorDetails
+  - term: InternalServerErrorResponse
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/InternalServerErrorResponse
+  - term: UnauthorizedRequestErrorResponse
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/UnauthorizedRequestErrorResponse
+  - term: AccountInquiryResponse_data
+    definition: 'Object declared by the contract with fields: referenceIdentifier, inquiryStatus.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-get-account-inquiry-status-api-openapi.yml#/components/schemas/AccountInquiryResponse_data
+  - term: AccountListQueryResponse
+    definition: 'Object declared by the contract with fields: accountList, totalRows, totalPages, rowsPerPage.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountListQueryResponse
+  - term: TransactionDetail_memoDetails
+    definition: 'Object declared by the contract with fields: MEMO DETAIL.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/TransactionDetail_memoDetails
+  - term: AccountListResponseData
+    definition: Represents the response data containing the API status and additional data.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountListResponseData
+  - term: AccountDetailRequest
+    definition: Represents the request for account details.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountDetailRequest
+  - term: AccountTransactionResponse
+    definition: Represents the response data containing the API status and additional data.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountTransactionResponse
+  - term: BalanceInquiryResponseData
+    definition: Represents the response data containing the API status and additional data.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/BalanceInquiryResponseData
+  - term: TransactionDetail
+    definition: 'Object declared by the contract with fields: type, description, transactionId, transactionStatus, postedDate, transactionDate,
+      amount, availableBalance, paymentReferenceNumber, commercialCode, memoDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/TransactionDetail
+  - term: BalanceInquiryResponseData2
+    definition: Represents the response data containing the API status and additional data.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/BalanceInquiryResponseData2
+  - term: ErrorResponse_errorDetails
+    definition: 'Object declared by the contract with fields: code, description, messageDetail.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/ErrorResponse_errorDetails
+  - term: AccountTransactionResponse_data
+    definition: 'Object declared by the contract with fields: accountNumber, transactions.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountTransactionResponse_data
+  - term: AccountTransactionRequest
+    definition: Represents the request for account details.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountTransactionRequest
+  - term: BankIdentifier
+    definition: Schema for bank identifiers, includes bank id type and bank id value.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/BankIdentifier
+  - term: AccountInquiryInitiateResponse_data
+    definition: 'Object declared by the contract with fields: referenceIdentifier.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/AccountInquiryInitiateResponse_data
+  - term: AccountStatusInquiryRequest
+    definition: Schema for the request body to initiate an account inquiry. Includes account and bank identifiers.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/AccountStatusInquiryRequest
+  - term: AccountIdentifier
+    definition: Schema for account identifiers, including personal and account details.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/AccountIdentifier
+  - term: AccountInquiryInitiateResponse
+    definition: Schema for the response of an account inquiry. Includes reference identifier, inquiry status, and metadata.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/AccountInquiryInitiateResponse
+  - term: UnauthorizedErrorResponse
+    definition: 'Object declared by the contract with fields: result, source, requestId, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-account-validation-inquiry-api-openapi.yml#/components/schemas/UnauthorizedErrorResponse
+  - term: UltimateDebtor
+    definition: Ultimate debtor (3rd party) details
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/UltimateDebtor
+  - term: Error
+    definition: 'Object declared by the contract with fields: result, source, errorDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/Error
+  - term: PaymentInitiationRequest
+    definition: 'Object declared by the contract with fields: paymentId, paymentAccountInformation, counterpartyAccountInformation, amount, memo,
+      paymentType, rtpDetails, achDetails.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/PaymentInitiationRequest
+  - term: RtpDetails
+    definition: This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType.
+      This object becomes mandatory for paymentType RTP.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/RtpDetails
+  - term: Debtor
+    definition: 'Object declared by the contract with fields: name, postalAddress.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/Debtor
+  - term: CounterpartyAddressInformation
+    definition: Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal
+      to $3000.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/CounterpartyAddressInformation
+  - term: PaymentInitiationResponse
+    definition: Response fields of the ACH Credit transfer initiated.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/PaymentInitiationResponse
+  - term: AchDetails
+    definition: This object provides the list of request fields needed to originate an ACH credit/debit transfer. This section is driven by the
+      paymentType. This object becomes mandatory for paymentType ACH.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/AchDetails
+  - term: Error_errorDetails
+    definition: 'Object declared by the contract with fields: code, description, messageDetail.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/Error_errorDetails
+  - term: UltimateCreditor
+    definition: Ultimate debtor (3rd party) details
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/UltimateCreditor
+  - term: CounterpartyAccountInformation
+    definition: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/CounterpartyAccountInformation
+  - term: PaymentAccountInformation
+    definition: The client party's account details
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/PaymentAccountInformation
+  - term: Address
+    definition: 'Object declared by the contract with fields: line1, line2, city, postalCode, state, country.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/Address
+  - term: CounterpartyInformation
+    definition: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-initiate-payment-api-openapi.yml#/components/schemas/CounterpartyInformation
+  - term: ParticipantStatusSummary
+    definition: 'Object declared by the contract with fields: routingNumber, paymentType, inNetwork, available, additionalInformation, participantName,
+      eligibleServices.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-participant-status-api-openapi.yml#/components/schemas/ParticipantStatusSummary
+  - term: ParticipantStatusQuery
+    definition: 'Object declared by the contract with fields: routingNumber, paymentType.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-participant-status-api-openapi.yml#/components/schemas/ParticipantStatusQuery
+  - term: PaymentStatusResponse
+    definition: Response fields of the Payments Response.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-payment-status-api-openapi.yml#/components/schemas/PaymentStatusResponse
+  - term: PaymentStatusRequest
+    definition: Request fields of the Payments Response.
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-payment-status-api-openapi.yml#/components/schemas/PaymentStatusRequest
+  - term: Branch
+    definition: 'Object declared by the contract with fields: features, operatingHours, driveupWindowHours.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/Branch
+  - term: SearchByPostalResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/SearchByPostalResponse
+  - term: DriveupWindowHour
+    definition: 'Object declared by the contract with fields: dayOfWeek, openingTime, closingTime.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/DriveupWindowHour
+  - term: SearchByPostalResponseData
+    definition: 'Object declared by the contract with fields: brand.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/SearchByPostalResponseData
+  - term: OperatingHour
+    definition: 'Object declared by the contract with fields: dayOfWeek, openingTime, closingTime.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/OperatingHour
+  - term: Brand
+    definition: 'Object declared by the contract with fields: BrandName, Branch.'
+    tags:
+    - Object
+    source: openapi/citizens-financial-group-postalcode-api-openapi.yml#/components/schemas/Brand

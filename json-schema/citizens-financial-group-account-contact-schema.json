@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-contact-schema.json",
+  "title": "Account Contact entity",
+  "description": "Contact information for the account",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-accounts-api-openapi.yml#/components/schemas/AccountContact",
+  "type": "object",
+  "properties": {
+    "holders": {
+      "type": "string",
+      "description": "Owners of the account"
+    },
+    "emails": {
+      "type": "array",
+      "description": "Email addresses associated with the account"
+    },
+    "addresses": {
+      "type": "array",
+      "description": "Physical mail addresses associated with the account"
+    },
+    "telephones": {
+      "type": "array",
+      "description": "Telephone numbers associated with the account"
+    }
+  }
+}

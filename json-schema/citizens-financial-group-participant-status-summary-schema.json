@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-participant-status-summary-schema.json",
+  "title": "ParticipantStatusSummary",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-participant-status-api-openapi.yml#/components/schemas/ParticipantStatusSummary",
+  "type": "object",
+  "required": [
+    "available",
+    "inNetwork",
+    "paymentType",
+    "routingNumber"
+  ],
+  "properties": {
+    "routingNumber": {
+      "type": "string",
+      "description": "A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.",
+      "minLength": 9,
+      "maxLength": 9
+    },
+    "paymentType": {
+      "type": "string",
+      "description": "Describes the type of payment for which the routing number is searched for.Possible values WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.",
+      "maxLength": 4,
+      "enum": [
+        "WIRE",
+        "RTP"
+      ]
+    },
+    "inNetwork": {
+      "type": "string",
+      "description": "Describes the presence of a Financial Institution in clearing network(The Clearing House/Fed Wire/Automate Clearing House).",
+      "maxLength": 3,
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "available": {
+      "type": "string",
+      "description": "Describes the availability of a Financial Institution to receive payments.",
+      "maxLength": 3,
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "additionalInformation": {
+      "type": "string",
+      "description": "This field is populated only when the value of 'available' field is 'NO'. It contains the reason for unavailability of the Financial Institution/participant.",
+      "maxLength": 140
+    },
+    "participantName": {
+      "type": "string",
+      "description": "Name of the participant/Financial Institution registered in the payment clearing scheme.",
+      "maxLength": 36
+    },
+    "eligibleServices": {
+      "type": "array",
+      "description": "These are the list of eligible services provided/supported by the financial Institution for RTP payment type. Possible values are CREDIT_TRANSFER - These are push payments supported by the clearing network. REQUEST_FOR_PAYMENT - These are pull payments supported by the clearing network. ACKNOWLEDGMENT - Bank is capable of sending a confirmation that the payment has been received and settled REMITTANCE - Bank is capable of receiving remittance information like the payment has been received and settled REQUEST_FOR_INFORMATION - Bank has capability to receive request for information messages. REQUEST_FOR_RETURN_OF_FUND - Bank has capability to receive request for return of funds messages.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 6,
+      "minItems": 1
+    }
+  }
+}

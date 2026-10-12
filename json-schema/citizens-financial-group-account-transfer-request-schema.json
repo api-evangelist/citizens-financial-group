@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-transfer-request-schema.json",
+  "title": "AccountTransferRequest",
+  "description": "Represents the request for account transfer.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AccountTransferRequest",
+  "required": [
+    "fromAccountNumber",
+    "toAccountNumber",
+    "amount"
+  ],
+  "type": "object",
+  "properties": {
+    "fromAccountNumber": {
+      "maxLength": 10,
+      "minLength": 10,
+      "type": "string",
+      "description": "The from account number is the number that identifies the account from which funds are being transferred.. Must be 10 characters."
+    },
+    "toAccountNumber": {
+      "maxLength": 10,
+      "minLength": 10,
+      "type": "string",
+      "title": "To Account Number of Max size 10 digit char",
+      "description": "The to account number is the number that identifies the account to which funds are being transferred."
+    },
+    "amount": {
+      "type": "number",
+      "title": "Amount with minimum of $0.01 ",
+      "description": "The amount is ensure being transferred between the From/To accounts"
+    },
+    "memo": {
+      "maxLength": 50,
+      "type": "string",
+      "title": "Instruction of A debit memo on a company’s bank statement",
+      "description": "Document that helps account holders understand deductions from their accounts, ensuring clarity and accuracy in their financial records."
+    }
+  }
+}

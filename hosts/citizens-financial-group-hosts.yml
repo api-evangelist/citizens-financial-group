@@ -1,0 +1,100 @@
+generated: '2026-10-12'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 8
+  own: 7
+  other_domain: 0
+  platform: 1
+  roles:
+  - api
+  - other
+  - portal
+  - website
+hosts:
+- host: api.citizensbank.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: citizensbank.com
+  role: api
+  relation: own
+- host: developer.citizensbank.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - Portal
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - Support
+  - Login
+  serves:
+  - docs
+  registrable_domain: citizensbank.com
+  role: portal
+  relation: own
+- host: investor.citizensbank.com
+  found_by:
+  - pointer
+  types:
+  - InvestorRelations
+  - PressReleases
+  serves: []
+  registrable_domain: citizensbank.com
+  role: other
+  relation: own
+- host: pay.citizensbank.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - docs
+  registrable_domain: citizensbank.com
+  role: other
+  relation: own
+- host: sandboxapi.citizensbank.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: citizensbank.com
+  role: other
+  relation: own
+- host: sandboxdeveloper.citizensbank.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - Sandbox
+  serves:
+  - docs
+  registrable_domain: citizensbank.com
+  role: other
+  relation: own
+- host: www.citizensbank.com
+  found_by:
+  - pointer
+  types:
+  - Website
+  - HelpCenter
+  - PrivacyPolicy
+  - TermsOfService
+  serves: []
+  registrable_domain: citizensbank.com
+  role: website
+  relation: own
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform

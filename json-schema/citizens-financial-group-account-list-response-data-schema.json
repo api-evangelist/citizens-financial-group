@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-list-response-data-schema.json",
+  "title": "AccountListResponseData",
+  "description": "Represents the response data containing the API status and additional data.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountListResponseData",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The message associated with the API response."
+    },
+    "description": {
+      "type": "string",
+      "description": "A detailed description of the API response."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "The unique identifier for the API request."
+    },
+    "requestTime": {
+      "type": "string",
+      "description": "The timestamp of the API request in US/Eastern timezone.",
+      "format": "date-time"
+    },
+    "data": {
+      "type": "array",
+      "description": "The actual data returned in the response. Can be of any type.",
+      "items": {
+        "$ref": "#/$defs/AccountListQueryResponse"
+      }
+    },
+    "status": {
+      "type": "integer",
+      "description": "The HTTP status code of the API response.",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "Account": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of the account."
+        },
+        "accountType": {
+          "type": "string",
+          "description": "The specific type of the account."
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number."
+        },
+        "routingNumber": {
+          "type": "string",
+          "description": "The routing number associated with the account."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "The name of the account."
+        },
+        "isRealTimeAccount": {
+          "type": "boolean",
+          "description": "Indicates if the account is a real-time account."
+        }
+      }
+    },
+    "AccountListQueryResponse": {
+      "type": "object",
+      "properties": {
+        "accountList": {
+          "type": "array",
+          "description": "The list of accounts returned by the query.",
+          "items": {
+            "$ref": "#/$defs/Account"
+          }
+        },
+        "totalRows": {
+          "type": "integer",
+          "description": "The total number of rows available."
+        },
+        "totalPages": {
+          "type": "integer",
+          "description": "The total number of pages available."
+        },
+        "rowsPerPage": {
+          "type": "integer",
+          "description": "The number of rows per page."
+        }
+      }
+    }
+  }
+}

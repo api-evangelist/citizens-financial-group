@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-transfer-response-schema.json",
+  "title": "AccountTransferResponse",
+  "description": "Represents the response data containing the API status and additional data.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-account-transfer-api-openapi.yml#/components/schemas/AccountTransferResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The message associated with the API response."
+    },
+    "description": {
+      "type": "string",
+      "description": "A detailed description of the API response."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "The unique identifier for the API request."
+    },
+    "requestTime": {
+      "type": "string",
+      "description": "The timestamp of the API request in US/Eastern timezone.",
+      "format": "date-time"
+    },
+    "data": {
+      "type": "object",
+      "description": "The actual data returned in the response. Can be of any type.",
+      "items": {
+        "$ref": "#/$defs/AccountTransferData"
+      }
+    },
+    "status": {
+      "type": "integer",
+      "description": "The HTTP status code of the API response.",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "AccountTransferData": {
+      "type": "object",
+      "properties": {
+        "transactionId": {
+          "maxLength": 10,
+          "type": "string",
+          "title": "Unique Transaction Id to track the transaction details"
+        },
+        "confirmationNumber": {
+          "maxLength": 10,
+          "type": "string",
+          "title": "Ensure the transaction is successfull and generate a unique id in the system"
+        }
+      },
+      "required": [
+        "transactionId",
+        "confirmationNumber"
+      ]
+    }
+  }
+}

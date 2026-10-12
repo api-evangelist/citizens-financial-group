@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-payment-status-response-schema.json",
+  "title": "PaymentStatusResponse",
+  "description": "Response fields of the Payments Response.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-payment-status-api-openapi.yml#/components/schemas/PaymentStatusResponse",
+  "type": "object",
+  "required": [
+    "paymentId",
+    "paymentStatus",
+    "paymentType",
+    "receivedDateTime",
+    "statusDateTime"
+  ],
+  "properties": {
+    "paymentId": {
+      "type": "string",
+      "description": "Unique identifier for the payment submission request.",
+      "maxLength": 15
+    },
+    "paymentType": {
+      "type": "string",
+      "description": "The type of transaction that was initiated.",
+      "enum": [
+        "RTP",
+        "ACH_CREDIT",
+        "ACH_DEBIT"
+      ]
+    },
+    "paymentStatus": {
+      "type": "string",
+      "description": "The status of the transaction. Possible values for RTP are RECEIVED - The payment has been received for processing. IN_PROGRESS - The payment processing is in progress. COMPLETED - The payment has been completed. REJECTED - The payment has been rejected.\nPossible values for ACH are RECEIVED - API payment request received and staged for exported. EXPORTED - API payment request exported for backend processing system. ACKNOWLEDGED - Backend processing system acknowledged receipt of payment.",
+      "maxLength": 30,
+      "enum": [
+        "RECEIVED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "REJECTED",
+        "EXPORTED",
+        "ACKNOWLEDGED"
+      ]
+    },
+    "rejectCode": {
+      "type": "string",
+      "description": "The rejection code in case the transaction was rejected"
+    },
+    "rejectDescription": {
+      "type": "string",
+      "description": "The description for the rejection code"
+    },
+    "receivedDateTime": {
+      "format": "date",
+      "description": "The date and time when the payment transaction was received."
+    },
+    "statusDateTime": {
+      "format": "date",
+      "description": "The date and time when the status was updated."
+    },
+    "bankReferenceNumber": {
+      "type": "string",
+      "description": "The bank assigned transaction id."
+    },
+    "networkInstructionId": {
+      "type": "string",
+      "description": "The network assigned payment reference number."
+    }
+  }
+}

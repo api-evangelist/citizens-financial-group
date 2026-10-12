@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-participant-status-query-schema.json",
+  "title": "ParticipantStatusQuery",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-participant-status-api-openapi.yml#/components/schemas/ParticipantStatusQuery",
+  "type": "object",
+  "required": [
+    "paymentType",
+    "routingNumber"
+  ],
+  "properties": {
+    "routingNumber": {
+      "type": "string",
+      "description": "A value that uniquely identifies the Financial Institution. This is a 9 digits long ABA number associated with the account.",
+      "minLength": 9,
+      "maxLength": 9
+    },
+    "paymentType": {
+      "type": "string",
+      "description": "Describes the type of payment for which the routing number is searched for. Possible values that can be passed WIRE - Wire transfers are immediate direct transfers between any two financial institutions. RTP - Real-time payments are payments made between bank accounts that are initiated, cleared and settled within seconds, at any time of the day or week, holidays and weekends included.",
+      "enum": [
+        "WIRE",
+        "RTP"
+      ]
+    }
+  }
+}

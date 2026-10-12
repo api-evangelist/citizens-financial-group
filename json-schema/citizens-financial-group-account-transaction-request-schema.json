@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/citizens-financial-group/main/json-schema/citizens-financial-group-account-transaction-request-schema.json",
+  "title": "AccountTransactionRequest",
+  "description": "Represents the request for account details.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/citizens-financial-group-information-reporting-api-openapi.yml#/components/schemas/AccountTransactionRequest",
+  "required": [
+    "accountNumber"
+  ],
+  "type": "object",
+  "properties": {
+    "accountNumber": {
+      "maxLength": 14,
+      "minLength": 10,
+      "type": "string",
+      "description": "The account number associated with the account. Must be between 10 and 14 characters."
+    },
+    "routingNumber": {
+      "maxLength": 9,
+      "minLength": 9,
+      "type": "string",
+      "description": "The routing number associated with the account. Must be exactly 9 characters."
+    },
+    "startRangeOfDate": {
+      "type": "string",
+      "description": "Start range of transaction posted date. It would be in yyyy-MM-dd format.",
+      "format": "date"
+    },
+    "endRangeOfDate": {
+      "type": "string",
+      "description": "End range of transaction posted date. It would be in yyyy-MM-dd format.",
+      "format": "date"
+    },
+    "limit": {
+      "maximum": 2000,
+      "minimum": 100,
+      "type": "integer",
+      "description": "Total number of transaction(s) records to return (should be in multiple of 100)."
+    },
+    "nextKey": {
+      "maxLength": 45,
+      "type": "string",
+      "description": "This field can be used by the consumers to fetch the records from a specific page.  This value is returned as part of the response indicating the key for the next page."
+    }
+  }
+}

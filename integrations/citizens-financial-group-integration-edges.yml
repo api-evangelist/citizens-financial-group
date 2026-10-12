@@ -1,0 +1,22 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/citizens-financial-group/integrations
+- https://n8n.io/integrations/citizens-financial-group/
+- https://composio.dev/toolkits/citizens-financial-group
+- https://monid.ai/tools/citizens-financial-group
+checked:
+- https://composio.dev/toolkits/citizens-financial-group
+- https://monid.ai/tools/citizens-financial-group
+- https://n8n.io/integrations/citizens-bank/
+- https://n8n.io/integrations/citizens-financial-group/
+- https://www.make.com/en/integrations/citizens-bank
+- https://www.workato.com/integrations/citizens_bank
+- https://zapier.com/apps/citizens-bank/integrations
+- https://zapier.com/apps/citizens-financial-group/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
+note: No marketplace listing found under citizens-financial-group or citizens-bank names (zapier/n8n/workato 404;
+  make.com 403 to our crawler). Developer portal developer.citizensbank.com returned 403 to a browser UA on 2026-10-12.
