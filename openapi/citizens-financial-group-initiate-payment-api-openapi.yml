@@ -71,24 +71,9 @@ paths:
       - Initiate Payment
 components:
   schemas:
-    UltimateDebtor:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          example: ACME CORP
-          description: Name of the ultimate debtor party.
-          maxLength: 140
-        id:
-          type: string
-          example: '187658'
-          description: Id of the ultimate debtor party.
-          maxLength: 35
-        postalAddress:
-          $ref: '#/components/schemas/Address'
-      description: Ultimate debtor (3rd party) details
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
     Error:
       type: object
       required:
@@ -155,30 +140,63 @@ components:
           $ref: '#/components/schemas/RtpDetails'
         achDetails:
           $ref: '#/components/schemas/AchDetails'
-    RtpDetails:
+    Error_errorDetails:
       type: object
       required:
-      - counterpartyAddressInformation
+      - code
+      - description
       properties:
-        debtor:
-          $ref: '#/components/schemas/Debtor'
-        ultimateDebtor:
-          $ref: '#/components/schemas/UltimateDebtor'
-        ultimateCreditor:
-          $ref: '#/components/schemas/UltimateCreditor'
-        counterpartyAddressInformation:
-          $ref: '#/components/schemas/CounterpartyAddressInformation'
-      description: This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP.
-    Debtor:
+        code:
+          type: string
+          example: REQ1001
+          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
+          maxLength: 7
+        description:
+          type: string
+          example: Request Id should not be more than 36 characters long.
+          description: Description of the operation's status. It will have detailed error description in case of any error.
+          maxLength: 250
+        messageDetail:
+          type: string
+          example: Invalid requestId
+          description: Details about error including stack traces. This will not be populated for any handled error.
+          maxLength: 250
+    UltimateCreditor:
       type: object
+      required:
+      - name
       properties:
         name:
           type: string
           example: JOHN SMITH
-          description: Originator or Debtor Account Holder's Name.
+          description: Name of the ultimate creditor party.
           maxLength: 140
+        id:
+          type: string
+          example: '210356'
+          description: Id of the ultimate creditor party.
+          maxLength: 35
         postalAddress:
           $ref: '#/components/schemas/Address'
+      description: Ultimate debtor (3rd party) details
+    UltimateDebtor:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          example: ACME CORP
+          description: Name of the ultimate debtor party.
+          maxLength: 140
+        id:
+          type: string
+          example: '187658'
+          description: Id of the ultimate debtor party.
+          maxLength: 35
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+      description: Ultimate debtor (3rd party) details
     CounterpartyAddressInformation:
       type: object
       required:
@@ -197,30 +215,87 @@ components:
         postalAddress:
           $ref: '#/components/schemas/Address'
       description: Counter Party Details. The address information becomes mandatory for RTP transactions with payment amount greater than or equal to $3000.
-    PaymentInitiationResponse:
+    PaymentAccountInformation:
       type: object
       required:
-      - paymentId
-      - paymentStatus
-      - receivedDateTime
+      - accountNumber
+      - routingNumber
       properties:
-        paymentId:
+        routingNumber:
           type: string
-          example: M20190404OR
-          description: Unique identifier for the payment submission request
-          maxLength: 15
-        paymentStatus:
+          example: '2523216'
+          description: Client account holder's ABA(routing) number.
+          minLength: 9
+          maxLength: 9
+        accountNumber:
           type: string
-          example: RECEIVED
-          description: Status of the payment instruction.
-          maxLength: 30
+          example: '766060252'
+          description: Client account holder's account number.
+          maxLength: 17
+      description: The client party's account details
+    RtpDetails:
+      type: object
+      required:
+      - counterpartyAddressInformation
+      properties:
+        debtor:
+          $ref: '#/components/schemas/Debtor'
+        ultimateDebtor:
+          $ref: '#/components/schemas/UltimateDebtor'
+        ultimateCreditor:
+          $ref: '#/components/schemas/UltimateCreditor'
+        counterpartyAddressInformation:
+          $ref: '#/components/schemas/CounterpartyAddressInformation'
+      description: This object provides the list of request fields needed to originate a RTP credit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType RTP.
+    CounterpartyInformation:
+      type: object
+      required:
+      - counterpartyAccountType
+      - counterpartyName
+      properties:
+        counterpartyAccountType:
+          type: string
+          example: SAVINGS
+          description: 'Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.
+
+            CHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.'
           enum:
-          - RECEIVED
-        receivedDateTime:
-          format: date
-          example: '2024-09-30'
-          description: The date and time when the request was received.
-      description: Response fields of the ACH Credit transfer initiated.
+          - CHECKING
+          - SAVINGS
+        counterpartyName:
+          type: string
+          example: JOHN SMITH
+          description: Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.
+          maxLength: 22
+      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+    CounterpartyAccountInformation:
+      type: object
+      required:
+      - accountNumber
+      - routingNumber
+      properties:
+        routingNumber:
+          type: string
+          example: 53000196
+          description: Counteryparty account holder's ABA(routing) number.
+          minLength: 9
+          maxLength: 9
+        accountNumber:
+          type: string
+          example: 123456789
+          description: Counteryparty account holder's account number.
+          maxLength: 17
+      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+    Debtor:
+      type: object
+      properties:
+        name:
+          type: string
+          example: JOHN SMITH
+          description: Originator or Debtor Account Holder's Name.
+          maxLength: 140
+        postalAddress:
+          $ref: '#/components/schemas/Address'
     AchDetails:
       type: object
       required:
@@ -295,81 +370,6 @@ components:
           - SINGLE
           - STANDING_AUTHORIZATION
       description: This object provides the list of request fields needed to originate an ACH credit/debit transfer. This section is driven by the paymentType. This object becomes mandatory for paymentType ACH.
-    Error_errorDetails:
-      type: object
-      required:
-      - code
-      - description
-      properties:
-        code:
-          type: string
-          example: REQ1001
-          description: This is the application error code returned by the API layer or the Implementation layer. A list of error codes will be provided in the user guide.
-          maxLength: 7
-        description:
-          type: string
-          example: Request Id should not be more than 36 characters long.
-          description: Description of the operation's status. It will have detailed error description in case of any error.
-          maxLength: 250
-        messageDetail:
-          type: string
-          example: Invalid requestId
-          description: Details about error including stack traces. This will not be populated for any handled error.
-          maxLength: 250
-    UltimateCreditor:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          example: JOHN SMITH
-          description: Name of the ultimate creditor party.
-          maxLength: 140
-        id:
-          type: string
-          example: '210356'
-          description: Id of the ultimate creditor party.
-          maxLength: 35
-        postalAddress:
-          $ref: '#/components/schemas/Address'
-      description: Ultimate debtor (3rd party) details
-    CounterpartyAccountInformation:
-      type: object
-      required:
-      - accountNumber
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: 53000196
-          description: Counteryparty account holder's ABA(routing) number.
-          minLength: 9
-          maxLength: 9
-        accountNumber:
-          type: string
-          example: 123456789
-          description: Counteryparty account holder's account number.
-          maxLength: 17
-      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
-    PaymentAccountInformation:
-      type: object
-      required:
-      - accountNumber
-      - routingNumber
-      properties:
-        routingNumber:
-          type: string
-          example: '2523216'
-          description: Client account holder's ABA(routing) number.
-          minLength: 9
-          maxLength: 9
-        accountNumber:
-          type: string
-          example: '766060252'
-          description: Client account holder's account number.
-          maxLength: 17
-      description: The client party's account details
     Address:
       type: object
       required:
@@ -410,31 +410,40 @@ components:
           minLength: 2
           maxLength: 2
           pattern: ^[a-zA-Z]+$
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
-    CounterpartyInformation:
+    PaymentInitiationResponse:
       type: object
       required:
-      - counterpartyAccountType
-      - counterpartyName
+      - paymentId
+      - paymentStatus
+      - receivedDateTime
       properties:
-        counterpartyAccountType:
+        paymentId:
           type: string
-          example: SAVINGS
-          description: 'Specifies the nature of the benificiary account. Values of Account type should be either CHECKING or SAVINGS.
-
-            CHECKING - Current Account used to post credits. SAVINGS - Savings Account used to post credits.'
+          example: M20190404OR
+          description: Unique identifier for the payment submission request
+          maxLength: 15
+        paymentStatus:
+          type: string
+          example: RECEIVED
+          description: Status of the payment instruction.
+          maxLength: 30
           enum:
-          - CHECKING
-          - SAVINGS
-        counterpartyName:
-          type: string
-          example: JOHN SMITH
-          description: Counterparty account holder's name. The maximum length of the counterparty name is 16 for transactions with CTX as the SEC code. The maximum length is 22 for other SEC codes.
-          maxLength: 22
-      description: Counterparty is the crediting bank for RTP and ACH Credit; or debiting bank for ACH Debit.
+          - RECEIVED
+        receivedDateTime:
+          format: date
+          example: '2024-09-30'
+          description: The date and time when the request was received.
+      description: Response fields of the ACH Credit transfer initiated.
   parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
     x-fapi-channel-id:
       schema:
         maxLength: 20
@@ -445,15 +454,6 @@ components:
       style: simple
       required: false
       explode: false
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
     authorization:
       schema:
         $ref: '#/components/schemas/AuthorizationHeader'

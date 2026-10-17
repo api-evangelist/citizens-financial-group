@@ -73,30 +73,9 @@ paths:
       - Payment Status
 components:
   schemas:
-    Error:
-      type: object
-      required:
-      - errorDetails
-      - result
-      - source
-      properties:
-        result:
-          type: string
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          type: string
-          example: Payments System
-          description: Source system or provider system which causes error.
-          maxLength: 100
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error_errorDetails'
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
     PaymentStatusResponse:
       type: object
       required:
@@ -158,26 +137,30 @@ components:
           example: 20241004011500120T1BUSRT61960896581
           description: The network assigned payment reference number.
       description: Response fields of the Payments Response.
-    PaymentStatusRequest:
+    Error:
       type: object
       required:
-      - paymentId
-      - paymentType
+      - errorDetails
+      - result
+      - source
       properties:
-        paymentId:
+        result:
           type: string
-          example: M20190404OR
-          description: Unique identifier for the payment submission request.
-          maxLength: 15
-        paymentType:
-          type: string
-          example: RTP
-          description: The type of transaction that was initiated.
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
           enum:
-          - RTP
-          - ACH_CREDIT
-          - ACH_DEBIT
-      description: Request fields of the Payments Response.
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
     Error_errorDetails:
       type: object
       required:
@@ -199,10 +182,36 @@ components:
           example: Invalid requestId
           description: Details about error including stack traces. This will not be populated for any handled error.
           maxLength: 250
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
+    PaymentStatusRequest:
+      type: object
+      required:
+      - paymentId
+      - paymentType
+      properties:
+        paymentId:
+          type: string
+          example: M20190404OR
+          description: Unique identifier for the payment submission request.
+          maxLength: 15
+        paymentType:
+          type: string
+          example: RTP
+          description: The type of transaction that was initiated.
+          enum:
+          - RTP
+          - ACH_CREDIT
+          - ACH_DEBIT
+      description: Request fields of the Payments Response.
   parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
     x-fapi-channel-id:
       schema:
         maxLength: 20
@@ -213,15 +222,6 @@ components:
       style: simple
       required: false
       explode: false
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
     authorization:
       schema:
         $ref: '#/components/schemas/AuthorizationHeader'

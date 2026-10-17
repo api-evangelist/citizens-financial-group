@@ -73,6 +73,33 @@ paths:
       - Participant Status
 components:
   schemas:
+    AuthorizationHeader:
+      type: string
+      title: JWT Access Token
+    Error:
+      type: object
+      required:
+      - errorDetails
+      - result
+      - source
+      properties:
+        result:
+          type: string
+          example: FATAL
+          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
+          maxLength: 7
+          enum:
+          - FATAL
+          - WARNING
+        source:
+          type: string
+          example: Payments System
+          description: Source system or provider system which causes error.
+          maxLength: 100
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error_errorDetails'
     ParticipantStatusSummary:
       type: object
       required:
@@ -135,30 +162,6 @@ components:
             type: string
           maxItems: 6
           minItems: 1
-    Error:
-      type: object
-      required:
-      - errorDetails
-      - result
-      - source
-      properties:
-        result:
-          type: string
-          example: FATAL
-          description: It represents the error status. Its value should be either WARNING or FATAL. * `FATAL` - is an error which represents that something is not correct while processing the request. It could be because of the request or something is not correct with the processing system. * `WARNING` - is a success with some information which means it is not an absolute successful transaction. However response will have information about what is needed in order to be an absolute successful transaction.
-          maxLength: 7
-          enum:
-          - FATAL
-          - WARNING
-        source:
-          type: string
-          example: Payments System
-          description: Source system or provider system which causes error.
-          maxLength: 100
-        errorDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error_errorDetails'
     ParticipantStatusQuery:
       type: object
       required:
@@ -199,10 +202,16 @@ components:
           example: Invalid requestId
           description: Details about error including stack traces. This will not be populated for any handled error.
           maxLength: 250
-    AuthorizationHeader:
-      type: string
-      title: JWT Access Token
   parameters:
+    x-fapi-trace-id:
+      schema:
+        maxLength: 36
+        type: string
+      name: x-fapi-trace-id
+      in: header
+      description: Unique request id for each request to make it traceable if needed.
+      style: simple
+      required: true
     x-fapi-channel-id:
       schema:
         maxLength: 20
@@ -213,15 +222,6 @@ components:
       style: simple
       required: false
       explode: false
-    x-fapi-trace-id:
-      schema:
-        maxLength: 36
-        type: string
-      name: x-fapi-trace-id
-      in: header
-      description: Unique request id for each request to make it traceable if needed.
-      style: simple
-      required: true
     authorization:
       schema:
         $ref: '#/components/schemas/AuthorizationHeader'

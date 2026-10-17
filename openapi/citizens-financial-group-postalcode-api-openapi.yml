@@ -36,6 +36,29 @@ paths:
       - Postalcode
 components:
   schemas:
+    Brand:
+      type: object
+      properties:
+        BrandName:
+          type: string
+        Branch:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+    SearchByPostalResponseData:
+      type: object
+      properties:
+        brand:
+          type: array
+          items:
+            $ref: '#/components/schemas/Brand'
+    SearchByPostalResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchByPostalResponseData'
     Branch:
       type: object
       properties:
@@ -51,13 +74,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DriveupWindowHour'
-    SearchByPostalResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SearchByPostalResponseData'
     DriveupWindowHour:
       type: object
       properties:
@@ -67,13 +83,6 @@ components:
           type: string
         closingTime:
           type: string
-    SearchByPostalResponseData:
-      type: object
-      properties:
-        brand:
-          type: array
-          items:
-            $ref: '#/components/schemas/Brand'
     OperatingHour:
       type: object
       properties:
@@ -83,15 +92,6 @@ components:
           type: string
         closingTime:
           type: string
-    Brand:
-      type: object
-      properties:
-        BrandName:
-          type: string
-        Branch:
-          type: array
-          items:
-            $ref: '#/components/schemas/Branch'
   securitySchemes:
     Partner_Id:
       type: apiKey
