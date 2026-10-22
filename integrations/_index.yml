@@ -29,3 +29,34 @@
     detected: '2026-10-14'
   status: not-a-workflow
   arazzo: null
+- slug: citizens-financial-group-fdic-bankfind-insured-institutions
+  label: FDIC BankFind insured institutions
+  partner_name: FDIC BankFind insured institutions
+  category: US FDIC-insured depository institution charter
+  type: register
+  channel: regulator-register
+  evidence: https://api.fdic.gov/banks/institutions?filters=ACTIVE:1&fields=NAME,WEBADDR,CERT,ASSET,STALP
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: FDIC BankFind insured institutions
+    spec_file: null
+    standard: null
+    role: insured-depository-institution
+    registrations:
+    - registered_name: Citizens Bank, National Association
+      register_status: active
+      register_country: US
+      register_id: '57957'
+      matched_domain: citizensbank.com
+      matched_by: domain+local-verified
+      licences:
+      - FDIC-insured institution (CERT 57957)
+      evidence_url: https://banks.data.fdic.gov/bankfind-suite/bankfind/details/57957
+      state: RI
+    signal_note: 'participation only: a federal deposit-insurance charter on a regulator register; no API conformance
+      is published by this register'
+    detected_by: sweep-us-bank-credit-union-registers.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
